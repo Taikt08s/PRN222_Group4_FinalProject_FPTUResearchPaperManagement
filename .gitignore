@@ -12,6 +12,7 @@ secrets.json
 
 # Ignore Visual Studio user-specific files
 .vs/
+.idea/
 .vscode/
 *.suo
 *.user
