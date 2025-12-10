@@ -15,7 +15,7 @@ namespace BusinessObject.Models
         public string Full_Name { get; set; }
         public string Email { get; set; }
         public string Password_Hash { get; set; }
-        public string Role { get; set; } // ADMIN, STUDENT, GPEC, SDC
+        public string Role { get; set; }
         public string Major { get; set; }
         public bool Is_Suspended { get; set; }
         public DateTime? Suspended_Until { get; set; }

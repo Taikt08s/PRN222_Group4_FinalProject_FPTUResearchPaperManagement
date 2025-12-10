@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\BusinessObject.csproj": {}
+    "C:\\Users\\ACER\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\BusinessObject.csproj": {}
   },
   "projects": {
-    "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\BusinessObject.csproj": {
+    "C:\\Users\\ACER\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\BusinessObject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\BusinessObject.csproj",
+        "projectUniqueName": "C:\\Users\\ACER\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\BusinessObject.csproj",
         "projectName": "BusinessObject",
-        "projectPath": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\BusinessObject.csproj",
-        "packagesPath": "C:\\Users\\xtran\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\obj\\",
+        "projectPath": "C:\\Users\\ACER\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\BusinessObject.csproj",
+        "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ACER\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\xtran\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -43,8 +39,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -65,7 +60,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
