@@ -13,4 +13,14 @@ public class AuthService : IAuthService
         _userRepository = userRepository;
         _jwtService = jwtService;
     }
+
+    public async Task<string?> LoginAsync(string email, string password)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+        if (user == null) return null;
+
+        if (user.Password_Hash != password) return null;
+
+        return _jwtService.GenerateToken(user);
+    }
 }

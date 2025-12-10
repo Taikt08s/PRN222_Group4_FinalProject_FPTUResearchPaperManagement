@@ -22,7 +22,7 @@ namespace DataAccessLayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BusinessObject.DashboardCache", b =>
+            modelBuilder.Entity("BusinessObject.Models.DashboardCache", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("DashboardCaches");
                 });
 
-            modelBuilder.Entity("BusinessObject.ReviewLog", b =>
+            modelBuilder.Entity("BusinessObject.Models.ReviewLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,7 +96,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("ReviewLogs");
                 });
 
-            modelBuilder.Entity("BusinessObject.Semester", b =>
+            modelBuilder.Entity("BusinessObject.Models.Semester", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -120,9 +120,35 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Semesters");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            End_Date = new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Start_Date = new DateTime(2025, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Term = "Fall 2025",
+                            Year = 2025
+                        },
+                        new
+                        {
+                            Id = 2,
+                            End_Date = new DateTime(2026, 4, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Start_Date = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Term = "Spring 2026",
+                            Year = 2026
+                        },
+                        new
+                        {
+                            Id = 3,
+                            End_Date = new DateTime(2026, 8, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Start_Date = new DateTime(2026, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Term = "Summer 2026",
+                            Year = 2026
+                        });
                 });
 
-            modelBuilder.Entity("BusinessObject.StudentGroup", b =>
+            modelBuilder.Entity("BusinessObject.Models.StudentGroup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,7 +174,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("StudentGroups");
                 });
 
-            modelBuilder.Entity("BusinessObject.StudentGroupMember", b =>
+            modelBuilder.Entity("BusinessObject.Models.StudentGroupMember", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -174,7 +200,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("StudentGroupMembers");
                 });
 
-            modelBuilder.Entity("BusinessObject.Submission", b =>
+            modelBuilder.Entity("BusinessObject.Models.Submission", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -222,7 +248,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("Submissions");
                 });
 
-            modelBuilder.Entity("BusinessObject.SubmissionFile", b =>
+            modelBuilder.Entity("BusinessObject.Models.SubmissionFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -255,7 +281,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("SubmissionFiles");
                 });
 
-            modelBuilder.Entity("BusinessObject.SuspensionRecord", b =>
+            modelBuilder.Entity("BusinessObject.Models.SuspensionRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -293,7 +319,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("SuspensionRecords");
                 });
 
-            modelBuilder.Entity("BusinessObject.ThesisModeration", b =>
+            modelBuilder.Entity("BusinessObject.Models.ThesisModeration", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -353,7 +379,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("ThesisModerations");
                 });
 
-            modelBuilder.Entity("BusinessObject.Topic", b =>
+            modelBuilder.Entity("BusinessObject.Models.Topic", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -392,9 +418,44 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("Semester_Id");
 
                     b.ToTable("Topics");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Created_By = new Guid("aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaa1"),
+                            Deadline_Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Đo lường vốn từ vựng phái sinh của sinh viên học tiếng Anh như một ngoại ngữ bằng bài kiểm tra không có ngữ cảnh",
+                            Is_Group_Required = false,
+                            Major = "Ngôn Ngữ Anh",
+                            Semester_Id = 1,
+                            Title = "Measuring Vietnamese EFL learners’ productive derivative knowledge in a decontextualized test format"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Created_By = new Guid("aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaa1"),
+                            Deadline_Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Gọi ngẫu nhiên, làm việc nhóm và kiểm tra trắc nghiệm trực tuyến trong vai trò dự báo lo âu trong lớp học tiếng Anh dự bị (ENT) tại Trường Đại học FPT",
+                            Is_Group_Required = false,
+                            Major = "Ngôn Ngữ Anh",
+                            Semester_Id = 1,
+                            Title = "Predictors of Classroom Anxiety in General English (ENT) classes at FPT University"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Created_By = new Guid("aaaaaaa2-aaaa-aaaa-aaaa-aaaaaaaaaaa2"),
+                            Deadline_Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "HomePlus - Cổng dịch vụ sống thông minh cho cư dân",
+                            Is_Group_Required = true,
+                            Major = "Kỹ Thuật Phần Mềm",
+                            Semester_Id = 1,
+                            Title = "HomePlus- Smart Living Services Portal for Apartment Residents"
+                        });
                 });
 
-            modelBuilder.Entity("BusinessObject.User", b =>
+            modelBuilder.Entity("BusinessObject.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -435,11 +496,178 @@ namespace DataAccessLayer.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6148),
+                            Email = "admin@fpt.edu.vn",
+                            Full_Name = "Administrator",
+                            Is_Suspended = false,
+                            Major = "System Administrator",
+                            Password_Hash = "1",
+                            Role = "Administrator"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6152),
+                            Email = "anh@fpt.edu.vn",
+                            Full_Name = "Nguyen Van Anh",
+                            Is_Suspended = false,
+                            Major = "Ngôn Ngữ Anh",
+                            Password_Hash = "1",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6155),
+                            Email = "bao@fpt.edu.vn",
+                            Full_Name = "Nguyen Van Bao",
+                            Is_Suspended = false,
+                            Major = "Ngôn Ngữ Anh",
+                            Password_Hash = "1",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            Id = new Guid("44444444-4444-4444-4444-444444444444"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6157),
+                            Email = "cam@fpt.edu.vn",
+                            Full_Name = "Le Thi Cam",
+                            Is_Suspended = false,
+                            Major = "Quản Trị Kinh Doanh",
+                            Password_Hash = "1",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            Id = new Guid("55555555-5555-5555-5555-555555555555"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6159),
+                            Email = "duc@fpt.edu.vn",
+                            Full_Name = "Tran Minh Duc",
+                            Is_Suspended = false,
+                            Major = "Quản Trị Kinh Doanh",
+                            Password_Hash = "1",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            Id = new Guid("66666666-6666-6666-6666-666666666666"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6162),
+                            Email = "huy@fpt.edu.vn",
+                            Full_Name = "Pham Quoc Huy",
+                            Is_Suspended = false,
+                            Major = "Kỹ Thuật Phần Mềm",
+                            Password_Hash = "1",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            Id = new Guid("77777777-7777-7777-7777-777777777777"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6165),
+                            Email = "khanh@fpt.edu.vn",
+                            Full_Name = "Vo Thi Khanh",
+                            Is_Suspended = false,
+                            Major = "Kỹ Thuật Phần Mềm",
+                            Password_Hash = "1",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            Id = new Guid("88888888-8888-8888-8888-888888888888"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6167),
+                            Email = "lam@fpt.edu.vn",
+                            Full_Name = "Nguyen Hoang Lam",
+                            Is_Suspended = false,
+                            Major = "Kỹ Thuật Phần Mềm",
+                            Password_Hash = "1",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            Id = new Guid("99999999-9999-9999-9999-999999999999"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6169),
+                            Email = "my@fpt.edu.vn",
+                            Full_Name = "Tran Thi My",
+                            Is_Suspended = false,
+                            Major = "Kỹ Thuật Phần Mềm",
+                            Password_Hash = "1",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaa1"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6171),
+                            Email = "son.instructor@fpt.edu.vn",
+                            Full_Name = "Pham Thanh Son",
+                            Is_Suspended = false,
+                            Major = "Teacher",
+                            Password_Hash = "1",
+                            Role = "Instructor"
+                        },
+                        new
+                        {
+                            Id = new Guid("aaaaaaa2-aaaa-aaaa-aaaa-aaaaaaaaaaa2"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6173),
+                            Email = "ha.instructor@fpt.edu.vn",
+                            Full_Name = "Le Thi Ha",
+                            Is_Suspended = false,
+                            Major = "Teacher",
+                            Password_Hash = "1",
+                            Role = "Instructor"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbb1-bbbb-bbbb-bbbb-bbbbbbbbbbb1"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6204),
+                            Email = "tri.committee@fpt.edu.vn",
+                            Full_Name = "Nguyen Minh Tri",
+                            Is_Suspended = false,
+                            Major = "Teacher",
+                            Password_Hash = "1",
+                            Role = "GraduationProjectEvaluationCommitteeMember"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbb2-bbbb-bbbb-bbbb-bbbbbbbbbbb2"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6206),
+                            Email = "thu.committee@fpt.edu.vn",
+                            Full_Name = "Tran Hoai Thu",
+                            Is_Suspended = false,
+                            Major = "Teacher",
+                            Password_Hash = "1",
+                            Role = "GraduationProjectEvaluationCommitteeMember"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbb3-bbbb-bbbb-bbbb-bbbbbbbbbbb3"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6209),
+                            Email = "duy.committee@fpt.edu.vn",
+                            Full_Name = "Vo Quoc Duy",
+                            Is_Suspended = false,
+                            Major = "Teacher",
+                            Password_Hash = "1",
+                            Role = "GraduationProjectEvaluationCommitteeMember"
+                        },
+                        new
+                        {
+                            Id = new Guid("bbbbbbb4-bbbb-bbbb-bbbb-bbbbbbbbbbb4"),
+                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6211),
+                            Email = "yen.committee@fpt.edu.vn",
+                            Full_Name = "Pham Thi Yen",
+                            Is_Suspended = false,
+                            Major = "Teacher",
+                            Password_Hash = "1",
+                            Role = "GraduationProjectEvaluationCommitteeMember"
+                        });
                 });
 
-            modelBuilder.Entity("BusinessObject.DashboardCache", b =>
+            modelBuilder.Entity("BusinessObject.Models.DashboardCache", b =>
                 {
-                    b.HasOne("BusinessObject.Semester", "Semester")
+                    b.HasOne("BusinessObject.Models.Semester", "Semester")
                         .WithMany()
                         .HasForeignKey("Semester_Id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -448,15 +676,15 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Semester");
                 });
 
-            modelBuilder.Entity("BusinessObject.ReviewLog", b =>
+            modelBuilder.Entity("BusinessObject.Models.ReviewLog", b =>
                 {
-                    b.HasOne("BusinessObject.User", "Reviewer")
+                    b.HasOne("BusinessObject.Models.User", "Reviewer")
                         .WithMany()
                         .HasForeignKey("Reviewer_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Submission", "Submission")
+                    b.HasOne("BusinessObject.Models.Submission", "Submission")
                         .WithMany()
                         .HasForeignKey("Submission_Id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -467,15 +695,15 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Submission");
                 });
 
-            modelBuilder.Entity("BusinessObject.StudentGroup", b =>
+            modelBuilder.Entity("BusinessObject.Models.StudentGroup", b =>
                 {
-                    b.HasOne("BusinessObject.User", "Creator")
+                    b.HasOne("BusinessObject.Models.User", "Creator")
                         .WithMany("CreatedGroups")
                         .HasForeignKey("Created_By")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Topic", "Topic")
+                    b.HasOne("BusinessObject.Models.Topic", "Topic")
                         .WithMany("Groups")
                         .HasForeignKey("Topic_Id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -486,15 +714,15 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Topic");
                 });
 
-            modelBuilder.Entity("BusinessObject.StudentGroupMember", b =>
+            modelBuilder.Entity("BusinessObject.Models.StudentGroupMember", b =>
                 {
-                    b.HasOne("BusinessObject.StudentGroup", "Group")
+                    b.HasOne("BusinessObject.Models.StudentGroup", "Group")
                         .WithMany("Members")
                         .HasForeignKey("Group_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.User", "Student")
+                    b.HasOne("BusinessObject.Models.User", "Student")
                         .WithMany()
                         .HasForeignKey("Student_Id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -505,21 +733,21 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("BusinessObject.Submission", b =>
+            modelBuilder.Entity("BusinessObject.Models.Submission", b =>
                 {
-                    b.HasOne("BusinessObject.StudentGroup", "Group")
+                    b.HasOne("BusinessObject.Models.StudentGroup", "Group")
                         .WithMany()
                         .HasForeignKey("Group_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Semester", "Semester")
+                    b.HasOne("BusinessObject.Models.Semester", "Semester")
                         .WithMany()
                         .HasForeignKey("Semester_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Topic", "Topic")
+                    b.HasOne("BusinessObject.Models.Topic", "Topic")
                         .WithMany()
                         .HasForeignKey("Topic_Id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -532,9 +760,9 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Topic");
                 });
 
-            modelBuilder.Entity("BusinessObject.SubmissionFile", b =>
+            modelBuilder.Entity("BusinessObject.Models.SubmissionFile", b =>
                 {
-                    b.HasOne("BusinessObject.Submission", "Submission")
+                    b.HasOne("BusinessObject.Models.Submission", "Submission")
                         .WithMany("Files")
                         .HasForeignKey("Submission_Id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -543,15 +771,15 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Submission");
                 });
 
-            modelBuilder.Entity("BusinessObject.SuspensionRecord", b =>
+            modelBuilder.Entity("BusinessObject.Models.SuspensionRecord", b =>
                 {
-                    b.HasOne("BusinessObject.User", "Student")
+                    b.HasOne("BusinessObject.Models.User", "Student")
                         .WithMany()
                         .HasForeignKey("Student_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Submission", "Submission")
+                    b.HasOne("BusinessObject.Models.Submission", "Submission")
                         .WithMany()
                         .HasForeignKey("Submission_Id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -562,26 +790,26 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Submission");
                 });
 
-            modelBuilder.Entity("BusinessObject.ThesisModeration", b =>
+            modelBuilder.Entity("BusinessObject.Models.ThesisModeration", b =>
                 {
-                    b.HasOne("BusinessObject.Submission", "Submission")
+                    b.HasOne("BusinessObject.Models.Submission", "Submission")
                         .WithOne("Moderation")
-                        .HasForeignKey("BusinessObject.ThesisModeration", "Submission_Id")
+                        .HasForeignKey("BusinessObject.Models.ThesisModeration", "Submission_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Submission");
                 });
 
-            modelBuilder.Entity("BusinessObject.Topic", b =>
+            modelBuilder.Entity("BusinessObject.Models.Topic", b =>
                 {
-                    b.HasOne("BusinessObject.User", "Creator")
+                    b.HasOne("BusinessObject.Models.User", "Creator")
                         .WithMany("Topics")
                         .HasForeignKey("Created_By")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Semester", "Semester")
+                    b.HasOne("BusinessObject.Models.Semester", "Semester")
                         .WithMany("Topics")
                         .HasForeignKey("Semester_Id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -592,17 +820,17 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Semester");
                 });
 
-            modelBuilder.Entity("BusinessObject.Semester", b =>
+            modelBuilder.Entity("BusinessObject.Models.Semester", b =>
                 {
                     b.Navigation("Topics");
                 });
 
-            modelBuilder.Entity("BusinessObject.StudentGroup", b =>
+            modelBuilder.Entity("BusinessObject.Models.StudentGroup", b =>
                 {
                     b.Navigation("Members");
                 });
 
-            modelBuilder.Entity("BusinessObject.Submission", b =>
+            modelBuilder.Entity("BusinessObject.Models.Submission", b =>
                 {
                     b.Navigation("Files");
 
@@ -610,12 +838,12 @@ namespace DataAccessLayer.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BusinessObject.Topic", b =>
+            modelBuilder.Entity("BusinessObject.Models.Topic", b =>
                 {
                     b.Navigation("Groups");
                 });
 
-            modelBuilder.Entity("BusinessObject.User", b =>
+            modelBuilder.Entity("BusinessObject.Models.User", b =>
                 {
                     b.Navigation("CreatedGroups");
 

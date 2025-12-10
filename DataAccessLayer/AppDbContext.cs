@@ -154,7 +154,7 @@ namespace DataAccessLayer
                     Email = "admin@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.Administrator.ToString(),
-                    Major = "",
+                    Major = "System Administrator",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 },
@@ -165,7 +165,7 @@ namespace DataAccessLayer
                     Email = "anh@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.Student.ToString(),
-                    Major = "Ngôn ngữ Anh",
+                    Major = "Ngôn Ngữ Anh",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 },
@@ -176,7 +176,7 @@ namespace DataAccessLayer
                     Email = "bao@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.Student.ToString(),
-                    Major = "Ngôn ngữ Anh",
+                    Major = "Ngôn Ngữ Anh",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 },
@@ -187,7 +187,7 @@ namespace DataAccessLayer
                     Email = "cam@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.Student.ToString(),
-                    Major = "Quản trị kinh doanh",
+                    Major = "Quản Trị Kinh Doanh",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 },
@@ -198,7 +198,7 @@ namespace DataAccessLayer
                     Email = "duc@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.Student.ToString(),
-                    Major = "Quản trị kinh doanh",
+                    Major = "Quản Trị Kinh Doanh",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 },
@@ -253,7 +253,7 @@ namespace DataAccessLayer
                     Email = "son.instructor@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.Instructor.ToString(),
-                    Major = "",
+                    Major = "Teacher",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 },
@@ -264,7 +264,7 @@ namespace DataAccessLayer
                     Email = "ha.instructor@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.Instructor.ToString(),
-                    Major = "",
+                    Major = "Teacher",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 },
@@ -275,7 +275,7 @@ namespace DataAccessLayer
                     Email = "tri.committee@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.GraduationProjectEvaluationCommitteeMember.ToString(),
-                    Major = "",
+                    Major = "Teacher",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 },
@@ -286,7 +286,7 @@ namespace DataAccessLayer
                     Email = "thu.committee@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.GraduationProjectEvaluationCommitteeMember.ToString(),
-                    Major = "",
+                    Major = "Teacher",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 },
@@ -297,7 +297,7 @@ namespace DataAccessLayer
                     Email = "duy.committee@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.GraduationProjectEvaluationCommitteeMember.ToString(),
-                    Major = "",
+                    Major = "Teacher",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 },
@@ -308,7 +308,7 @@ namespace DataAccessLayer
                     Email = "yen.committee@fpt.edu.vn",
                     Password_Hash = "1",
                     Role = AccountRole.GraduationProjectEvaluationCommitteeMember.ToString(),
-                    Major = "",
+                    Major = "Teacher",
                     Is_Suspended = false,
                     Created_At = DateTime.UtcNow
                 }
@@ -349,6 +349,8 @@ namespace DataAccessLayer
                     Description =
                         "Đo lường vốn từ vựng phái sinh của sinh viên học tiếng Anh như một ngoại ngữ bằng bài kiểm tra không có ngữ cảnh",
                     Created_By = Guid.Parse("aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaa1"),
+                    Major = "Ngôn Ngữ Anh",
+                    Is_Group_Required = false,
                     Semester_Id = 1
                 },
                 new Topic
@@ -358,6 +360,8 @@ namespace DataAccessLayer
                     Description =
                         "Gọi ngẫu nhiên, làm việc nhóm và kiểm tra trắc nghiệm trực tuyến trong vai trò dự báo lo âu trong lớp học tiếng Anh dự bị (ENT) tại Trường Đại học FPT",
                     Created_By = Guid.Parse("aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaa1"),
+                    Major = "Ngôn Ngữ Anh",
+                    Is_Group_Required = false,
                     Semester_Id = 1
                 },
                 new Topic
@@ -366,6 +370,8 @@ namespace DataAccessLayer
                     Title = "HomePlus- Smart Living Services Portal for Apartment Residents",
                     Description = "HomePlus - Cổng dịch vụ sống thông minh cho cư dân",
                     Created_By = Guid.Parse("aaaaaaa2-aaaa-aaaa-aaaa-aaaaaaaaaaa2"),
+                    Major = "Kỹ Thuật Phần Mềm",
+                    Is_Group_Required = true,
                     Semester_Id = 1
                 }
             );

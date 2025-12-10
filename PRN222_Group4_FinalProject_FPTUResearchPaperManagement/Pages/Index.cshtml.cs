@@ -12,9 +12,9 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-
+            return RedirectToPage("/Authentication/Login");
         }
     }
 }

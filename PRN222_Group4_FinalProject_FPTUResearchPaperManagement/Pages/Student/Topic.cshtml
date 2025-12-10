@@ -1,0 +1,45 @@
+﻿@page
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student.TopicModel
+@{
+    ViewBag.ShowSidebar = true;
+    ViewBag.ActiveMenu = "Topic";
+}
+
+<div class="container-fluid bg-white rounded shadow-sm topic-container">
+
+    <div class="topic-inner">
+        <h2 class="mb-4">Danh Sách Đề Tài</h2>
+
+        @if (Model.Topics.Count == 0)
+        {
+            <p>Hiện chưa có đề tài nào cho chuyên ngành của bạn.</p>
+        }
+        else
+        {
+            <div class="row g-3">
+                @foreach (var t in Model.Topics)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100 shadow-sm topic-card">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">@t.Title</h5>
+
+                                <p class="card-text flex-grow-1">
+                                    <strong>Chuyên ngành:</strong> @t.Major<br />
+                                    <strong>Hạn cuối:</strong> @t.Deadline_Date.ToString("dd/MM/yyyy")<br />
+                                    <strong>Nhóm:</strong> @(t.Is_Group_Required ? "Cần nhóm" : "Làm cá nhân")
+                                </p>
+
+                                <a href="/Student/ChooseTopic?id=@t.Id"
+                                   class="btn choose-btn mt-auto">
+                                    Chọn đề tài
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+

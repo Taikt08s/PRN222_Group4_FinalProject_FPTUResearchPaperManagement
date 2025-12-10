@@ -3,24 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6DB46580-F81E-4507-A97C-6EEDACAEF242}|BusinessObject\\BusinessObject.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\businessobject\\models\\dashboardcache.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6DB46580-F81E-4507-A97C-6EEDACAEF242}|BusinessObject\\BusinessObject.csproj|solutionrelative:businessobject\\models\\dashboardcache.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\prn222_group4_finalproject_fpturesearchpapermanagement\\pages\\student\\topic.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|solutionrelative:prn222_group4_finalproject_fpturesearchpapermanagement\\pages\\student\\topic.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C050687B-A3A7-4FB8-9B2B-6CE0326720AE}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\dataaccesslayer\\dataaccesslayer.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{C050687B-A3A7-4FB8-9B2B-6CE0326720AE}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\dataaccesslayer.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\prn222_group4_finalproject_fpturesearchpapermanagement\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|solutionrelative:prn222_group4_finalproject_fpturesearchpapermanagement\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5F5047BA-F859-4CF1-B0EA-13F63376938B}|Repository\\Repository.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\repository\\repository.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{5F5047BA-F859-4CF1-B0EA-13F63376938B}|Repository\\Repository.csproj|solutionrelative:repository\\repository.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{C050687B-A3A7-4FB8-9B2B-6CE0326720AE}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\dataaccesslayer\\mappers\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C050687B-A3A7-4FB8-9B2B-6CE0326720AE}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\mappers\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C050687B-A3A7-4FB8-9B2B-6CE0326720AE}|DataAccessLayer\\DataAccessLayer.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\dataaccesslayer\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C050687B-A3A7-4FB8-9B2B-6CE0326720AE}|DataAccessLayer\\DataAccessLayer.csproj|solutionrelative:dataaccesslayer\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\prn222_group4_finalproject_fpturesearchpapermanagement\\pages\\student\\topic.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|solutionrelative:prn222_group4_finalproject_fpturesearchpapermanagement\\pages\\student\\topic.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\prn222_group4_finalproject_fpturesearchpapermanagement\\prn222_group4_finalproject_fpturesearchpapermanagement.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|solutionrelative:prn222_group4_finalproject_fpturesearchpapermanagement\\prn222_group4_finalproject_fpturesearchpapermanagement.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{1776C32E-5ABA-4FD0-8363-40DF45537CB3}|Service\\Service.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\service\\interfaces\\itopicservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1776C32E-5ABA-4FD0-8363-40DF45537CB3}|Service\\Service.csproj|solutionrelative:service\\interfaces\\itopicservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1776C32E-5ABA-4FD0-8363-40DF45537CB3}|Service\\Service.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\service\\topicservice.cs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1776C32E-5ABA-4FD0-8363-40DF45537CB3}|Service\\Service.csproj|solutionrelative:service\\topicservice.cs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\prn222_group4_finalproject_fpturesearchpapermanagement\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|solutionrelative:prn222_group4_finalproject_fpturesearchpapermanagement\\pages\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|c:\\users\\xtran\\onedrive\\desktop\\prn222_group4_finalproject_fpturesearchpapermanagement\\prn222_group4_finalproject_fpturesearchpapermanagement\\pages\\authentication\\login.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8CCB5135-34DD-4500-AB79-3BE034004F00}|PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj|solutionrelative:prn222_group4_finalproject_fpturesearchpapermanagement\\pages\\authentication\\login.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,34 +42,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 9,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Repository",
-              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Repository\\Repository.csproj",
-              "RelativeDocumentMoniker": "Repository\\Repository.csproj",
-              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Repository\\Repository.csproj",
-              "RelativeToolTip": "Repository\\Repository.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-12-09T17:13:11.791Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement",
-              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj",
-              "RelativeDocumentMoniker": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj",
-              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj",
-              "RelativeToolTip": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-12-09T17:03:37.383Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
@@ -68,41 +54,106 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DashboardCache.cs",
-              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\Models\\DashboardCache.cs",
-              "RelativeDocumentMoniker": "BusinessObject\\Models\\DashboardCache.cs",
-              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\BusinessObject\\Models\\DashboardCache.cs",
-              "RelativeToolTip": "BusinessObject\\Models\\DashboardCache.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAtAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Program.cs",
+              "RelativeDocumentMoniker": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Program.cs",
+              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Program.cs",
+              "RelativeToolTip": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Program.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAYwB4AAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-09T17:09:25.176Z",
+              "WhenOpened": "2025-12-10T17:39:00.497Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "DataAccessLayer.csproj",
-              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\DataAccessLayer\\DataAccessLayer.csproj",
-              "RelativeDocumentMoniker": "DataAccessLayer\\DataAccessLayer.csproj",
-              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\DataAccessLayer\\DataAccessLayer.csproj",
-              "RelativeToolTip": "DataAccessLayer\\DataAccessLayer.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-12-09T16:52:15.183Z",
+              "DocumentIndex": 2,
+              "Title": "MappingProfile.cs",
+              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\DataAccessLayer\\Mappers\\MappingProfile.cs",
+              "RelativeDocumentMoniker": "DataAccessLayer\\Mappers\\MappingProfile.cs",
+              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\DataAccessLayer\\Mappers\\MappingProfile.cs",
+              "RelativeToolTip": "DataAccessLayer\\Mappers\\MappingProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T17:39:25.029Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ITopicService.cs",
+              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Service\\Interfaces\\ITopicService.cs",
+              "RelativeDocumentMoniker": "Service\\Interfaces\\ITopicService.cs",
+              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Service\\Interfaces\\ITopicService.cs",
+              "RelativeToolTip": "Service\\Interfaces\\ITopicService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T17:35:20.018Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TopicService.cs.cs",
+              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Service\\TopicService.cs.cs",
+              "RelativeDocumentMoniker": "Service\\TopicService.cs.cs",
+              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Service\\TopicService.cs.cs",
+              "RelativeToolTip": "Service\\TopicService.cs.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T17:33:56.528Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAwwGgAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-10T16:53:27.844Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Login.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Authentication\\Login.cshtml.cs",
+              "RelativeDocumentMoniker": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Authentication\\Login.cshtml.cs",
+              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Authentication\\Login.cshtml.cs",
+              "RelativeToolTip": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Authentication\\Login.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-10T16:46:25.7Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "AppDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\DataAccessLayer\\AppDbContext.cs",
-              "RelativeDocumentMoniker": "DataAccessLayer\\AppDbContext.cs",
-              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\DataAccessLayer\\AppDbContext.cs",
-              "RelativeToolTip": "DataAccessLayer\\AppDbContext.cs",
-              "ViewState": "AgIAAHgAAAAAAAAAAAAwwIsAAABVAAAAAAAAAA==",
+              "Title": "Topic.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Student\\Topic.cshtml.cs",
+              "RelativeDocumentMoniker": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Student\\Topic.cshtml.cs",
+              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Student\\Topic.cshtml.cs",
+              "RelativeToolTip": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Student\\Topic.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-09T16:33:26.421Z",
+              "WhenOpened": "2025-12-10T16:45:34.501Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Topic.cshtml",
+              "DocumentMoniker": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Student\\Topic.cshtml",
+              "RelativeDocumentMoniker": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Student\\Topic.cshtml",
+              "ToolTip": "C:\\Users\\xtran\\OneDrive\\Desktop\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Student\\Topic.cshtml",
+              "RelativeToolTip": "PRN222_Group4_FinalProject_FPTUResearchPaperManagement\\Pages\\Student\\Topic.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-10T16:38:54.099Z",
               "EditorCaption": ""
             }
           ]

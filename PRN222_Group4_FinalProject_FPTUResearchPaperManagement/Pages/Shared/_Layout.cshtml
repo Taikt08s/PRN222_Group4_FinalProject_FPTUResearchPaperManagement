@@ -1,4 +1,14 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@{
+    string? userRoleString = User.FindFirst(ClaimTypes.Role)?.Value;
+
+    bool isAdmin = userRoleString == "Administrator";
+    bool isStudent = userRoleString == "Student";
+    bool isCommitteeMember = userRoleString == "GraduationProjectEvaluationCommitteeMember";
+    bool isInstructor = userRoleString == "Instructor";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,43 +19,87 @@
     <link rel="stylesheet" href="~/PRN222_Group4_FinalProject_FPTUResearchPaperManagement.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">PRN222_Group4_FinalProject_FPTUResearchPaperManagement</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    @if (ViewBag.ShowSidebar == true)
+    {
+        <!-- Dashboard Layout: Sidebar + Content Wrapper -->
+        <div class="dashboard-wrapper">
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-icon">
+                        <img src="https://cdn-icons-png.freepik.com/512/17985/17985864.png" alt="Avatar">
+                    </div>
+                    <h3 class="sidebar-title">@User.Identity?.Name</h3>
+                    <p class="sidebar-email">@User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value</p>
                 </div>
+
+                <ul class="sidebar-menu">
+                    @* Admin menu *@
+                    @if (isAdmin)
+                    {
+                        <li><a href="/Administrator/Dashboard" class="@(ViewBag.ActiveMenu == "Dashboard" ? "active" : "")">>📊Dashboard</a></li>
+                        <li><a href="/Administrator/Semester" class="@(ViewBag.ActiveMenu == "Semester" ? "active" : "")">📅 Quản lí kỳ</a></li>
+                        <li><a href="/Administrator/ThesisTopic" class="@(ViewBag.ActiveMenu == "ThesisTopic" ? "active" : "")">📝 Quản lí đề tài</a></li>
+                        <li><a href="/Administrator/User" class="@(ViewBag.ActiveMenu == "User" ? "active" : "")">👤 Quản lí người dùng</a></li>
+                    }
+
+                    @* Instructor menu *@
+                    else if (isCommitteeMember)
+                    {
+                        <li><a href="/Booking/Index" class="@(ViewBag.ActiveMenu == "Booking" ? "active" : "")">📝 Quản lí slot đặt chỗ</a></li>
+                    }
+                    else if (isStudent)
+                    {
+                        <li><a href="/Student/Topic" class="@(ViewBag.ActiveMenu == "Topic" ? "active" : "")">📝 Đề tài luận án</a></li>
+                    }
+
+                    @* Logout button at bottom *@
+                    <li><a href="/Authentication/Logout" class="sidebar-logout">Đăng xuất</a></li>
+                </ul>
+            </aside>
+
+            <!-- Page Content -->
+            <div class="dashboard-content">
+                @if (TempData["Message"] != null && TempData["Code"] == null)
+                {
+                    <div class="alert alert-success">@TempData["Message"]</div>
+                }
+                @if (TempData["Code"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["Code"]: @TempData["Message"]</div>
+                }
+                @RenderBody()
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+
+        </div>
+    }
+    else
+    {
+        <!-- Normal Layout for regular pages -->
+        <div class="container">
+            <main role="main" class="pb-3">
+                @if (TempData["Message"] != null && TempData["Code"] == null)
+                {
+                    <div class="alert alert-success">@TempData["Message"]</div>
+                }
+                @if (TempData["Code"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["Code"]: @TempData["Message"]</div>
+                }
+                @RenderBody()
+            </main>
+        </div>
+    }
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - PRN222_Group4_FinalProject_FPTUResearchPaperManagement - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2025 - Hệ thống quản lý các luận án tốt nghiệp ĐH FPT - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

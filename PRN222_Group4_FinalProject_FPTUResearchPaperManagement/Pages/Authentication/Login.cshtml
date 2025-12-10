@@ -1,0 +1,38 @@
+﻿@page
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Authentication.LoginModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/login.css" />
+
+<div class="login-wrapper">
+    <div class="login-box">
+
+        <!-- LEFT SIDE -->
+        <div class="login-left">
+            <h2>Chào mừng trở lại!</h2>
+            <p class="subtitle">Hãy đăng nhập để tiếp tục truy cập dữ liệu & thông tin.</p>
+
+            <form method="post" class="login-form">
+
+                <label>Email</label>
+                <input type="email" asp-for="Input.Email" placeholder="Nhập email của bạn" required />
+
+                <label>Mật khẩu</label>
+                <input type="password" asp-for="Input.Password" placeholder="Nhập mật khẩu" required />
+
+                <button type="submit" class="btn-login">Đăng nhập</button>
+
+                <span class="error">@Model.ErrorMessage</span>
+            </form>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="login-right">
+            <div class="abstract-bg"></div>
+        </div>
+
+    </div>
+</div>
