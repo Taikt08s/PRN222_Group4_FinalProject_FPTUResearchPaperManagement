@@ -351,6 +351,7 @@ namespace DataAccessLayer
                     Created_By = Guid.Parse("aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaa1"),
                     Major = "Ngôn Ngữ Anh",
                     Is_Group_Required = false,
+                    Status = TopicStatus.Created.ToString(),
                     SubmissionInstruction = "Students must upload their project files in PDF format to the correct assigned folder. " + "Each submission will be reviewed by the project supervisor and members of the board committee. " + "If the submission is rejected, the student must resubmit it before the deadline. Once the supervisor has approved the project or the secretary has confirmed it, or when the project deadline has passed, the student will no longer be able to modify or upload any files. " + "The system also checks for plagiarism; if plagiarism is detected, the student will be suspended." + "\n\nSinh viên phải upload file đồ án dưới dạng PDF vào đúng thư mục được chỉ định. " + "Mỗi bài nộp sẽ được giảng viên hướng dẫn và các thành viên hội đồng xét duyệt. " + "Nếu bài nộp bị từ chối, sinh viên phải điều chỉnh và nộp lại trước hạn chót. Khi giảng viên đã phê duyệt, hoặc thư ký đã xác nhận, hoặc khi hết hạn nộp bài, sinh viên sẽ không thể chỉnh sửa hoặc upload bất kỳ file nào khác. " + "Hệ thống cũng tự động kiểm tra đạo văn, nếu phát hiện đạo văn, sinh viên sẽ bị đình chỉ.",
                     Semester_Id = 1
                 },
@@ -363,6 +364,7 @@ namespace DataAccessLayer
                     Created_By = Guid.Parse("aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaa1"),
                     Major = "Ngôn Ngữ Anh",
                     Is_Group_Required = false,
+                    Status = TopicStatus.Created.ToString(),
                     SubmissionInstruction = "Students must upload their project files in PDF format to the correct assigned folder. " + "Each submission will be reviewed by the project supervisor and members of the board committee. " + "If the submission is rejected, the student must resubmit it before the deadline. Once the supervisor has approved the project or the secretary has confirmed it, or when the project deadline has passed, the student will no longer be able to modify or upload any files. " + "The system also checks for plagiarism; if plagiarism is detected, the student will be suspended." + "\n\nSinh viên phải upload file đồ án dưới dạng PDF vào đúng thư mục được chỉ định. " + "Mỗi bài nộp sẽ được giảng viên hướng dẫn và các thành viên hội đồng xét duyệt. " + "Nếu bài nộp bị từ chối, sinh viên phải điều chỉnh và nộp lại trước hạn chót. Khi giảng viên đã phê duyệt, hoặc thư ký đã xác nhận, hoặc khi hết hạn nộp bài, sinh viên sẽ không thể chỉnh sửa hoặc upload bất kỳ file nào khác. " + "Hệ thống cũng tự động kiểm tra đạo văn, nếu phát hiện đạo văn, sinh viên sẽ bị đình chỉ.",
                     Semester_Id = 1
                 },
@@ -374,6 +376,7 @@ namespace DataAccessLayer
                     Created_By = Guid.Parse("aaaaaaa2-aaaa-aaaa-aaaa-aaaaaaaaaaa2"),
                     Major = "Kỹ Thuật Phần Mềm",
                     Is_Group_Required = true,
+                    Status = TopicStatus.Created.ToString(),
                     SubmissionInstruction = "Students must upload their project files in PDF format to the correct assigned folder. " + "Each submission will be reviewed by the project supervisor and members of the board committee. " + "If the submission is rejected, the student must resubmit it before the deadline. Once the supervisor has approved the project or the secretary has confirmed it, or when the project deadline has passed, the student will no longer be able to modify or upload any files. " + "The system also checks for plagiarism; if plagiarism is detected, the student will be suspended." + "\n\nSinh viên phải upload file đồ án dưới dạng PDF vào đúng thư mục được chỉ định. " + "Mỗi bài nộp sẽ được giảng viên hướng dẫn và các thành viên hội đồng xét duyệt. " + "Nếu bài nộp bị từ chối, sinh viên phải điều chỉnh và nộp lại trước hạn chót. Khi giảng viên đã phê duyệt, hoặc thư ký đã xác nhận, hoặc khi hết hạn nộp bài, sinh viên sẽ không thể chỉnh sửa hoặc upload bất kỳ file nào khác. " + "Hệ thống cũng tự động kiểm tra đạo văn, nếu phát hiện đạo văn, sinh viên sẽ bị đình chỉ.",
                     Semester_Id = 1
                 }

@@ -23,6 +23,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<ITopicService, TopicService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddRazorPages();
 
 builder.Services.AddAutoMapper(cfg =>

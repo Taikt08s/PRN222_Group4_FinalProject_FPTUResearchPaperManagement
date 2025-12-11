@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BusinessObject.Models
+﻿namespace BusinessObject.Models
 {
     public class Topic
     {
@@ -19,6 +13,7 @@ namespace BusinessObject.Models
 
         public bool Is_Group_Required { get; set; }
         public DateTime Deadline_Date { get; set; }
+        public string Status { get; set; }
 
         // Navigation
         public Semester Semester { get; set; }

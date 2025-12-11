@@ -17,6 +17,8 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
 
         public List<TopicResponseModel> Topics { get; set; } = new();
 
+        public bool AlreadyHasTopic { get; set; }
+
         public async Task<IActionResult> OnGet()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -26,11 +28,15 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
                 return RedirectToPage("/Authentication/Login");
             }
 
+            Guid userIdConvert = Guid.Parse(userId);
+
             var major = User.FindFirst("major")?.Value;
             if (major == null)
                 return RedirectToPage("/Authentication/Login");
 
             Topics = await _topicService.GetTopicsForStudentAsync(major);
+
+            AlreadyHasTopic = await _topicService.StudentHasTopicAsync(userIdConvert);
 
             return Page();
         }

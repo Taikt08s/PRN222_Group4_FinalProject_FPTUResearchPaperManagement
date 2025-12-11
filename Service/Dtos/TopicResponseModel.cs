@@ -15,5 +15,6 @@
         public bool Is_Group_Required { get; set; }
         
         public string InstructorName { get; set; }
+        public string Status { get; set; }
     }
 }

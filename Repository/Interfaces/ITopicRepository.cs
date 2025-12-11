@@ -1,9 +1,4 @@
 ﻿using BusinessObject.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository.Interfaces
 {
@@ -12,5 +7,11 @@ namespace Repository.Interfaces
         Task<List<Topic>> GetTopicsByMajorAsync(string major);
 
         Task<Topic?> GetTopicByIdAsync(int id);
+
+        Task CreateGroupAsync(StudentGroup group);
+
+        Task<Topic> UpdateAsync(Topic topic);
+
+        Task<bool> StudentHasTopicAsync(Guid studentId);
     }
 }

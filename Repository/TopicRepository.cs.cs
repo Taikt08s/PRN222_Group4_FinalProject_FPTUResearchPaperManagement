@@ -29,5 +29,25 @@ namespace Repository
                 .Include(t => t.Semester)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
+
+        public async Task<Topic> UpdateAsync(Topic topic)
+        {
+            _context.Topics.Update(topic);
+            await _context.SaveChangesAsync();
+            return topic;
+        }
+
+        public async Task CreateGroupAsync(StudentGroup group)
+        {
+            await _context.StudentGroups.AddAsync(group);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> StudentHasTopicAsync(Guid studentId)
+        {
+            return await _context.StudentGroupMembers
+                .Include(x => x.Group)
+                .AnyAsync(x => x.Student_Id == studentId);
+        }
     }
 }

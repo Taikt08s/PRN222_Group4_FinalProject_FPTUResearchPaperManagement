@@ -9,5 +9,8 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Topic, TopicResponseModel>();
+        CreateMap<TopicRegistrationRequest, StudentGroup>();
+        CreateMap<User, StudentBasicInfo>();
+
     }
 }

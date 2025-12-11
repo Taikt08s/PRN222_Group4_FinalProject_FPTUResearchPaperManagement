@@ -1,10 +1,22 @@
 ﻿@page "{id:int}"
+@using System.Security.Claims
 @model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student.TopicDetail
 
 @{
     ViewBag.ShowSidebar = true;
     ViewBag.ActiveMenu = "Topic";
+    string currentEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
+    string currentFullName = User.FindFirst(ClaimTypes.Name)?.Value ?? "";
+    string currentMajor = User.FindFirst("major")?.Value ?? "";
 }
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/topic.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PRN222_Group4_FinalProject_FPTUResearchPaperManagement.styles.css" asp-append-version="true" />
+</head>
 
 <div class="container bg-white rounded shadow-sm p-4 mt-3">
 
@@ -30,30 +42,31 @@
                 <p>
                     <strong>Chuyên ngành:</strong> @Model.Topic.Major <br />
                     <strong>Học kỳ:</strong> @Model.Topic.SemesterTerm <br />
-                    <strong>Hạn cuối:</strong> @Model.Topic.Deadline_Date.ToString("dd/MM/yyyy") <br />
                     <strong>Nhóm:</strong> @(Model.Topic.Is_Group_Required ? "Cần nhóm" : "Làm cá nhân") <br />
                     @* <strong>Giảng viên phụ trách:</strong> @Model.InstructorName *@
                 </p>
-
-                <div class="mt-4">
-                    <a class="btn btn-primary"
-                       href="/Student/ChooseTopic?id=@Model.Topic.Id">
-                        Chọn đề tài
-                    </a>
-                </div>
             </div>
 
             <!-- RIGHT SIDE: Form -->
             <div class="col-md-6 ps-4">
 
                 <h5 class="mb-3">Nộp Thông Tin</h5>
-
+              
                 @if (Model.Topic.Is_Group_Required)
                 {
-                    <div class="alert alert-info">
-                        Đề tài này yêu cầu làm theo nhóm.
-                        (Tại đây bạn sẽ thêm UI nhóm sau)
+
+                    <div class="mb-3 position-relative">
+                        <label class="form-label">Tìm sinh viên theo email</label>
+                        <input id="studentSearch" type="text" class="form-control" placeholder="Nhập email sinh viên..." autocomplete="off" />
+
+                        <!-- Dropdown suggestion -->
+                        <ul id="searchResult" class="list-group position-absolute w-100" style="z-index: 1000; display:none;">
+                            <!-- Filled by JS -->
+                        </ul>
                     </div>
+
+                    <!-- Selected student card -->
+                    <div id="selectedStudentContainer"></div>
                 }
                 else
                 {
@@ -62,15 +75,26 @@
                     </div>
                 }
 
-                <form method="post">
-                    <div class="mb-3">
-                        <label class="form-label">Ghi chú của bạn</label>
-                        <textarea class="form-control" rows="4"></textarea>
+                @if (!ViewContext.ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger p-2 m-0 mt-2" style="font-size: 0.85rem; line-height: 1.1;">
+                        <ul class="mb-0 ps-3">
+                            @foreach (var error in ViewContext.ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li class="py-0 my-0">@error.ErrorMessage</li>
+                            }
+                        </ul>
                     </div>
+                }
 
-                    <button class="btn btn-success">
-                        Gửi đăng ký
-                    </button>
+                <form method="post" id="topicRegistrationForm">
+                    <div class="mt-2">
+                        <input type="hidden" name="Registration.TopicId" value="@Model.Topic.Id" />
+                        @* <input type="hidden" name="Registration.MemberIds" id="memberIds" /> *@
+                        <button type="button" class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                            Gửi đăng ký
+                        </button>
+                    </div>
                 </form>
 
             </div>
@@ -80,4 +104,211 @@
     {
         <p>Không tìm thấy đề tài.</p>
     }
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Xác nhận đăng ký đề tài</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn gửi đăng ký đề tài này không?</p>
+
+                    <ul class="list-group small">
+                        <li class="list-group-item">
+                            <strong>Đề tài:</strong> @Model.Topic.Title
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Loại:</strong> @(Model.Topic.Is_Group_Required ? "Làm theo nhóm" : "Làm cá nhân")
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Số thành viên:</strong> <span id="memberCountPreview"></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+
+                    <!-- REAL submit -->
+                    <button id="confirmSubmitBtn" class="btn btn-success">
+                        Xác nhận gửi
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    const selectedMembers = [];
+    const searchBox = document.getElementById("studentSearch");
+    const resultList = document.getElementById("searchResult");
+    const selectedContainer = document.getElementById("selectedStudentContainer");
+
+    // Team size rules
+    const MIN_MEMBERS = 4;
+    const MAX_MEMBERS = 5;
+
+    // Track selected emails
+    const selectedEmails = new Set();
+
+        function decodeHtml(html) {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    }
+
+
+    // ---------- 1) ADD CURRENT USER AS DEFAULT LEADER ----------
+    const currentUser = {
+        email: "@currentEmail",
+        full_Name: "@currentFullName",
+        major: decodeHtml("@currentMajor")
+    };
+
+    addLeaderCard(currentUser);
+    selectedEmails.add(currentUser.email);
+
+    function addLeaderCard(user) {
+        const div = document.createElement("div");
+        div.className = "member-card bg-light border border-warning d-flex justify-content-between";
+
+        div.innerHTML = `
+            <div>
+                <strong>${user.full_Name}</strong>
+                <span class="badge bg-warning text-dark ms-2">⭐ Nhóm trưởng</span><br>
+                Email: ${user.email}<br>
+                Chuyên ngành: ${user.major}
+            </div>
+        `;
+
+        selectedContainer.appendChild(div);
+    }
+
+    // ---------- 2) SEARCH STUDENT ----------
+    searchBox.addEventListener("input", async function () {
+        const keyword = this.value.trim();
+        if (keyword.length < 3) {
+            resultList.style.display = "none";
+            return;
+        }
+
+        const response = await fetch(`?handler=FindStudent&email=${keyword}`);
+        const student = await response.json();
+
+        resultList.innerHTML = "";
+
+        if (!student) {
+            resultList.style.display = "none";
+            return;
+        }
+
+        const li = document.createElement("li");
+        li.className = "list-group-item list-group-item-action";
+        li.innerHTML = `<strong>${student.email}</strong> — ${student.full_Name}`;
+        li.onclick = () => selectStudent(student);
+        resultList.appendChild(li);
+
+        resultList.style.display = "block";
+    });
+
+    // ---------- 3) ADD MEMBER ----------
+       function selectStudent(student) {
+        resultList.style.display = "none";
+        searchBox.value = "";
+
+        if (selectedEmails.size >= MAX_MEMBERS) {
+            showWarning(`Nhóm tối đa ${MAX_MEMBERS} thành viên (bao gồm nhóm trưởng).`);
+            return;
+        }
+
+        if (selectedEmails.has(student.email)) {
+            showWarning("Sinh viên này đã trong nhóm.");
+            return;
+        }
+
+        if (student.major !== currentUser.major) {
+        showWarning("Chỉ được thêm sinh viên cùng chuyên ngành.");
+        return;
+    }
+
+        selectedEmails.add(student.email);
+        selectedMembers.push(student);
+
+        const div = document.createElement("div");
+        div.className = "member-card alert alert-info border d-flex justify-content-between align-items-start";
+
+        div.innerHTML = `
+            <div>
+                <strong>${student.full_Name}</strong><br>
+                <span>Email: ${student.email}</span><br>
+                <span>Chuyên ngành: ${student.major}</span>
+            </div>
+            <button type="button" class="btn-close ms-2"></button>
+        `;
+
+        div.querySelector(".btn-close").onclick = () => {
+        selectedEmails.delete(student.email);
+        const index = selectedMembers.findIndex(s => s.email === student.email);
+        if (index > -1) selectedMembers.splice(index, 1);
+        div.remove();
+    };
+
+        selectedContainer.appendChild(div);
+    }
+
+    // ---------- 4) WARNING MESSAGE ----------
+    function showWarning(message) {
+        let warning = document.getElementById("warningMessage");
+
+        if (!warning) {
+            warning = document.createElement("div");
+            warning.id = "warningMessage";
+            warning.className = "alert alert-warning mt-2";
+            searchBox.parentNode.appendChild(warning);
+        }
+
+        warning.textContent = message;
+
+        setTimeout(() => {
+            if (warning) warning.remove();
+        }, 2500);
+    }
+
+    const form = document.getElementById("topicRegistrationForm");
+
+        form.addEventListener("submit", function () {
+        document.querySelectorAll(".member-id-input").forEach(e => e.remove());
+
+        selectedMembers
+            .filter(s => s.email !== currentUser.email) 
+            .forEach((s, index) => {
+
+                let input = document.createElement("input");
+                input.type = "hidden";
+                input.classList.add("member-id-input");
+                input.name = `Registration.MemberIds[${index}]`;
+                input.value = s.id; // must be GUID
+                form.appendChild(input);
+            });
+    });
+
+    const confirmSubmitBtn = document.getElementById("confirmSubmitBtn");
+
+    // Update member count in modal each time user opens it
+    const confirmModal = document.getElementById("confirmModal");
+    confirmModal.addEventListener('show.bs.modal', () => {
+        document.getElementById("memberCountPreview").textContent = selectedEmails.size;
+    });
+
+    // Submit the form after confirmation
+    confirmSubmitBtn.addEventListener("click", () => {
+        document.getElementById("topicRegistrationForm").requestSubmit();
+    });
+</script>

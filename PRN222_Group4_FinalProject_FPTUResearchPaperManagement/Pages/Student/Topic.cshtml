@@ -9,37 +9,51 @@
 
     <div class="topic-inner">
         <h3 class="mb-4">Danh Sách Đề Tài</h3>
-
         @if (Model.Topics.Count == 0)
         {
-            <p>Hiện chưa có đề tài nào cho chuyên ngành của bạn.</p>
-        }
-        else
-        {
-            <div class="row g-3">
-                @foreach (var t in Model.Topics)
-                {
-                    <div class="col-md-3 mb-4">
-                        <div class="card h-100 shadow-sm topic-card">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">@t.Title</h5>
+            <div class="text-center my-5">
+                <img src="~/assets/empty_box.png"
+                     asp-append-version="true"
+                     style="width:150px; height:auto; opacity:0.8;" />
+                <p class="mt-3 text-muted">Hiện chưa có đề tài nào.</p>
+            </div>
+        }else
+            {
+                <div class="row g-3">
+                    @foreach (var t in Model.Topics.Where(x => x.Status == "Created"))
+                    {
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100 shadow-sm topic-card">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">@t.Title</h5>
 
-                                <p class="card-text flex-grow-1">
-                                    <strong>Chuyên ngành:</strong> @t.Major<br />
-                                    <strong>Học kỳ:</strong> @t.SemesterTerm <br />
-                                    <strong>Nhóm:</strong> @(t.Is_Group_Required ? "Cần nhóm" : "Làm cá nhân")
-                                </p>
+                                    <p class="card-text flex-grow-1">
+                                        <strong>Chuyên ngành:</strong> @t.Major<br />
+                                        <strong>Học kỳ:</strong> @t.SemesterTerm <br />
+                                        <strong>Nhóm:</strong> @(t.Is_Group_Required ? "Cần nhóm" : "Làm cá nhân")
+                                    </p>
 
-                                <a href="/Student/TopicDetail/@t.Id"
-                                   class="btn choose-btn mt-auto">
-                                    Chọn đề tài
-                                </a>
+                                @if (Model.AlreadyHasTopic)
+                                {
+                                    <button class="btn btn-secondary mt-auto" disabled>
+                                        Đã chọn đề tài
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a href="/Student/TopicDetail/@t.Id"
+                                       class="btn choose-btn mt-auto">
+                                        Chọn đề tài
+                                    </a>
+                                }
+
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
-        }
+                    }
+                </div>
+            }
+       
     </div>
 </div>
 

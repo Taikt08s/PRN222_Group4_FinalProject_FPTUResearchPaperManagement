@@ -7,5 +7,9 @@ namespace Service.Interfaces
         Task<List<TopicResponseModel>> GetTopicsForStudentAsync(string major);
         
         Task<TopicResponseModel?> GetTopicByIdAsync(int id);
+
+        Task<(bool Success, string Error)> TopicRegistrationAsync(TopicRegistrationRequest req);
+
+        Task<bool> StudentHasTopicAsync(Guid studentId);
     }
 }
