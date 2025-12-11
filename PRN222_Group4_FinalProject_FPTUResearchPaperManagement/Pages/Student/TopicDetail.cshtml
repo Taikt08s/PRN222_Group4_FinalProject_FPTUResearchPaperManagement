@@ -1,0 +1,41 @@
+﻿@page "{id:int}"
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student.TopicDetail
+@{
+    ViewBag.ShowSidebar = true;
+    ViewBag.ActiveMenu = "Topic";
+}
+
+<div class="container bg-white rounded shadow-sm p-4 mt-3">
+
+    <h3 class="mb-4">Chi Tiết Đề Tài</h3>
+
+    @if (Model.Topic != null)
+    {
+        <div>
+            <h4>@Model.Topic.Title</h4>
+
+            <p><strong>Mô tả:</strong> @Model.Topic.Description</p>
+            <p><strong>Mô tả:</strong> @Model.Topic.SubmissionInstruction</p>
+
+            <p>
+                <strong>Chuyên ngành:</strong> @Model.Topic.Major <br/>
+                <strong>Học kỳ:</strong> @Model.Topic.SemesterTerm <br/>
+                <strong>Hạn cuối:</strong> @Model.Topic.Deadline_Date.ToString("dd/MM/yyyy") <br/>
+                <strong>Nhóm:</strong> @(Model.Topic.Is_Group_Required ? "Cần nhóm" : "Làm cá nhân")
+            </p>
+
+            <div class="mt-4">
+                <a class="btn btn-secondary" href="/Student/Topic">Quay lại danh sách</a>
+
+                <a class="btn btn-primary ms-2"
+                   href="/Student/ChooseTopic?id=@Model.Topic.Id">
+                    Chọn đề tài
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>Không tìm thấy đề tài.</p>
+    }
+</div>

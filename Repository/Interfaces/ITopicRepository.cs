@@ -10,5 +10,7 @@ namespace Repository.Interfaces
     public interface ITopicRepository
     {
         Task<List<Topic>> GetTopicsByMajorAsync(string major);
+
+        Task<Topic?> GetTopicByIdAsync(int id);
     }
 }

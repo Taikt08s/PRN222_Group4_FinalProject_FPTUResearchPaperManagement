@@ -2,11 +2,6 @@
 using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -23,7 +18,15 @@ namespace Repository
         {
             return await _context.Topics
                 .Where(t => t.Major == major)
+                .Include(t => t.Semester)
                 .ToListAsync();
+        }
+        
+        public async Task<Topic?> GetTopicByIdAsync(int id)
+        {
+            return await _context.Topics
+                .Include(t => t.Semester)
+                .FirstOrDefaultAsync(t => t.Id == id);
         }
     }
 }

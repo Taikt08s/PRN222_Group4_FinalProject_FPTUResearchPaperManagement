@@ -8,7 +8,7 @@
 <div class="container-fluid bg-white rounded shadow-sm topic-container">
 
     <div class="topic-inner">
-        <h2 class="mb-4">Danh Sách Đề Tài</h2>
+        <h3 class="mb-4">Danh Sách Đề Tài</h3>
 
         @if (Model.Topics.Count == 0)
         {
@@ -26,11 +26,11 @@
 
                                 <p class="card-text flex-grow-1">
                                     <strong>Chuyên ngành:</strong> @t.Major<br />
-                                    <strong>Hạn cuối:</strong> @t.Deadline_Date.ToString("dd/MM/yyyy")<br />
+                                    <strong>Học kỳ:</strong> @t.SemesterTerm <br />
                                     <strong>Nhóm:</strong> @(t.Is_Group_Required ? "Cần nhóm" : "Làm cá nhân")
                                 </p>
 
-                                <a href="/Student/ChooseTopic?id=@t.Id"
+                                <a href="/Student/TopicDetail/@t.Id"
                                    class="btn choose-btn mt-auto">
                                     Chọn đề tài
                                 </a>

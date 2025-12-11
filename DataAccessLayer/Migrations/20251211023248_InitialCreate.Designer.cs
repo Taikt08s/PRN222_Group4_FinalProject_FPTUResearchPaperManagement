@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251210055417_InitialCreate")]
+    [Migration("20251211023248_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -410,6 +410,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<int>("Semester_Id")
                         .HasColumnType("int");
 
+                    b.Property<string>("SubmissionInstruction")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -432,6 +436,7 @@ namespace DataAccessLayer.Migrations
                             Is_Group_Required = false,
                             Major = "Ngôn Ngữ Anh",
                             Semester_Id = 1,
+                            SubmissionInstruction = "Students must upload their project files in PDF format to the correct assigned folder. Each submission will be reviewed by the project supervisor and members of the board committee. If the submission is rejected, the student must resubmit it before the deadline. Once the supervisor has approved the project or the secretary has confirmed it, or when the project deadline has passed, the student will no longer be able to modify or upload any files. The system also checks for plagiarism; if plagiarism is detected, the student will be suspended.\n\nSinh viên phải upload file đồ án dưới dạng PDF vào đúng thư mục được chỉ định. Mỗi bài nộp sẽ được giảng viên hướng dẫn và các thành viên hội đồng xét duyệt. Nếu bài nộp bị từ chối, sinh viên phải điều chỉnh và nộp lại trước hạn chót. Khi giảng viên đã phê duyệt, hoặc thư ký đã xác nhận, hoặc khi hết hạn nộp bài, sinh viên sẽ không thể chỉnh sửa hoặc upload bất kỳ file nào khác. Hệ thống cũng tự động kiểm tra đạo văn, nếu phát hiện đạo văn, sinh viên sẽ bị đình chỉ.",
                             Title = "Measuring Vietnamese EFL learners’ productive derivative knowledge in a decontextualized test format"
                         },
                         new
@@ -443,6 +448,7 @@ namespace DataAccessLayer.Migrations
                             Is_Group_Required = false,
                             Major = "Ngôn Ngữ Anh",
                             Semester_Id = 1,
+                            SubmissionInstruction = "Students must upload their project files in PDF format to the correct assigned folder. Each submission will be reviewed by the project supervisor and members of the board committee. If the submission is rejected, the student must resubmit it before the deadline. Once the supervisor has approved the project or the secretary has confirmed it, or when the project deadline has passed, the student will no longer be able to modify or upload any files. The system also checks for plagiarism; if plagiarism is detected, the student will be suspended.\n\nSinh viên phải upload file đồ án dưới dạng PDF vào đúng thư mục được chỉ định. Mỗi bài nộp sẽ được giảng viên hướng dẫn và các thành viên hội đồng xét duyệt. Nếu bài nộp bị từ chối, sinh viên phải điều chỉnh và nộp lại trước hạn chót. Khi giảng viên đã phê duyệt, hoặc thư ký đã xác nhận, hoặc khi hết hạn nộp bài, sinh viên sẽ không thể chỉnh sửa hoặc upload bất kỳ file nào khác. Hệ thống cũng tự động kiểm tra đạo văn, nếu phát hiện đạo văn, sinh viên sẽ bị đình chỉ.",
                             Title = "Predictors of Classroom Anxiety in General English (ENT) classes at FPT University"
                         },
                         new
@@ -454,6 +460,7 @@ namespace DataAccessLayer.Migrations
                             Is_Group_Required = true,
                             Major = "Kỹ Thuật Phần Mềm",
                             Semester_Id = 1,
+                            SubmissionInstruction = "Students must upload their project files in PDF format to the correct assigned folder. Each submission will be reviewed by the project supervisor and members of the board committee. If the submission is rejected, the student must resubmit it before the deadline. Once the supervisor has approved the project or the secretary has confirmed it, or when the project deadline has passed, the student will no longer be able to modify or upload any files. The system also checks for plagiarism; if plagiarism is detected, the student will be suspended.\n\nSinh viên phải upload file đồ án dưới dạng PDF vào đúng thư mục được chỉ định. Mỗi bài nộp sẽ được giảng viên hướng dẫn và các thành viên hội đồng xét duyệt. Nếu bài nộp bị từ chối, sinh viên phải điều chỉnh và nộp lại trước hạn chót. Khi giảng viên đã phê duyệt, hoặc thư ký đã xác nhận, hoặc khi hết hạn nộp bài, sinh viên sẽ không thể chỉnh sửa hoặc upload bất kỳ file nào khác. Hệ thống cũng tự động kiểm tra đạo văn, nếu phát hiện đạo văn, sinh viên sẽ bị đình chỉ.",
                             Title = "HomePlus- Smart Living Services Portal for Apartment Residents"
                         });
                 });
@@ -504,7 +511,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6148),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8346),
                             Email = "admin@fpt.edu.vn",
                             Full_Name = "Administrator",
                             Is_Suspended = false,
@@ -515,7 +522,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6152),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8351),
                             Email = "anh@fpt.edu.vn",
                             Full_Name = "Nguyen Van Anh",
                             Is_Suspended = false,
@@ -526,7 +533,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("33333333-3333-3333-3333-333333333333"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6155),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8353),
                             Email = "bao@fpt.edu.vn",
                             Full_Name = "Nguyen Van Bao",
                             Is_Suspended = false,
@@ -537,7 +544,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("44444444-4444-4444-4444-444444444444"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6157),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8355),
                             Email = "cam@fpt.edu.vn",
                             Full_Name = "Le Thi Cam",
                             Is_Suspended = false,
@@ -548,7 +555,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("55555555-5555-5555-5555-555555555555"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6159),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8357),
                             Email = "duc@fpt.edu.vn",
                             Full_Name = "Tran Minh Duc",
                             Is_Suspended = false,
@@ -559,7 +566,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("66666666-6666-6666-6666-666666666666"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6162),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8359),
                             Email = "huy@fpt.edu.vn",
                             Full_Name = "Pham Quoc Huy",
                             Is_Suspended = false,
@@ -570,7 +577,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("77777777-7777-7777-7777-777777777777"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6165),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8361),
                             Email = "khanh@fpt.edu.vn",
                             Full_Name = "Vo Thi Khanh",
                             Is_Suspended = false,
@@ -581,7 +588,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("88888888-8888-8888-8888-888888888888"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6167),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8363),
                             Email = "lam@fpt.edu.vn",
                             Full_Name = "Nguyen Hoang Lam",
                             Is_Suspended = false,
@@ -592,7 +599,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("99999999-9999-9999-9999-999999999999"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6169),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8365),
                             Email = "my@fpt.edu.vn",
                             Full_Name = "Tran Thi My",
                             Is_Suspended = false,
@@ -603,7 +610,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaa1"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6171),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8367),
                             Email = "son.instructor@fpt.edu.vn",
                             Full_Name = "Pham Thanh Son",
                             Is_Suspended = false,
@@ -614,7 +621,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("aaaaaaa2-aaaa-aaaa-aaaa-aaaaaaaaaaa2"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6173),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8369),
                             Email = "ha.instructor@fpt.edu.vn",
                             Full_Name = "Le Thi Ha",
                             Is_Suspended = false,
@@ -625,7 +632,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("bbbbbbb1-bbbb-bbbb-bbbb-bbbbbbbbbbb1"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6204),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8371),
                             Email = "tri.committee@fpt.edu.vn",
                             Full_Name = "Nguyen Minh Tri",
                             Is_Suspended = false,
@@ -636,7 +643,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("bbbbbbb2-bbbb-bbbb-bbbb-bbbbbbbbbbb2"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6206),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8373),
                             Email = "thu.committee@fpt.edu.vn",
                             Full_Name = "Tran Hoai Thu",
                             Is_Suspended = false,
@@ -647,7 +654,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("bbbbbbb3-bbbb-bbbb-bbbb-bbbbbbbbbbb3"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6209),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8375),
                             Email = "duy.committee@fpt.edu.vn",
                             Full_Name = "Vo Quoc Duy",
                             Is_Suspended = false,
@@ -658,7 +665,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("bbbbbbb4-bbbb-bbbb-bbbb-bbbbbbbbbbb4"),
-                            Created_At = new DateTime(2025, 12, 10, 5, 54, 17, 167, DateTimeKind.Utc).AddTicks(6211),
+                            Created_At = new DateTime(2025, 12, 11, 2, 32, 48, 606, DateTimeKind.Utc).AddTicks(8377),
                             Email = "yen.committee@fpt.edu.vn",
                             Full_Name = "Pham Thi Yen",
                             Is_Suspended = false,

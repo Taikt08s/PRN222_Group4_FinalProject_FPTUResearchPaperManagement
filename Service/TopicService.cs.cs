@@ -28,5 +28,13 @@ namespace Service
 
             return _mapper.Map<List<TopicResponseModel>>(topics);
         }
+
+        public async Task<TopicResponseModel?> GetTopicByIdAsync(int id)
+        {
+            var topic = await _repo.GetTopicByIdAsync(id);
+            if (topic == null) return null;
+
+            return _mapper.Map<TopicResponseModel>(topic);
+        }
     }
 }

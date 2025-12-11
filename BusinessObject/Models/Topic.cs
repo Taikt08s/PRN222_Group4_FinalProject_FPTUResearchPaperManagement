@@ -11,6 +11,7 @@ namespace BusinessObject.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string SubmissionInstruction { get; set; }
         public string Major { get; set; }
 
         public int Semester_Id { get; set; }
