@@ -19,6 +19,7 @@ namespace Repository
             return await _context.Topics
                 .Where(t => t.Major == major)
                 .Include(t => t.Semester)
+                .Include(t => t.Creator)
                 .ToListAsync();
         }
         

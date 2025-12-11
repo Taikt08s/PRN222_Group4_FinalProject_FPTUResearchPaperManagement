@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using BusinessObject.Dtos;
 using BusinessObject.Models;
+using Service.Dtos;
+
 namespace DataAccessLayer.Mappers;
 
 public class MappingProfile : Profile

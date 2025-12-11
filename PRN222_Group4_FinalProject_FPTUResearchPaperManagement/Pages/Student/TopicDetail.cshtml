@@ -1,5 +1,6 @@
 ﻿@page "{id:int}"
 @model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student.TopicDetail
+
 @{
     ViewBag.ShowSidebar = true;
     ViewBag.ActiveMenu = "Topic";
@@ -7,30 +8,71 @@
 
 <div class="container bg-white rounded shadow-sm p-4 mt-3">
 
-    <h3 class="mb-4">Chi Tiết Đề Tài</h3>
+    <!-- Back button + Title Row -->
+    <div class="d-flex align-items-center mb-4">
+        <a href="/Student/Topic" class="btn btn-secondary me-3">
+            ← Quay lại
+        </a>
+        <h3 class="mb-0">Chi Tiết Đề Tài</h3>
+    </div>
 
     @if (Model.Topic != null)
     {
-        <div>
-            <h4>@Model.Topic.Title</h4>
+        <div class="row">
 
-            <p><strong>Mô tả:</strong> @Model.Topic.Description</p>
-            <p><strong>Mô tả:</strong> @Model.Topic.SubmissionInstruction</p>
+            <!-- LEFT SIDE: Topic Details -->
+            <div class="col-md-6 border-end pe-4">
 
-            <p>
-                <strong>Chuyên ngành:</strong> @Model.Topic.Major <br/>
-                <strong>Học kỳ:</strong> @Model.Topic.SemesterTerm <br/>
-                <strong>Hạn cuối:</strong> @Model.Topic.Deadline_Date.ToString("dd/MM/yyyy") <br/>
-                <strong>Nhóm:</strong> @(Model.Topic.Is_Group_Required ? "Cần nhóm" : "Làm cá nhân")
-            </p>
+                <h4>@Model.Topic.Title</h4>
 
-            <div class="mt-4">
-                <a class="btn btn-secondary" href="/Student/Topic">Quay lại danh sách</a>
+                <p><strong>Mô tả:</strong> @Model.Topic.Description</p>
 
-                <a class="btn btn-primary ms-2"
-                   href="/Student/ChooseTopic?id=@Model.Topic.Id">
-                    Chọn đề tài
-                </a>
+                <p>
+                    <strong>Chuyên ngành:</strong> @Model.Topic.Major <br />
+                    <strong>Học kỳ:</strong> @Model.Topic.SemesterTerm <br />
+                    <strong>Hạn cuối:</strong> @Model.Topic.Deadline_Date.ToString("dd/MM/yyyy") <br />
+                    <strong>Nhóm:</strong> @(Model.Topic.Is_Group_Required ? "Cần nhóm" : "Làm cá nhân") <br />
+                    @* <strong>Giảng viên phụ trách:</strong> @Model.InstructorName *@
+                </p>
+
+                <div class="mt-4">
+                    <a class="btn btn-primary"
+                       href="/Student/ChooseTopic?id=@Model.Topic.Id">
+                        Chọn đề tài
+                    </a>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: Form -->
+            <div class="col-md-6 ps-4">
+
+                <h5 class="mb-3">Nộp Thông Tin</h5>
+
+                @if (Model.Topic.Is_Group_Required)
+                {
+                    <div class="alert alert-info">
+                        Đề tài này yêu cầu làm theo nhóm.
+                        (Tại đây bạn sẽ thêm UI nhóm sau)
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-success">
+                        Đề tài cá nhân — không yêu cầu nhóm.
+                    </div>
+                }
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Ghi chú của bạn</label>
+                        <textarea class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <button class="btn btn-success">
+                        Gửi đăng ký
+                    </button>
+                </form>
+
             </div>
         </div>
     }

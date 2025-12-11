@@ -1,13 +1,8 @@
 ﻿using AutoMapper;
-using BusinessObject.Dtos;
-using BusinessObject.Models;
 using Repository.Interfaces;
+using Service.Dtos;
 using Service.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Service
 {

@@ -1,8 +1,8 @@
-using BusinessObject.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Service.Interfaces;
 using System.Security.Claims;
+using Service.Dtos;
 
 namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
 {
