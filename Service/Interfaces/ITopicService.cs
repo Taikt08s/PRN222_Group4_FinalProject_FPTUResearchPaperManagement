@@ -11,5 +11,7 @@ namespace Service.Interfaces
         Task<(bool Success, string Error)> TopicRegistrationAsync(TopicRegistrationRequest req);
 
         Task<bool> StudentHasTopicAsync(Guid studentId);
+
+        Task<TopicResponseModel?> GetRegisteredTopicForStudentAsync(Guid studentId);
     }
 }

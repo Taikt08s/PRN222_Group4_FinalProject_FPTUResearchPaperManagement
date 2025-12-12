@@ -49,5 +49,14 @@ namespace Repository
                 .Include(x => x.Group)
                 .AnyAsync(x => x.Student_Id == studentId);
         }
+
+        public async Task<StudentGroupMember> GetStudentGroupMemberAsync(Guid studentId)
+        {
+            return await _context.StudentGroupMembers
+                .Include(x => x.Group)
+                    .ThenInclude(g => g.Members)
+                        .ThenInclude(m => m.Student)
+                .FirstOrDefaultAsync(x => x.Student_Id == studentId);
+        }
     }
 }

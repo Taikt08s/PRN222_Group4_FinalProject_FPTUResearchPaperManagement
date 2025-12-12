@@ -147,38 +147,40 @@
 
 <script>
     const selectedMembers = [];
+    const selectedEmails = new Set();
+
     const searchBox = document.getElementById("studentSearch");
     const resultList = document.getElementById("searchResult");
     const selectedContainer = document.getElementById("selectedStudentContainer");
 
-    // Team size rules
     const MIN_MEMBERS = 4;
     const MAX_MEMBERS = 5;
 
-    // Track selected emails
-    const selectedEmails = new Set();
-
-        function decodeHtml(html) {
+    function decodeHtml(html) {
         const txt = document.createElement("textarea");
         txt.innerHTML = html;
         return txt.value;
     }
 
-
-    // ---------- 1) ADD CURRENT USER AS DEFAULT LEADER ----------
+    // ---------- CURRENT USER ----------
     const currentUser = {
         email: "@currentEmail",
         full_Name: "@currentFullName",
         major: decodeHtml("@currentMajor")
     };
 
-    addLeaderCard(currentUser);
+    // Check if topic requires a group
+    const isGroupTopic = @Model.Topic.Is_Group_Required.ToString().ToLower();
+
+    // ---------- 1) ADD LEADER CARD ----------
+    if (isGroupTopic) {
+        addLeaderCard(currentUser);
+    }
     selectedEmails.add(currentUser.email);
 
     function addLeaderCard(user) {
         const div = document.createElement("div");
         div.className = "member-card bg-light border border-warning d-flex justify-content-between";
-
         div.innerHTML = `
             <div>
                 <strong>${user.full_Name}</strong>
@@ -187,39 +189,40 @@
                 Chuyên ngành: ${user.major}
             </div>
         `;
-
         selectedContainer.appendChild(div);
     }
 
     // ---------- 2) SEARCH STUDENT ----------
-    searchBox.addEventListener("input", async function () {
-        const keyword = this.value.trim();
-        if (keyword.length < 3) {
-            resultList.style.display = "none";
-            return;
-        }
+    if (isGroupTopic && searchBox) {
+        searchBox.addEventListener("input", async function () {
+            const keyword = this.value.trim();
+            if (keyword.length < 3) {
+                resultList.style.display = "none";
+                return;
+            }
 
-        const response = await fetch(`?handler=FindStudent&email=${keyword}`);
-        const student = await response.json();
+            const response = await fetch(`?handler=FindStudent&email=${keyword}`);
+            const student = await response.json();
 
-        resultList.innerHTML = "";
+            resultList.innerHTML = "";
 
-        if (!student) {
-            resultList.style.display = "none";
-            return;
-        }
+            if (!student) {
+                resultList.style.display = "none";
+                return;
+            }
 
-        const li = document.createElement("li");
-        li.className = "list-group-item list-group-item-action";
-        li.innerHTML = `<strong>${student.email}</strong> — ${student.full_Name}`;
-        li.onclick = () => selectStudent(student);
-        resultList.appendChild(li);
+            const li = document.createElement("li");
+            li.className = "list-group-item list-group-item-action";
+            li.innerHTML = `<strong>${student.email}</strong> — ${student.full_Name}`;
+            li.onclick = () => selectStudent(student);
+            resultList.appendChild(li);
 
-        resultList.style.display = "block";
-    });
+            resultList.style.display = "block";
+        });
+    }
 
     // ---------- 3) ADD MEMBER ----------
-       function selectStudent(student) {
+    function selectStudent(student) {
         resultList.style.display = "none";
         searchBox.value = "";
 
@@ -234,16 +237,15 @@
         }
 
         if (student.major !== currentUser.major) {
-        showWarning("Chỉ được thêm sinh viên cùng chuyên ngành.");
-        return;
-    }
+            showWarning("Chỉ được thêm sinh viên cùng chuyên ngành.");
+            return;
+        }
 
         selectedEmails.add(student.email);
         selectedMembers.push(student);
 
         const div = document.createElement("div");
         div.className = "member-card alert alert-info border d-flex justify-content-between align-items-start";
-
         div.innerHTML = `
             <div>
                 <strong>${student.full_Name}</strong><br>
@@ -252,13 +254,12 @@
             </div>
             <button type="button" class="btn-close ms-2"></button>
         `;
-
         div.querySelector(".btn-close").onclick = () => {
-        selectedEmails.delete(student.email);
-        const index = selectedMembers.findIndex(s => s.email === student.email);
-        if (index > -1) selectedMembers.splice(index, 1);
-        div.remove();
-    };
+            selectedEmails.delete(student.email);
+            const index = selectedMembers.findIndex(s => s.email === student.email);
+            if (index > -1) selectedMembers.splice(index, 1);
+            div.remove();
+        };
 
         selectedContainer.appendChild(div);
     }
@@ -266,49 +267,49 @@
     // ---------- 4) WARNING MESSAGE ----------
     function showWarning(message) {
         let warning = document.getElementById("warningMessage");
-
         if (!warning) {
             warning = document.createElement("div");
             warning.id = "warningMessage";
             warning.className = "alert alert-warning mt-2";
             searchBox.parentNode.appendChild(warning);
         }
-
         warning.textContent = message;
-
         setTimeout(() => {
             if (warning) warning.remove();
         }, 2500);
     }
 
+    // ---------- 5) FORM SUBMISSION ----------
     const form = document.getElementById("topicRegistrationForm");
 
-        form.addEventListener("submit", function () {
-        document.querySelectorAll(".member-id-input").forEach(e => e.remove());
+    form.addEventListener("submit", function () {
+        if (isGroupTopic) {
+            document.querySelectorAll(".member-id-input").forEach(e => e.remove());
 
-        selectedMembers
-            .filter(s => s.email !== currentUser.email) 
-            .forEach((s, index) => {
-
-                let input = document.createElement("input");
-                input.type = "hidden";
-                input.classList.add("member-id-input");
-                input.name = `Registration.MemberIds[${index}]`;
-                input.value = s.id; // must be GUID
-                form.appendChild(input);
-            });
+            selectedMembers
+                .filter(s => s.email !== currentUser.email)
+                .forEach((s, index) => {
+                    let input = document.createElement("input");
+                    input.type = "hidden";
+                    input.classList.add("member-id-input");
+                    input.name = `Registration.MemberIds[${index}]`;
+                    input.value = s.id;
+                    form.appendChild(input);
+                });
+        }
+        // For individual topic, no extra processing is needed
     });
 
+    // ---------- 6) MODAL ----------
     const confirmSubmitBtn = document.getElementById("confirmSubmitBtn");
-
-    // Update member count in modal each time user opens it
     const confirmModal = document.getElementById("confirmModal");
+
     confirmModal.addEventListener('show.bs.modal', () => {
         document.getElementById("memberCountPreview").textContent = selectedEmails.size;
     });
 
-    // Submit the form after confirmation
     confirmSubmitBtn.addEventListener("click", () => {
         document.getElementById("topicRegistrationForm").requestSubmit();
     });
 </script>
+

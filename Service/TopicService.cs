@@ -88,5 +88,27 @@ namespace Service
         {
             return _repo.StudentHasTopicAsync(studentId);
         }
+
+        public async Task<TopicResponseModel?> GetRegisteredTopicForStudentAsync(Guid studentId)
+        {
+            var groupMember = await _repo.GetStudentGroupMemberAsync(studentId);
+            if (groupMember == null) return null;
+
+            var topic = await _repo.GetTopicByIdAsync(groupMember.Group.Topic_Id);
+            if (topic == null) return null;
+
+            var topicDto = _mapper.Map<TopicResponseModel>(topic);
+
+            // Map members
+            topicDto.Members = groupMember.Group.Members
+                .Select(m => new StudentBasicInfo
+                {
+                    Id = m.Student_Id,
+                    Full_Name = m.Student.Full_Name,
+                    IsLeader = m.Is_Leader
+                }).ToList();
+
+            return topicDto;
+        }
     }
 }

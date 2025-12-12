@@ -16,5 +16,7 @@
         
         public string InstructorName { get; set; }
         public string Status { get; set; }
+
+        public List<StudentBasicInfo> Members { get; set; } = new List<StudentBasicInfo>();
     }
 }

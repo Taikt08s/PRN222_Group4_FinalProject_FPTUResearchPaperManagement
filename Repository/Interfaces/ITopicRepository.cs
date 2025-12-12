@@ -13,5 +13,7 @@ namespace Repository.Interfaces
         Task<Topic> UpdateAsync(Topic topic);
 
         Task<bool> StudentHasTopicAsync(Guid studentId);
+
+        Task<StudentGroupMember> GetStudentGroupMemberAsync(Guid studentId);
     }
 }

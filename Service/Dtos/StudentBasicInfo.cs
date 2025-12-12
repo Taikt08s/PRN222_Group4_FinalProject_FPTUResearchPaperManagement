@@ -12,5 +12,6 @@ namespace Service.Dtos
         public string Full_Name { get; set; }
         public string Email { get; set; }
         public string Major { get; set; }
+        public bool IsLeader { get; set; }
     }
 }
