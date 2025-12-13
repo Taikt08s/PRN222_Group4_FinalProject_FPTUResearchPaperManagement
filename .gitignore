@@ -3,6 +3,7 @@ appsettings.json
 appsettings.Development.json
 secrets.json
 Credentials/*.json
+PRN222_Group4_FinalProject_FPTUResearchPaperManagement/Credentials/*.json
 
 .env
 .env.local

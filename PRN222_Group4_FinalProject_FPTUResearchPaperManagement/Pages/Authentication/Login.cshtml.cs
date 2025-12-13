@@ -55,8 +55,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Authentic
             {
                 "Administrator" => RedirectToPage("/Administrator/Dashboard"),
                 "Student" => RedirectToPage("/Student/Topic"),
-                "GraduationProjectEvaluationCommitteeMember" => RedirectToPage("/Committee/Dashboard"),
-                "Instructor" => RedirectToPage("/Instructor/Dashboard"),
+                "Teacher" => RedirectToPage("/Teacher/TopicManagement"),
                 _ => RedirectToPage("/Index")
             };
         }
