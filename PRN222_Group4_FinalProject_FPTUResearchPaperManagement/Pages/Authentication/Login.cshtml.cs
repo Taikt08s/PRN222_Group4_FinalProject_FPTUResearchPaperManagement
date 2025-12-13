@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Dtos;
+using Service.Dtos;
 using Service.Interfaces;
 using System.Security.Claims;
 

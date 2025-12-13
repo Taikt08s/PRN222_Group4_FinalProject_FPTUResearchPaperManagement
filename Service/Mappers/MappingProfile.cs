@@ -11,5 +11,6 @@ public class MappingProfile : Profile
         CreateMap<Topic, TopicResponseModel>();
         CreateMap<TopicRegistrationRequest, StudentGroup>();
         CreateMap<User, StudentBasicInfo>();
+        CreateMap<SubmissionFile, SubmissionFileDto>();
     }
 }

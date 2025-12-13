@@ -29,8 +29,8 @@ html {
 
 /* Dashboard wrapper */
 .dashboard-wrapper {
+    min-height: 100vh;
     display: flex;
-    min-height: calc(100vh - 70px);
 }
 
 /* Sidebar */

@@ -17,6 +17,9 @@
         public string InstructorName { get; set; }
         public string Status { get; set; }
 
+        public int SemesterId { get; set; }
+        public int GroupId { get; set; }
+
         public List<StudentBasicInfo> Members { get; set; } = new List<StudentBasicInfo>();
     }
 }

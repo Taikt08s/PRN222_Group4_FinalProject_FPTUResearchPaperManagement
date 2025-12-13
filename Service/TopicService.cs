@@ -108,6 +108,9 @@ namespace Service
                     IsLeader = m.Is_Leader
                 }).ToList();
 
+            topicDto.GroupId = groupMember.Group.Id;
+            topicDto.SemesterId = topic.Semester_Id;
+
             return topicDto;
         }
     }

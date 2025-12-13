@@ -1,5 +1,7 @@
 using DataAccessLayer;
 using DataAccessLayer.Mappers;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +26,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddRazorPages();
 
 builder.Services.AddAutoMapper(cfg =>
@@ -82,6 +85,16 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AllowAnonymousToPage("/Authentication/Login");
 });
 
+var credentialPath = Path.Combine(
+    Directory.GetCurrentDirectory(),
+    "Credentials",
+    "fpturesearchpapermanagement-firebase-adminsdk-fbsvc-651f744a16.json"
+);
+
+FirebaseApp.Create(new AppOptions
+{
+    Credential = GoogleCredential.FromFile(credentialPath)
+});
 
 var app = builder.Build();
 

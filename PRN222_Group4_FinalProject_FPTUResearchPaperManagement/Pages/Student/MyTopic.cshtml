@@ -3,9 +3,18 @@
 @{
     ViewBag.ShowSidebar = true;
     ViewBag.ActiveMenu = "MyTopic";
+    var filesByFolder = Model.Files?
+    .GroupBy(f => f.File_Type)
+    .ToDictionary(g => g.Key, g => g.ToList());
 }
 
-<div class="container-fluid px-0 my-4">
+<head>
+    <title>@ViewData["Title"] - PRN222_Group4_FinalProject_FPTUResearchPaperManagement</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<div class="rounded p-3 d-flex flex-row gap-3 bg-white shadow-sm">
+    <div class="topic-inner w-100">
     <h3 class="mb-4">Đề Tài Đã Đăng Ký</h3>
 
     @if (Model.RegisteredTopic == null)
@@ -17,7 +26,7 @@
     }
     else
     {
-        <div class="card shadow-sm rounded p-3 topic-card d-flex flex-row gap-3">
+            <div class="container-fluid rounded p-3 d-flex flex-row gap-3">
             <!-- Left: Topic details + members -->
             <div class="flex-fill border-end pe-3">
                 <h4>@Model.RegisteredTopic.Title</h4>
@@ -48,7 +57,9 @@
             <div class="flex-fill ps-3 d-flex flex-column justify-content-between">
                 <div>
                     <h5>Hướng dẫn nộp bài</h5>
-                    <p><strong>@Model.RegisteredTopic.SubmissionInstruction</strong></p>
+                        <p style="white-space: pre-wrap;">
+                            <strong>@Html.Raw(Model.RegisteredTopic.SubmissionInstruction?.TrimStart())</strong>
+                        </p>
                 </div>
                 <div class="mt-3 text-center">
                     <h6>Hạn nộp còn lại:</h6>
@@ -58,27 +69,156 @@
         </div>
     }
 </div>
+</div>
 
-<div class="container-fluid mt-4 px-0">
-    <div class="p-4 bg-white shadow-sm rounded">
-        <h4>Nội dung bổ sung</h4>
-        <p class="text-muted">Thêm thông tin ở đây…</p>
+@if (Model.RegisteredTopic != null)
+{
+    <div class="container-fluid mt-4 px-0">
+        <div class="bg-white shadow-sm rounded submission-card">
+            <!-- Header -->
+            <div class="row text-center submission-header fw-semibold">
+                <div class="col border-end">Phê duyệt của GVHD</div>
+                <div class="col border-end">Xác nhận của Thành viên Hội Đồng</div>
+                <div class="col">Thư mục</div>
+            </div>
+
+            <!-- Content -->
+            <div class="row submission-body text-center">
+                <div class="col border-end text-danger fw-semibold">
+                    Chưa phê duyệt
+                </div>
+                <div class="col border-end text-danger fw-semibold">
+                    Chưa xác nhận
+                </div>
+                <div class="col text-start">
+                    <ul class="list-unstyled mb-0 directory-list">
+                        <li>
+                            <a asp-page="./MyTopic"
+                               asp-route-folder="Final Thesis and Reports"
+                               class="folder-link">
+                                <i class="bi bi-folder-fill text-primary me-2"></i>
+                                Final Thesis and Reports
+                            </a>
+                        </li>
+
+                        <li>
+                            <a asp-page="./MyTopic"
+                               asp-route-folder="Slides"
+                               class="folder-link">
+                                <i class="bi bi-folder-fill text-primary me-2"></i>
+                                Slides
+                            </a>
+                        </li>
+
+                        <li>
+                            <a asp-page="./MyTopic"
+                               asp-route-folder="Others"
+                               class="folder-link">
+                                <i class="bi bi-folder-fill text-primary me-2"></i>
+                                Others
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="submission-footer text-end p-2">
+                <button class="btn btn-primary px-4">
+                    Xác nhận nộp bài
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (filesByFolder.ContainsKey("Slides"))
+{
+    <small class="text-success">
+        ✔ @filesByFolder["Slides"].Count file(s) uploaded
+    </small>
+}
+
+
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Nộp bài vào thư mục: <span id="folderName"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="FolderName" id="folderInput" />
+                    <div class="mb-3">
+                        <label class="form-label">Chọn file</label>
+                        <input type="file" name="UploadFile" class="form-control" id="uploadFileInput" required />
+                        <div id="fileSizeError" class="text-danger mt-1" style="display:none;">
+                            File không được vượt quá 2GB!
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.Files.Any(f => f.File_Type == Model.CurrentFolder))
+                {
+                    <ul class="list-group mt-3">
+                        @foreach (var f in Model.Files.Where(f => f.File_Type == Model.CurrentFolder))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <a href="@f.Firebase_Url" target="_blank">
+                                    @f.File_Name
+                                </a>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-muted small me-2">
+                                        @f.Uploaded_At.ToString("dd/MM/yyyy HH:mm")
+                                    </span>
+                                    <!-- Red X icon -->
+                                    <button type="button" class="btn btn-link p-0 text-danger delete-file-btn"
+                                            data-file-id="@f.Id" title="Xóa file">
+                                        <i class="bi bi-x-circle fs-5"></i>
+                                    </button>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Tải lên
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<style>
-    .topic-card {
-        background-color: #fff;
-    }
+@if (!string.IsNullOrEmpty(Model.CurrentFolder))
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // set folder name
+            document.getElementById("folderName").innerText = "@Model.CurrentFolder";
+            document.getElementById("folderInput").value = "@Model.CurrentFolder";
 
-    #countdown span {
-        display: inline-block;
-        min-width: 40px;
-    }
-</style>
+            // open modal
+            const modal = new bootstrap.Modal(
+                document.getElementById("uploadModal")
+            );
+            modal.show();
+        });
+    </script>
+}
+
+
 
 <script>
-    @* Countdown Timer *@
     const deadline = new Date("@Model.RegisteredTopic?.Deadline_Date.ToString("yyyy-MM-ddTHH:mm:ss")").getTime();
 
     const countdownEl = document.getElementById("countdown");
@@ -106,4 +246,39 @@
                 String(seconds).padStart(2,'0');
         }, 1000);
     }
+     function openUploadModal(el) {
+        const folder = el.getAttribute("data-folder");
+
+        document.getElementById("folderName").innerText = folder;
+        document.getElementById("folderInput").value = folder;
+
+        const modal = new bootstrap.Modal(
+            document.getElementById("uploadModal")
+        );
+        modal.show();
+    }
+    const fileInput = document.getElementById("uploadFileInput");
+    const fileSizeError = document.getElementById("fileSizeError");
+
+    fileInput.addEventListener("change", function() {
+        const file = fileInput.files[0];
+        const maxSize = 2 * 1024 * 1024 * 1024; 
+
+        if (file && file.size > maxSize) {
+            fileSizeError.style.display = "block";
+            fileInput.value = "";
+        } else {
+            fileSizeError.style.display = "none";
+        }
+    });
+
+        document.querySelectorAll('.delete-file-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const fileId = this.getAttribute('data-file-id');
+            if(confirm("Bạn có chắc chắn muốn xóa file này?")) {
+                // Call your API to delete file using fileId
+                console.log("Delete file with ID:", fileId);
+            }
+        });
+    });
 </script>
