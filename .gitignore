@@ -59,3 +59,5 @@ project.assets.json
 *.swo
 *.DS_Store
 Thumbs.db
+
+.config

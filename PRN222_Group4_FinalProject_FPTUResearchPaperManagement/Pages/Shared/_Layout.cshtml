@@ -54,7 +54,10 @@
                         <li><a href="/Student/Topic" class="@(ViewBag.ActiveMenu == "Topic" ? "active" : "")">📝 Đề tài luận án</a></li>
                         <li><a href="/Student/MyTopic" class="@(ViewBag.ActiveMenu == "MyTopic" ? "active" : "")">⭐ Đề tài đã đăng ký</a></li>
                     }
-
+                    else if (isInstructor)
+                    {
+                        <li><a href="/Instructor/Topic/Index" class="@(ViewBag.ActiveMenu == "TopicManagement" ? "active" : "")">📝 Đề tài luận án</a></li>
+                    }
                     @* Logout button at bottom *@
                     <li><a href="/Authentication/Logout" class="sidebar-logout">Đăng xuất</a></li>
                 </ul>
@@ -95,6 +98,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://unpkg.com/@@microsoft/signalr@latest/dist/browser/signalr.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

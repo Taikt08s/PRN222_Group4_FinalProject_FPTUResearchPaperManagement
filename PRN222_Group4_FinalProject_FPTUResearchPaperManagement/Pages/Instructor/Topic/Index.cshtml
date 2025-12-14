@@ -1,0 +1,217 @@
+﻿@page
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.TopicManagementModel
+@{
+    ViewBag.ShowSidebar = true;
+    ViewBag.ActiveMenu = "TopicManagement";
+    ViewData["Title"] = "Quản Lý Đề Tài Luận Văn";
+}
+
+@section Scripts {
+    <script src="https://unpkg.com/@@microsoft/signalr@latest/dist/browser/signalr.js"></script>
+    <script>
+        "use strict";
+
+        // Thiết lập kết nối
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub") // URL phải khớp với mapping trong Program.cs
+            .build();
+
+        // Lắng nghe tín hiệu "ReceiveApprovalUpdate"
+        connection.on("ReceiveApprovalUpdate", function (message) {
+            console.log("Server signal received: " + message);
+            
+            // Kích hoạt tải lại trang
+            window.location.reload(); 
+        });
+
+        // Bắt đầu kết nối
+        connection.start().catch(function (err) {
+            console.error("SignalR connection error: " + err.toString());
+        });
+    </script>
+}
+
+<h1><i class="fas fa-list-alt"></i> Quản Lý Đề Tài Luận Văn</h1>
+<hr />
+
+<div class="mb-3 d-flex justify-content-between align-items-center">
+    <h3>Danh Sách Tất Cả Đề Tài</h3>
+    <a asp-page="Approve" class="btn btn-primary"> 
+        <i class="fas fa-check"></i> Duyệt Đề Tài
+    </a>
+</div>
+
+<form method="get" asp-page="./TopicManagement">
+    <div class="row g-3 mb-4 align-items-end p-3 border rounded shadow-sm">
+        
+        <div class="col-md-3">
+            <label for="SemesterTermFilter" class="form-label">Học Kỳ</label>
+            <select asp-for="SemesterTermFilter" class="form-select">
+                <option value="">-- Tất cả Học kỳ --</option>
+                @foreach (var term in Model.AvailableSemesters)
+                {
+                    <option value="@term">@term</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label for="GroupStatusFilter" class="form-label">Trạng Thái Nhóm</label>
+            <select asp-for="GroupStatusFilter" class="form-select">
+                <option value="">-- Tất cả --</option>
+                <option value="Solo">Cá Nhân</option>
+                <option value="Group">Nhóm</option>
+            </select>
+        </div>
+        
+        <div class="col-md-2">
+            <label for="TopicStatusFilter" class="form-label">Trạng Thái Đề Tài</label>
+            <select asp-for="TopicStatusFilter" class="form-select">
+                <option value="">-- Tất cả --</option>
+                <option value="@nameof(TopicStatus.Created)">@Model.GetVietnameseStatus(nameof(TopicStatus.Created))</option>
+                <option value="@nameof(TopicStatus.PendingAssignedSingle)">@Model.GetVietnameseStatus(nameof(TopicStatus.PendingAssignedSingle))</option>
+                <option value="@nameof(TopicStatus.PendingAssignedGroup)">@Model.GetVietnameseStatus(nameof(TopicStatus.PendingAssignedGroup))</option>
+                <option value="@nameof(TopicStatus.Assigned)">@Model.GetVietnameseStatus(nameof(TopicStatus.Assigned))</option>
+                <option value="@nameof(TopicStatus.Closed)">@Model.GetVietnameseStatus(nameof(TopicStatus.Closed))</option>
+                </select>
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-info w-100">
+                <i class="fas fa-filter"></i> Lọc
+            </button>
+        </div>
+    </div>
+</form>
+
+@if (!Model.Topics.Any())
+{
+    <div class="alert alert-warning" role="alert">
+        Không tìm thấy đề tài nào trong cơ sở dữ liệu.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Tên Đề Tài</th>
+                <th>Chuyên Ngành</th>
+                <th>Học Kỳ</th>
+                <th>Hạn Chót</th>
+                <th>Thành Viên</th> 
+                <th>Trạng Thái</th>
+                <th>Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Topics)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Major</td>
+                    <td>@item.SemesterTerm</td> 
+                    <td>@item.Deadline_Date.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @if (item.Members.Any())
+                        {
+                            <span class="badge bg-success" title="Số lượng: @item.Members.Count người">@item.Members.Count Thành Viên</span>
+                        }
+                        else if (item.Is_Group_Required)
+                        {
+                            <span class="badge bg-warning">Yêu Cầu Nhóm</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-info">Cá Nhân</span>
+                        }
+                    </td>
+                    <td>
+                    @{
+                        var vietnameseStatus = Model.GetVietnameseStatus(item.Status);
+                    }
+                    <span class="badge bg-secondary">@vietnameseStatus</span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#topicDetailModal_@item.Id">
+                            Chi Tiết
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @foreach (var item in Model.Topics)
+{
+    <div class="modal fade" id="topicDetailModal_@item.Id" tabindex="-1" aria-labelledby="topicDetailModalLabel_@item.Id" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="topicDetailModalLabel_@item.Id">Chi Tiết Đề Tài: @item.Title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Chuyên ngành:</strong> @item.Major</p>
+                    <p><strong>Học kỳ:</strong> @item.SemesterTerm</p>
+                    <hr/>
+
+                    <h6><i class="fas fa-info-circle"></i> Mô Tả Đề Tài</h6>
+                    <p>@Html.Raw(item.Description)</p>
+                    
+                    <h6><i class="fas fa-paper-plane"></i> Hướng Dẫn Nộp Bài</h6>
+                    <p>@Html.Raw(item.SubmissionInstruction)</p>
+                    <hr/>
+
+                    <h6><i class="fas fa-users"></i> Thông Tin Thành Viên</h6>
+                    @if (item.Members != null && item.Members.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var member in item.Members)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @member.Full_Name @(member.IsLeader ? "(Nhóm trưởng)": "")
+                                    <span class="badge bg-primary rounded-pill">@member.Email</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Đề tài này là cá nhân hoặc chưa có thành viên.</p>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+}
+
+    <nav aria-label="Phân trang đề tài">
+        <ul class="pagination justify-content-center">
+            @{
+                var prevDisabled = Model.PageIndex <= 1 ? "disabled" : "";
+                var nextDisabled = Model.PageIndex >= Model.TotalPages ? "disabled" : "";
+            }
+
+            <li class="page-item @prevDisabled">
+                <a asp-page="./TopicManagement" asp-route-pageIndex="@(Model.PageIndex - 1)" class="page-link">Trước</a>
+            </li>
+
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                var activeClass = i == Model.PageIndex ? "active" : "";
+                <li class="page-item @activeClass">
+                    <a asp-page="./TopicManagement" asp-route-pageIndex="@i" class="page-link">@i</a>
+                </li>
+            }
+
+            <li class="page-item @nextDisabled">
+                <a asp-page="./TopicManagement" asp-route-pageIndex="@(Model.PageIndex + 1)" class="page-link">Sau</a>
+            </li>
+        </ul>
+        <p class="text-center mt-2">Hiển thị trang @Model.PageIndex trên tổng số @Model.TotalPages trang</p>
+    </nav>
+}

@@ -8,6 +8,12 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        CreateMap<StudentGroupMember, StudentBasicInfo>()
+            .ForMember(d => d.IsLeader, o => o.MapFrom(s => s.Is_Leader))
+            .ForMember(d => d.Id, o => o.MapFrom(s => s.Student_Id))
+            .ForMember(d => d.Full_Name, o => o.MapFrom(s => s.Student.Full_Name))
+            .ForMember(d => d.Email, o => o.MapFrom(s => s.Student.Email))
+            .ForMember(d => d.Major, o => o.MapFrom(s => s.Student.Major));
         CreateMap<Topic, TopicResponseModel>();
         CreateMap<TopicRegistrationRequest, StudentGroup>();
         CreateMap<User, StudentBasicInfo>();

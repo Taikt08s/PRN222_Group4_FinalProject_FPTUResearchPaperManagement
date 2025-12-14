@@ -1,0 +1,138 @@
+@page
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.TopicApproveModel
+@{
+    ViewBag.ShowSidebar = true;
+    ViewBag.ActiveMenu = "TopicManagement";
+    ViewData["Title"] = "Duyệt Đề Tài";
+}
+
+@section Scripts {
+    <script src="https://unpkg.com/@@microsoft/signalr@latest/dist/browser/signalr.js"></script>
+    <script>
+        "use strict";
+
+        // Thiết lập kết nối
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub") // URL phải khớp với mapping trong Program.cs
+            .build();
+
+        // Lắng nghe tín hiệu "ReceiveApprovalUpdate"
+        connection.on("ReceiveApprovalUpdate", function (message) {
+            console.log("Server signal received: " + message);
+            
+            // Kích hoạt tải lại trang
+            window.location.reload(); 
+        });
+
+        // Bắt đầu kết nối
+        connection.start().catch(function (err) {
+            console.error("SignalR connection error: " + err.toString());
+        });
+    </script>
+}
+<span class="error">@Model.ErrorMessage</span>
+<h1><i class="fas fa-tasks"></i> Duyệt Đề Tài Luận Văn (Phê Duyệt Topic)</h1>
+<hr />
+
+@if (!Model.PendingTopics.Any())
+{
+    <div class="alert alert-success" role="alert">
+        <i class="fas fa-check-circle"></i> Hiện không có đề tài nào đang chờ duyệt.
+    </div>
+}
+else
+{
+    <p class="mb-3">Có **@Model.PendingTopics.Count** đề tài đang chờ bạn xem xét:</p>
+    
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Tên Đề Tài</th>
+                <th>Học Kỳ</th>
+                <th>GV Hướng Dẫn</th>
+                <th>Yêu Cầu Nhóm</th>
+                <th>Trạng Thái Hiện Tại</th>
+                <th>Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PendingTopics)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.SemesterTerm</td>
+                    <td>@item.InstructorName</td>
+                    <td>
+                        @if (item.Is_Group_Required)
+                        {
+                            <span class="badge bg-primary">Có (Nhóm)</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-info">Không (Cá Nhân)</span>
+                        }
+                    </td>
+                    <td>
+                        @{
+                            var vietnameseStatus = Model.GetVietnameseStatus(item.Status);
+                        }
+                        <span class="badge bg-warning text-dark">@vietnameseStatus</span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-secondary me-2" data-bs-toggle="modal" data-bs-target="#topicDetailModal_@item.Id">
+                            <i class="fas fa-search"></i> Chi Tiết
+                        </button>
+
+                        <form method="post" asp-page-handler="Approve" asp-route-id="@item.Id" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-success" 
+                                    onclick="return confirm('Xác nhận DUYỆT đề tài: @item.Title ?');"
+                                    title="Duyệt Đề Tài">
+                                <i class="fas fa-check"></i> Duyệt
+                            </button>
+                        </form>
+                        
+                        <form method="post" asp-page-handler="Reject" asp-route-id="@item.Id" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" 
+                                    onclick="return confirm('Xác nhận TỪ CHỐI đề tài: @item.Title ?');"
+                                    title="Từ Chối Đề Tài">
+                                <i class="fas fa-times"></i> Từ Chối
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <nav aria-label="Phân trang đề tài chờ duyệt">
+        <ul class="pagination justify-content-center">
+            @{
+                var prevDisabled = Model.PageIndex <= 1 ? "disabled" : "";
+                var nextDisabled = Model.PageIndex >= Model.TotalPages ? "disabled" : "";
+            }
+
+            <li class="page-item @prevDisabled">
+                <a asp-page="./TopicApproval" 
+                   asp-route-pageIndex="@(Model.PageIndex - 1)" 
+                   class="page-link">Trước</a>
+            </li>
+
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                var activeClass = i == Model.PageIndex ? "active" : "";
+                <li class="page-item @activeClass">
+                    <a asp-page="./TopicApproval" asp-route-pageIndex="@i" class="page-link">@i</a>
+                </li>
+            }
+
+            <li class="page-item @nextDisabled">
+                <a asp-page="./TopicApproval" 
+                   asp-route-pageIndex="@(Model.PageIndex + 1)" 
+                   class="page-link">Sau</a>
+            </li>
+        </ul>
+        <p class="text-center mt-2">Hiển thị trang @Model.PageIndex trên tổng số @Model.TotalPages trang</p>
+    </nav>
+
+}
+

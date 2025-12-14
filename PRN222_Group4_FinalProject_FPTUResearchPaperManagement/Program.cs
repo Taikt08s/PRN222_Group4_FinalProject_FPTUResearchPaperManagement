@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Hubs;
 using Repository;
 using Repository.Interfaces;
 using Service;
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Repos + Services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISemesterRepository, SemesterRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
@@ -28,6 +30,7 @@ builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 builder.Services.AddScoped<ISubmissionFileRepository, SubmissionFileRepository>();
 builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISemesterService, SemesterService>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddRazorPages();
 
@@ -60,6 +63,7 @@ builder.Services.AddAuthentication(options =>
         OnChallenge = context =>
         {
             context.HandleResponse();
+            Console.WriteLine("Challenge failed");
             context.Response.Redirect("/Authentication/Login");
             return Task.CompletedTask;
         }
@@ -78,6 +82,8 @@ builder.Services.AddAuthentication(options =>
         RoleClaimType = ClaimTypes.Role
     };
 });
+
+builder.Services.AddSignalR();
 
 builder.Services.AddAuthorization();
 
@@ -103,6 +109,7 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.MapHub<NotificationHub>("/notificationHub");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();

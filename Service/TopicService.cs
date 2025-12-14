@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using BusinessObject.Enums;
+using BusinessObject.Filters;
 using BusinessObject.Models;
 using Repository.Interfaces;
 using Service.Dtos;
 using Service.Interfaces;
+using Service.Utils;
 
 
 namespace Service
@@ -71,11 +74,11 @@ namespace Service
                     });
                 }
 
-                topic.Status = "PendingAssignedGroup";  
+                topic.Status = "PendingAssignedGroup";
             }
             else
             {
-                topic.Status = "PendingAssignedSingle";         
+                topic.Status = "PendingAssignedSingle";
             }
 
             await _repo.CreateGroupAsync(group);
@@ -113,5 +116,34 @@ namespace Service
 
             return topicDto;
         }
+
+        public async Task<int> CountAsync(TopicFilter? filter)
+        {
+            return await _repo.CountAsync(filter);
+        }
+
+        public async Task<List<TopicResponseModel>> GetPaginationAsync(TopicFilter? filter, int page, int size)
+        {
+            var list = await _repo.GetPaginationAsync(filter, page, size);
+            var listDto = _mapper.Map<List<TopicResponseModel>>(list);
+            for (int index = 0; index < list.Count; ++index)
+            {
+                listDto[index].Members = _mapper.Map<List<StudentBasicInfo>>(list[index].Groups.SelectMany(group => group.Members).ToList());
+            }
+            return listDto;
+        }
+
+        public async Task UpdateTopicStatus(int id, string status)
+        {
+            Topic? topic = await _repo.GetTopicByIdAsync(id);
+            if (topic == null)
+            {
+                throw new Exception("Cannot find topic with id: " + id);
+            }
+            EnumValidator.EnsureValidEnum(status, typeof(TopicStatus));
+            topic.Status = status;
+            await _repo.UpdateAsync(topic);
+        }
     }
+
 }

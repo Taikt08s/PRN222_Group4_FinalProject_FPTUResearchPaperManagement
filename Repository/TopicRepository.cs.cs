@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Filters;
+using BusinessObject.Models;
 using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
@@ -22,7 +23,7 @@ namespace Repository
                 .Include(t => t.Creator)
                 .ToListAsync();
         }
-        
+
         public async Task<Topic?> GetTopicByIdAsync(int id)
         {
             return await _context.Topics
@@ -58,5 +59,38 @@ namespace Repository
                         .ThenInclude(m => m.Student)
                 .FirstOrDefaultAsync(x => x.Student_Id == studentId);
         }
+
+        private IQueryable<Topic> GetFiltered(TopicFilter? filter)
+        {
+            if (filter == null)
+                return _context.Topics.AsQueryable();
+            return _context.Topics
+            .Where(t => filter.SemesterTermFilter == null ? true : filter.SemesterTermFilter.Contains(t.Semester.Term))
+            .Where(t => String.IsNullOrEmpty(filter.GroupStatusFilter) ?
+                    true :
+                    filter.GroupStatusFilter == "Solo" ? t.Is_Group_Required == true : t.Is_Group_Required == false)
+            .Where(t => filter.TopicStatusFilter == null ? true : filter.TopicStatusFilter.Contains(t.Status))
+            .AsQueryable();
+        }
+
+        public async Task<int> CountAsync(TopicFilter? filter)
+        {
+            return await GetFiltered(filter).CountAsync();
+        }
+
+        public async Task<List<Topic>> GetPaginationAsync(TopicFilter? filter, int page, int size)
+        {
+            return await GetFiltered(filter)
+            .Include(t => t.Creator) // Include the user who created the topic
+            .Include(t => t.Semester) // Include the associated semester
+            .Include(x => x.Groups)
+                .ThenInclude(g => g.Members)
+                    .ThenInclude(m => m.Student)
+            .OrderBy(t => t.Title)
+            .Skip((page - 1) * size)
+            .Take(size)
+            .ToListAsync();
+        }
     }
+
 }

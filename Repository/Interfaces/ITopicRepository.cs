@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Filters;
+using BusinessObject.Models;
 
 namespace Repository.Interfaces
 {
@@ -15,5 +16,9 @@ namespace Repository.Interfaces
         Task<bool> StudentHasTopicAsync(Guid studentId);
 
         Task<StudentGroupMember> GetStudentGroupMemberAsync(Guid studentId);
+
+        Task<int> CountAsync(TopicFilter? filter);
+
+        Task<List<Topic>> GetPaginationAsync(TopicFilter? filter, int page, int size);
     }
 }
