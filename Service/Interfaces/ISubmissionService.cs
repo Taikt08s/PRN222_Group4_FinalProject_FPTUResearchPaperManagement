@@ -15,7 +15,9 @@ namespace Service.Interfaces
 
         Task<List<SubmissionFileDto>> GetFilesAsync(int submissionId);
 
-        Task<Submission> GetOrCreateSubmissionIdAsync(
+        Task SubmitAsync(int submissionId);
+
+        Task<SubmissionDto> GetOrCreateSubmissionAsync(
         int topicId,
         int groupId,
         int semesterId

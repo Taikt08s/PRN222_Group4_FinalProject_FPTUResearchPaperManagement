@@ -20,6 +20,8 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
 
         public TopicResponseModel RegisteredTopic { get; set; }
 
+        public SubmissionDto Submission { get; set; }
+
         [BindProperty]
         public IFormFile UploadFile { get; set; }
 
@@ -28,7 +30,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
 
         public List<SubmissionFileDto> Files { get; set; } = new();
         public string CurrentFolder { get; set; }
-
+        
 
         public async Task<IActionResult> OnGet(string? folder)
         {
@@ -42,15 +44,13 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
             if (RegisteredTopic == null)
                 return Page();
 
-            var submission = await _submissionService
-            .GetOrCreateSubmissionIdAsync(
-                RegisteredTopic.Id,
-                RegisteredTopic.GroupId,
-                RegisteredTopic.SemesterId
-            );
+            Submission = await _submissionService.GetOrCreateSubmissionAsync(
+            RegisteredTopic.Id,
+            RegisteredTopic.GroupId,
+            RegisteredTopic.SemesterId);
 
+            Files = await _submissionService.GetFilesAsync(Submission.Id);
 
-            Files = await _submissionService.GetFilesAsync(submission.Id);
 
             CurrentFolder = folder;
 
@@ -73,7 +73,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
             if (RegisteredTopic == null)
                 return Page();
 
-            var submission = await _submissionService.GetOrCreateSubmissionIdAsync(
+            var submission = await _submissionService.GetOrCreateSubmissionAsync(
             RegisteredTopic.Id,
             RegisteredTopic.GroupId,
             RegisteredTopic.SemesterId
@@ -92,6 +92,34 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
 
 
             return RedirectToPage(new { folder = FolderName });
+        }
+
+        public async Task<IActionResult> OnPostSubmitFinalAsync()
+        {
+            var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdStr))
+                return RedirectToPage("/Authentication/Login");
+
+            var userId = Guid.Parse(userIdStr);
+
+            RegisteredTopic = await _topicService.GetRegisteredTopicForStudentAsync(userId);
+            if (RegisteredTopic == null)
+                return Page();
+
+            var submission = await _submissionService.GetOrCreateSubmissionAsync(
+                RegisteredTopic.Id,
+                RegisteredTopic.GroupId,
+                RegisteredTopic.SemesterId
+            );
+
+            // prevent double submit
+            if (submission.Status == "Submitted")
+                return RedirectToPage();
+
+            await _submissionService.SubmitAsync(submission.Id);
+
+            TempData["Success"] = "Nộp bài thành công!";
+            return RedirectToPage();
         }
     }
 }

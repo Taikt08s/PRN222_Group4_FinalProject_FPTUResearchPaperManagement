@@ -6,6 +6,9 @@
     var filesByFolder = Model.Files?
     .GroupBy(f => f.File_Type)
     .ToDictionary(g => g.Key, g => g.ToList());
+    bool isSubmitted = Model.Submission?.IsSubmitted == true;
+    int CountOf(string folder) =>
+        filesByFolder.ContainsKey(folder)? filesByFolder[folder].Count: 0;
 }
 
 <head>
@@ -92,53 +95,124 @@
                 </div>
                 <div class="col text-start">
                     <ul class="list-unstyled mb-0 directory-list">
-                        <li>
-                            <a asp-page="./MyTopic"
-                               asp-route-folder="Final Thesis and Reports"
-                               class="folder-link">
-                                <i class="bi bi-folder-fill text-primary me-2"></i>
-                                Final Thesis and Reports
-                            </a>
+
+                        <!-- Final Thesis and Reports -->
+                        <li class="d-flex align-items-center justify-content-between">
+                            @if (isSubmitted)
+                            {
+                                <a class="folder-link disabled-folder" aria-disabled="true">
+                                    <span>
+                                        <i class="bi bi-folder-fill text-primary me-2"></i>
+                                        Final Thesis and Reports
+                                    </span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-page="./MyTopic"
+                                   asp-route-folder="Final Thesis and Reports"
+                                   class="folder-link">
+                                    <span>
+                                        <i class="bi bi-folder-fill text-primary me-2"></i>
+                                        Final Thesis and Reports
+                                    </span>
+                                </a>
+                            }
+
+                            @if (CountOf("Final Thesis and Reports") > 0)
+                            {
+                                <small class="text-success ms-2">
+                                    ✔ @CountOf("Final Thesis and Reports") file(s)
+                                </small>
+                            }
                         </li>
 
-                        <li>
-                            <a asp-page="./MyTopic"
-                               asp-route-folder="Slides"
-                               class="folder-link">
-                                <i class="bi bi-folder-fill text-primary me-2"></i>
-                                Slides
-                            </a>
+                        <!-- Slides -->
+                        <li class="d-flex align-items-center justify-content-between">
+                            @if (isSubmitted)
+                            {
+                                <a class="folder-link disabled-folder" aria-disabled="true">
+                                    <span>
+                                        <i class="bi bi-folder-fill text-primary me-2"></i>
+                                        Slides
+                                    </span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-page="./MyTopic"
+                                   asp-route-folder="Slides"
+                                   class="folder-link">
+                                    <span>
+                                        <i class="bi bi-folder-fill text-primary me-2"></i>
+                                        Slides
+                                    </span>
+                                </a>
+                            }
+
+                            @if (CountOf("Slides") > 0)
+                            {
+                                <small class="text-success ms-2">
+                                    ✔ @CountOf("Slides") file(s)
+                                </small>
+                            }
                         </li>
 
-                        <li>
-                            <a asp-page="./MyTopic"
-                               asp-route-folder="Others"
-                               class="folder-link">
-                                <i class="bi bi-folder-fill text-primary me-2"></i>
-                                Others
-                            </a>
+                        <!-- Others -->
+                        <li class="d-flex align-items-center justify-content-between">
+                            @if (isSubmitted)
+                            {
+                                <a class="folder-link disabled-folder" aria-disabled="true">
+                                    <span>
+                                        <i class="bi bi-folder-fill text-primary me-2"></i>
+                                        Others
+                                    </span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-page="./MyTopic"
+                                   asp-route-folder="Others"
+                                   class="folder-link">
+                                    <span>
+                                        <i class="bi bi-folder-fill text-primary me-2"></i>
+                                        Others
+                                    </span>
+                                </a>
+                            }
+
+                            @if (CountOf("Others") > 0)
+                            {
+                                <small class="text-success ms-2">
+                                    ✔ @CountOf("Others") file(s)
+                                </small>
+                            }
                         </li>
+
                     </ul>
                 </div>
             </div>
 
             <!-- Footer -->
             <div class="submission-footer text-end p-2">
-                <button class="btn btn-primary px-4">
-                    Xác nhận nộp bài
-                </button>
+                @if (isSubmitted)
+                {
+                    <button class="btn btn-success px-4" disabled>
+                        ✔ Đã nộp bài
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-primary px-4"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmSubmitModal">
+                        Xác nhận nộp bài
+                    </button>
+                }
             </div>
         </div>
     </div>
 }
-
-@if (filesByFolder.ContainsKey("Slides"))
-{
-    <small class="text-success">
-        ✔ @filesByFolder["Slides"].Count file(s) uploaded
-    </small>
-}
-
 
 <div class="modal fade" id="uploadModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -198,6 +272,36 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="confirmSubmitModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="SubmitFinal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận nộp bài</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>
+                        Sau khi nộp bài, bạn <strong>không thể chỉnh sửa hoặc tải thêm file</strong>.
+                    </p>
+                    <p>Bạn có chắc chắn muốn nộp bài không?</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Xác nhận nộp
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 @if (!string.IsNullOrEmpty(Model.CurrentFolder))
 {
