@@ -89,13 +89,33 @@ namespace Service
 
             submission.Status = SubmissionStatus.Submitted.ToString();
             submission.Submitted_At = DateTime.UtcNow;
-            
+
             await _openAiSubmissionService
                 .ValidateAndModerateSubmissionAsync(submission);
 
             await _suspensionService.SuspendGroupAsync(submission);
 
             await _submissionRepo.UpdateAsync(submission);
+        }
+
+        //read-only lookup by topic/group/semester (does not create)
+        public async Task<SubmissionDto?> GetSubmissionAsync(int topicId, int groupId, int semesterId)
+        {
+            var submission = await _submissionRepo
+                .GetByTopicGroupSemesterAsync(topicId, groupId, semesterId);
+
+            if (submission == null)
+                return null;
+
+            return _mapper.Map<SubmissionDto>(submission);
+        }
+
+        //read-only lookup by submission id
+        public async Task<SubmissionDto?> GetByIdAsync(int submissionId)
+        {
+            var submission = await _submissionRepo.GetByIdAsync(submissionId);
+            if (submission == null) return null;
+            return _mapper.Map<SubmissionDto>(submission);
         }
 
         // ================= FILES =================

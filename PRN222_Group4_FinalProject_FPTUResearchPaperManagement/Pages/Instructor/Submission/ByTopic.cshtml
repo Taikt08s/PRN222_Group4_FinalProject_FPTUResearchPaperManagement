@@ -1,0 +1,79 @@
+﻿@page "{id:int}"
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.Submission.ByTopicModel
+@{
+    ViewData["Title"] = "Nhóm & Tệp - " + (Model.Topic?.Title ?? "");
+}
+
+<div class="container bg-white rounded shadow-sm p-4 mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Nhóm & Tệp cho đề tài: @Model.Topic.Title</h4>
+        <a asp-page="./Index" class="btn btn-secondary">Back to list</a>
+    </div>
+
+    <p><strong>Học kỳ:</strong> @Model.Topic.SemesterTerm</p>
+    <p><strong>Chuyên ngành:</strong> @Model.Topic.Major</p>
+
+    @if (!Model.Groups.Any())
+    {
+        <div class="alert alert-info">Chưa có nhóm đăng ký cho đề tài này.</div>
+    }
+    else
+    {
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>Group ID</th>
+                    <th>Leader</th>
+                    <th>Members</th>
+                    <th>Submission</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var g in Model.Groups)
+                {
+                    <tr>
+                        <td>@g.GroupId</td>
+                        <td>@g.LeaderName</td>
+                        <td>
+                            <ul class="mb-0">
+                                @foreach (var m in g.Members)
+                                {
+                                    <li>
+                                        @if (g.SubmissionId.HasValue)
+                                        {
+                                            <a asp-page="./SubmissionDetails" asp-route-submissionId="@g.SubmissionId.Value">
+                                                @m.FullName
+                                                @if (m.IsLeader) { <span class="badge bg-warning text-dark ms-1">⭐</span> }
+                                            </a>
+                                            <span class="text-muted small ms-2">(@m.Email)</span>
+                                        }
+                                        else
+                                        {
+                                            @m.FullName
+                                            @if (m.IsLeader) { <span class="badge bg-warning text-dark ms-1">⭐</span> }
+                                            <span class="text-muted small ms-2">(@m.Email)</span>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                        <td>@g.SubmissionStatus</td>
+                        <td>
+                            @if (g.SubmissionId.HasValue)
+                            {
+                                <a asp-page="./SubmissionDetails" asp-route-submissionId="@g.SubmissionId.Value" class="btn btn-sm btn-primary">
+                                    View files
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No submission</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
