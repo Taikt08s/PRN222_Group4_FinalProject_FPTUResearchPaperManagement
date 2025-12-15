@@ -83,12 +83,6 @@ public class TopicApproveModel : PageModel
         return await ProcessTopicStatusUpdate(id, nameof(TopicStatus.Assigned));
     }
 
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> OnPostRejectAsync(int id)
-    {
-        return await ProcessTopicStatusUpdate(id, nameof(TopicStatus.Closed));
-    }
-
     private async Task<IActionResult> ProcessTopicStatusUpdate(int topicId, string newStatus)
     {
         try

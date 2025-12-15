@@ -88,14 +88,6 @@ else
                                 <i class="fas fa-check"></i> Duyệt
                             </button>
                         </form>
-                        
-                        <form method="post" asp-page-handler="Reject" asp-route-id="@item.Id" style="display:inline;">
-                            <button type="submit" class="btn btn-sm btn-danger" 
-                                    onclick="return confirm('Xác nhận TỪ CHỐI đề tài: @item.Title ?');"
-                                    title="Từ Chối Đề Tài">
-                                <i class="fas fa-times"></i> Từ Chối
-                            </button>
-                        </form>
                     </td>
                 </tr>
             }
