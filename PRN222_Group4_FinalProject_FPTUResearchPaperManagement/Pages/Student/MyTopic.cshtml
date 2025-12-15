@@ -242,7 +242,8 @@
                         @foreach (var f in Model.Files.Where(f => f.File_Type == Model.CurrentFolder))
                         {
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <a href="@f.Firebase_Url" target="_blank">
+                                <a href="@f.Firebase_Url" target="_blank"  class="text-truncate d-inline-block"
+                                   style="max-width: 260px;">
                                     @f.File_Name
                                 </a>
                                 <div class="d-flex align-items-center">

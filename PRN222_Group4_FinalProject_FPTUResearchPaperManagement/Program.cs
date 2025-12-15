@@ -13,6 +13,8 @@ using Service;
 using Service.Interfaces;
 using System.Security.Claims;
 using System.Text;
+using Google.Cloud.Storage.V1;
+using Service.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,19 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Repos + Services
+builder.Services.AddSingleton<StorageClient>(sp =>
+{
+    var env = sp.GetRequiredService<IWebHostEnvironment>();
+
+    var credentialPaths = Path.Combine(
+        env.ContentRootPath,
+        "Credentials",
+        "fpturesearchpapermanagement-3465b1d3b88e.json"
+    );
+
+    var credential = GoogleCredential.FromFile(credentialPaths);
+    return StorageClient.Create(credential);
+});
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISemesterRepository, SemesterRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -32,6 +47,9 @@ builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISemesterService, SemesterService>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+builder.Services.AddScoped<IOpenAiSubmissionService, OpenAiSubmissionService>();
+builder.Services.Configure<OpenAiOptions>(
+    builder.Configuration.GetSection("OpenAI"));
 builder.Services.AddRazorPages();
 
 builder.Services.AddAutoMapper(cfg =>
@@ -96,7 +114,7 @@ builder.Services.AddRazorPages(options =>
 var credentialPath = Path.Combine(
     Directory.GetCurrentDirectory(),
     "Credentials",
-    "fpturesearchpapermanagement-firebase-adminsdk-fbsvc-651f744a16.json"
+    "fpturesearchpapermanagement-3465b1d3b88e.json"
 );
 
 FirebaseApp.Create(new AppOptions

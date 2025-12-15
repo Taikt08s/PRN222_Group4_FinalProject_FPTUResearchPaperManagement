@@ -15,6 +15,7 @@ namespace Service
     {
         private readonly ISubmissionRepository _submissionRepo;
         private readonly ISubmissionFileRepository _fileRepo;
+        private readonly IOpenAiSubmissionService _openAiSubmissionService;
         private readonly StorageClient _storage;
         private readonly IMapper _mapper;
 
@@ -24,16 +25,18 @@ namespace Service
         public SubmissionService(
             ISubmissionRepository submissionRepo,
             ISubmissionFileRepository fileRepo,
+            IOpenAiSubmissionService openAiSubmissionService,
             IMapper mapper)
         {
             _submissionRepo = submissionRepo;
             _fileRepo = fileRepo;
+            _openAiSubmissionService = openAiSubmissionService;
             _mapper = mapper;
 
             var credentialPath = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "Credentials",
-                "fpturesearchpapermanagement-firebase-adminsdk-fbsvc-651f744a16.json"
+                "fpturesearchpapermanagement-3465b1d3b88e.json"
             );
 
             var credential = GoogleCredential.FromFile(credentialPath);
@@ -83,6 +86,9 @@ namespace Service
 
             submission.Status = SubmissionStatus.Submitted.ToString();
             submission.Submitted_At = DateTime.UtcNow;
+            
+            await _openAiSubmissionService
+                .ValidateAndModerateSubmissionAsync(submission);
 
             await _submissionRepo.UpdateAsync(submission);
         }

@@ -2,11 +2,6 @@
 using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -22,6 +17,8 @@ namespace Repository
         public async Task<Submission?> GetByIdAsync(int id)
         {
             return await _context.Submissions
+                .Include(s => s.Files)
+                .Include(s => s.Group)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
