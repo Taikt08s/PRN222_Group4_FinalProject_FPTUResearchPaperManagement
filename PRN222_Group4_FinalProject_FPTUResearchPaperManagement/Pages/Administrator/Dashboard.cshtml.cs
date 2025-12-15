@@ -10,10 +10,10 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null)
-            {
-                return RedirectToPage("/Authentication/Login");
-            }
+            // if (userId == null)
+            // {
+            //     return RedirectToPage("/Authentication/Login");
+            // }
 
             return Page();
         }

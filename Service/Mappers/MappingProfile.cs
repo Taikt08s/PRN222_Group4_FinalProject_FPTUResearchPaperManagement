@@ -17,6 +17,12 @@ public class MappingProfile : Profile
         CreateMap<Topic, TopicResponseModel>();
         CreateMap<TopicRegistrationRequest, StudentGroup>();
         CreateMap<User, StudentBasicInfo>();
+        CreateMap<User, UserAdminDto>()
+            .ForMember(d => d.FullName, o => o.MapFrom(s => s.Full_Name))
+            .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.Created_At))
+            .ForMember(d => d.IsActive, o => o.MapFrom(s => s.Is_Active))
+            .ForMember(d => d.IsSuspended, o => o.MapFrom(s => s.Is_Suspended))
+            .ForMember(d => d.SuspendedUntil, o => o.MapFrom(s => s.Suspended_Until));
         CreateMap<SubmissionFile, SubmissionFileDto>();
         CreateMap<Submission, SubmissionDto>()
         .ForMember(d => d.GroupId, o => o.MapFrom(s => s.Group_Id))

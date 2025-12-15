@@ -17,6 +17,7 @@ namespace BusinessObject.Models
         public string Password_Hash { get; set; }
         public string Role { get; set; }
         public string Major { get; set; }
+        public bool Is_Active { get; set; }
         public bool Is_Suspended { get; set; }
         public DateTime? Suspended_Until { get; set; }
         public DateTime Created_At { get; set; }
