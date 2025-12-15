@@ -1,0 +1,45 @@
+﻿@page
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.Submission.IndexModel
+@{
+    ViewData["Title"] = "Quản lý tệp đề tài";
+    ViewBag.ShowSidebar = true;
+    ViewBag.ActiveMenu = "TopicSubmissions";
+}
+
+<h1>Quản lí tệp đề tài</h1>
+<hr/>
+
+@if (!Model.Topics.Any())
+{
+    <div class="alert alert-warning">Không tìm thấy đề tài.</div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Tên đề tài</th>
+                <th>Chuyên ngành</th>
+                <th>Học kỳ</th>
+                <th>Yêu cầu nhóm</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model.Topics)
+            {
+                <tr>
+                    <td>@t.Title</td>
+                    <td>@t.Major</td>
+                    <td>@t.SemesterTerm</td>
+                    <td>@(t.Is_Group_Required ? "Nhóm" : "Cá nhân")</td>
+                    <td>
+                        <a asp-page="./ByTopic" asp-route-id="@t.Id" class="btn btn-sm btn-primary">
+                            Xem nhóm / tệp
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
