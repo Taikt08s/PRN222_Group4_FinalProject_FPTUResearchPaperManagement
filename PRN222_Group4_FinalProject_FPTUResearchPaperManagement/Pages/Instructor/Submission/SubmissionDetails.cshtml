@@ -1,0 +1,53 @@
+﻿@page "{submissionId:int}"
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.Submission.SubmissionDetailsModel
+
+
+<div class="container bg-white rounded shadow-sm p-4 mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Submission Details — ID: @Model.SubmissionId</h4>
+        <a asp-page="/Instructor/Topic/Index" class="btn btn-secondary">Back to topics</a>
+    </div>
+
+    @if (Model.Submission == null)
+    {
+        <div class="alert alert-warning">Submission not found.</div>
+    }
+    else
+    {
+        <div class="mb-3">
+            <p><strong>Submission status:</strong> @Model.Submission.Status</p>
+            <p><strong>Submitted at:</strong> @(Model.Submission.SubmittedAt?.ToString("dd/MM/yyyy HH:mm") ?? "—")</p>
+            <p><strong>Plagiarism score:</strong> @Model.Submission.PlagiarismScore</p>
+            @if (!string.IsNullOrEmpty(Model.Submission.RejectReason))
+            {
+                <p><strong>Reject reason:</strong> @Model.Submission.RejectReason</p>
+            }
+        </div>
+
+        <h5>Files</h5>
+
+        @if (!Model.Files.Any())
+        {
+            <div class="alert alert-info">No files uploaded for this submission.</div>
+        }
+        else
+        {
+            <ul class="list-group">
+                @foreach (var f in Model.Files)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>@f.File_Name</strong>
+                            <div class="small text-muted">@f.File_Type • @f.Uploaded_At.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                        <div>
+                            <a class="btn btn-sm btn-outline-primary" href="@f.Firebase_Url" target="_blank" rel="noopener noreferrer">
+                                View / Download
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    }
+</div>
