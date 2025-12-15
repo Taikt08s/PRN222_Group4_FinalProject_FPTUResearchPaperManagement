@@ -25,4 +25,10 @@ public class SemesterRepository : GenericRepository<Semester>, ISemesterReposito
             .Where(sem => sem.End_Date.Date <= DateTime.Now.Date)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<Semester> GetByIdAsync(int semesterId)
+    {
+        return await _context.Semesters
+            .FirstOrDefaultAsync(s => s.Id == semesterId);
+    }
 }

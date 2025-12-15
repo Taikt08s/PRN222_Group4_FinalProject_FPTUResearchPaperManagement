@@ -24,5 +24,6 @@ namespace Service.Dtos
 
         public bool IsSubmitted => Status == "Submitted";
         public bool IsRejected => Status == "Rejected";
+        public bool IsSuspended => Status == "Suspended";
     }
 }

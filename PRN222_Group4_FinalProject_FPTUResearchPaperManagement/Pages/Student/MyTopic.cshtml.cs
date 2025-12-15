@@ -112,8 +112,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
                 RegisteredTopic.SemesterId
             );
 
-            // prevent double submit
-            if (submission.Status == "Submitted")
+            if (submission.Status == "Submitted" || submission.Status == "Suspended")
                 return RedirectToPage();
 
             await _submissionService.SubmitAsync(submission.Id);

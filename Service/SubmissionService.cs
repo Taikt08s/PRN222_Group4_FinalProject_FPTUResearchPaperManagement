@@ -16,6 +16,7 @@ namespace Service
         private readonly ISubmissionRepository _submissionRepo;
         private readonly ISubmissionFileRepository _fileRepo;
         private readonly IOpenAiSubmissionService _openAiSubmissionService;
+        private readonly ISuspensionService _suspensionService;
         private readonly StorageClient _storage;
         private readonly IMapper _mapper;
 
@@ -26,11 +27,13 @@ namespace Service
             ISubmissionRepository submissionRepo,
             ISubmissionFileRepository fileRepo,
             IOpenAiSubmissionService openAiSubmissionService,
+            ISuspensionService suspensionService,
             IMapper mapper)
         {
             _submissionRepo = submissionRepo;
             _fileRepo = fileRepo;
             _openAiSubmissionService = openAiSubmissionService;
+            _suspensionService = suspensionService;
             _mapper = mapper;
 
             var credentialPath = Path.Combine(
@@ -89,6 +92,8 @@ namespace Service
             
             await _openAiSubmissionService
                 .ValidateAndModerateSubmissionAsync(submission);
+
+            await _suspensionService.SuspendGroupAsync(submission);
 
             await _submissionRepo.UpdateAsync(submission);
         }

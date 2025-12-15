@@ -1,6 +1,6 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using BusinessObject.Enums;
 using BusinessObject.Models;
+using DocumentFormat.OpenXml.Packaging;
 using Google.Cloud.Storage.V1;
 using Microsoft.Extensions.Options;
 using OpenAI.Chat;
@@ -8,6 +8,8 @@ using Service.Dtos;
 using Service.Helpers;
 using Service.Interfaces;
 using Service.Options;
+using System.Text;
+using System.Text.Json;
 
 namespace Service;
 
@@ -22,7 +24,13 @@ public class OpenAiSubmissionService : IOpenAiSubmissionService
         _chat = new ChatClient(cfg.Model, cfg.ApiKey);
         _storage = storage;
     }
-    
+    private static string ExtractDocxText(Stream stream)
+    {
+        using var wordDoc = WordprocessingDocument.Open(stream, false);
+        var body = wordDoc.MainDocumentPart.Document.Body;
+        return body.InnerText;
+    }
+
     private static string ExtractObjectName(string firebaseUrl)
     {
         var uri = new Uri(firebaseUrl);
@@ -70,9 +78,16 @@ public class OpenAiSubmissionService : IOpenAiSubmissionService
                 ms
             );
 
-            var text = Encoding.UTF8.GetString(
-                ms.ToArray().Take(10_000).ToArray()
-            );
+            string text;
+
+            if (file.File_Name.EndsWith(".docx"))
+            {
+                text = ExtractDocxText(ms);
+            }
+            else
+            {
+                text = Encoding.UTF8.GetString(ms.ToArray());
+            }
 
             contentBuilder.AppendLine($"--- FILE: {file.File_Name} ---");
             contentBuilder.AppendLine(text);
@@ -135,9 +150,9 @@ public class OpenAiSubmissionService : IOpenAiSubmissionService
 
     private void Reject(Submission submission, string reason)
     {
-        submission.Status = "Rejected";
+        submission.Status = SubmissionStatus.Rejected.ToString();
         submission.Reject_Reason = reason;
-        submission.Plagiarism_Flag = true;
+        submission.Plagiarism_Flag = false;
     }
 
     private void UpdateModeration(Submission submission, ThesisAiResult result)
@@ -158,8 +173,12 @@ public class OpenAiSubmissionService : IOpenAiSubmissionService
 
         if (!result.IsApproved)
         {
-            submission.Status = "Rejected";
+            submission.Status = SubmissionStatus.Rejected.ToString();
             submission.Reject_Reason = "AI detected plagiarism or violations";
+            if (submission.Topic != null)
+            {
+                submission.Topic.Status = TopicStatus.Closed.ToString();
+            }
         }
     }
 }

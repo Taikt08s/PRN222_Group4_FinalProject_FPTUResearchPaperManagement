@@ -43,11 +43,14 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 builder.Services.AddScoped<ISubmissionFileRepository, SubmissionFileRepository>();
+builder.Services.AddScoped<IStudentGroupRepository, StudentGroupRepository>();
 builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISemesterService, SemesterService>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddScoped<IOpenAiSubmissionService, OpenAiSubmissionService>();
+builder.Services.AddScoped<ISuspensionService, SuspensionService>();
+builder.Services.AddScoped<ISuspensionRepository, SuspensionRepository>();
 builder.Services.Configure<OpenAiOptions>(
     builder.Configuration.GetSection("OpenAI"));
 builder.Services.AddRazorPages();

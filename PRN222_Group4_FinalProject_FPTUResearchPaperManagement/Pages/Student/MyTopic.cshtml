@@ -7,6 +7,7 @@
     .GroupBy(f => f.File_Type)
     .ToDictionary(g => g.Key, g => g.ToList());
     bool isSubmitted = Model.Submission?.IsSubmitted == true;
+    bool isSuspended = Model.Submission?.IsSuspended == true;
     int CountOf(string folder) =>
         filesByFolder.ContainsKey(folder)? filesByFolder[folder].Count: 0;
 }
@@ -18,7 +19,21 @@
 
 <div class="rounded p-3 d-flex flex-row gap-3 bg-white shadow-sm">
     <div class="topic-inner w-100">
-    <h3 class="mb-4">Đề Tài Đã Đăng Ký</h3>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h3 class="mb-0">Đề Tài Đã Đăng Ký</h3>
+
+            @if (isSuspended)
+            {
+                <div class="alert alert-danger py-1 px-3 mb-0">
+                    ⚠ Bạn đã bị đình chỉ do vi phạm học thuật. Mọi thao tác nộp bài đã bị khóa.
+                </div>
+            }else if (isSubmitted)
+            {
+                <div class="alert alert-success py-1 px-3 mb-0">
+                    ✔ Nộp bài thành công. Đề tài đang được chờ duyệt.
+                </div>
+            }
+        </div>
 
         @if (Model.RegisteredTopic == null || Model.RegisteredTopic.Status != "Assigned")
     {
@@ -98,7 +113,7 @@
 
                         <!-- Final Thesis and Reports -->
                         <li class="d-flex align-items-center justify-content-between">
-                            @if (isSubmitted)
+                            @if (isSubmitted || isSuspended)
                             {
                                 <a class="folder-link disabled-folder" aria-disabled="true">
                                     <span>
@@ -129,7 +144,7 @@
 
                         <!-- Slides -->
                         <li class="d-flex align-items-center justify-content-between">
-                            @if (isSubmitted)
+                            @if (isSubmitted || isSuspended)
                             {
                                 <a class="folder-link disabled-folder" aria-disabled="true">
                                     <span>
@@ -160,7 +175,7 @@
 
                         <!-- Others -->
                         <li class="d-flex align-items-center justify-content-between">
-                            @if (isSubmitted)
+                            @if (isSubmitted || isSuspended)
                             {
                                 <a class="folder-link disabled-folder" aria-disabled="true">
                                     <span>
@@ -195,7 +210,13 @@
 
             <!-- Footer -->
             <div class="submission-footer text-end p-2">
-                @if (isSubmitted)
+                @if (isSuspended)
+                {
+                    <button class="btn btn-danger px-4" disabled>
+                        ⛔ Tài khoản bị đình chỉ
+                    </button>
+                }
+                else if (isSubmitted)
                 {
                     <button class="btn btn-success px-4" disabled>
                         ✔ Đã nộp bài
