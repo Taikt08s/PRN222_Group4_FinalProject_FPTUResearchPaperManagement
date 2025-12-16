@@ -70,6 +70,7 @@ namespace Repository
                     true :
                     filter.GroupStatusFilter == "Solo" ? t.Is_Group_Required == true : t.Is_Group_Required == false)
             .Where(t => filter.TopicStatusFilter == null ? true : filter.TopicStatusFilter.Contains(t.Status))
+            .Where(t => filter.ByIntructors == null ? true : filter.ByIntructors.Contains(t.Created_By))
             .AsQueryable();
         }
 

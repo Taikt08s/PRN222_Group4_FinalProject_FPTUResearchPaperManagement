@@ -4,6 +4,42 @@
     ViewData["Title"] = "Nhóm & Tệp - " + (Model.Topic?.Title ?? "");
 }
 
+@section Scripts {
+    <script src="https://unpkg.com/@@microsoft/signalr@latest/dist/browser/signalr.js"></script>
+    <script>
+        "use strict";
+        const topicId = @Model.Topic.Id;
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .build();
+
+        connection.on("SubmissionSubmitted", function (data) {
+
+            // Only update this topic
+            if (data.topicId !== topicId) return;
+
+            const row = document.getElementById(`group-row-${data.groupId}`);
+            if (!row) return;
+
+            // Update submission status
+            row.querySelector(".submission-status").innerHTML =
+                `<span class="badge bg-success">${data.submissionStatus}</span>`;
+
+            // Update action button
+            row.querySelector(".submission-action").innerHTML = `
+                <a href="/Instructor/Submission/SubmissionDetails/${data.submissionId}"
+                   class="btn btn-sm btn-primary">
+                    View files
+                </a>
+            `;
+        });
+
+        connection.start()
+            .catch(err => console.error("SignalR error:", err));
+    </script>
+}
+
 <div class="container bg-white rounded shadow-sm p-4 mt-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4>Nhóm & Tệp cho đề tài: @Model.Topic.Title</h4>
@@ -32,7 +68,7 @@
             <tbody>
                 @foreach (var g in Model.Groups)
                 {
-                    <tr>
+                    <tr id="group-row-@g.GroupId">
                         <td>@g.GroupId</td>
                         <td>@g.LeaderName</td>
                         <td>
@@ -58,7 +94,10 @@
                                 }
                             </ul>
                         </td>
-                        <td>@g.SubmissionStatus</td>
+                        <td class="submission-status">
+                            @g.SubmissionStatus
+                        </td>
+
                         <td>
                             @if (g.SubmissionId.HasValue)
                             {

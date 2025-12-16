@@ -17,12 +17,25 @@
             .build();
 
         // Lắng nghe tín hiệu "ReceiveApprovalUpdate"
-        connection.on("ReceiveApprovalUpdate", function (message) {
-            console.log("Server signal received: " + message);
-            
-            // Kích hoạt tải lại trang
-            window.location.reload(); 
+        connection.on("ReceiveApprovalUpdate", function (data) {
+            console.log("Update received:", data);
+
+            const row = document.getElementById(`topic-row-${data.topicId}`);
+            if (!row) return;
+
+            const statusBadge = row.querySelector(".topic-status");
+            if (!statusBadge) return;
+
+            // Update text
+            statusBadge.innerText = data.vietnameseStatus;
+
+            // Update status data
+            statusBadge.dataset.status = data.newStatus;
+
+            // Optional: change color by status
+            statusBadge.className = "badge topic-status " + getStatusClass(data.newStatus);
         });
+
 
         // Bắt đầu kết nối
         connection.start().catch(function (err) {
@@ -107,7 +120,7 @@ else
         <tbody>
             @foreach (var item in Model.Topics)
             {
-                <tr>
+                <tr id="topic-row-@item.Id">
                     <td>@item.Title</td>
                     <td>@item.Major</td>
                     <td>@item.SemesterTerm</td> 
@@ -127,10 +140,11 @@ else
                         }
                     </td>
                     <td>
-                    @{
-                        var vietnameseStatus = Model.GetVietnameseStatus(item.Status);
-                    }
-                    <span class="badge bg-secondary">@vietnameseStatus</span>
+                        <span 
+                            class="badge bg-secondary topic-status"
+                            data-status="@item.Status">
+                            @Model.GetVietnameseStatus(item.Status)
+                        </span>
                     </td>
                     <td>
                         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#topicDetailModal_@item.Id">
