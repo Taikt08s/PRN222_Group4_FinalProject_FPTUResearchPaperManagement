@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
+using PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Hubs;
 using Service.Dtos;
 using Service.Interfaces;
 
 namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.Submission
 {
+
+
     [Authorize(Roles = "Instructor,GraduationProjectEvaluationCommitteeMember")]
     public class SubmissionDetailsModel : PageModel
     {

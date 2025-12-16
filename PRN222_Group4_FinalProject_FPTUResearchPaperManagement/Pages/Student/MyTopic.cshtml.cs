@@ -1,6 +1,8 @@
 ﻿using Google.Api.Gax.ResourceNames;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
+using PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Hubs;
 using Service.Dtos;
 using Service.Interfaces;
 using System.Security.Claims;
@@ -11,9 +13,11 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
     {
         private readonly ITopicService _topicService;
         private readonly ISubmissionService _submissionService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public MyTopicModel(ITopicService topicService, ISubmissionService submissionService)
+        public MyTopicModel(ITopicService topicService, ISubmissionService submissionService, IHubContext<NotificationHub> hubContext)
         {
+            _hubContext = hubContext;
             _topicService = topicService;
             _submissionService = submissionService;
         }
@@ -30,7 +34,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
 
         public List<SubmissionFileDto> Files { get; set; } = new();
         public string CurrentFolder { get; set; }
-        
+
 
         public async Task<IActionResult> OnGet(string? folder)
         {
@@ -116,6 +120,14 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
                 return RedirectToPage();
 
             await _submissionService.SubmitAsync(submission.Id);
+            await _hubContext.Clients.Group("Instructors")
+                .SendAsync("SubmissionSubmitted", new
+                {
+                    topicId = RegisteredTopic.Id,
+                    groupId = RegisteredTopic.GroupId,
+                    submissionId = submission.Id,
+                    submissionStatus = "Submitted"
+                });
 
             TempData["Success"] = "Nộp bài thành công!";
             return RedirectToPage();

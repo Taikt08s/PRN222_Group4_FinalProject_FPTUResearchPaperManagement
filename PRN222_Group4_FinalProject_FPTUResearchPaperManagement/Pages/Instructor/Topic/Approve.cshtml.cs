@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using BusinessObject.Enums;
 using BusinessObject.Filters;
 using BusinessObject.Models;
@@ -34,8 +35,29 @@ public class TopicApproveModel : PageModel
     public int TotalPages { get; set; }
     private const int PageSize = 20;
 
-    public async Task OnGetAsync(int pageIndex = 1)
+    private Guid GetUserGuid()
     {
+        string? id = HttpContext.User
+            .FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(id))
+        {
+            throw new Exception("Cannot get user id");
+        }
+        return Guid.Parse(id);
+    }
+
+    public async Task<IActionResult> OnGetAsync(int pageIndex = 1)
+    {
+        Guid id;
+        try
+        {
+            id = GetUserGuid();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            return RedirectToPage("/Authentication/Login");
+        }
         PageIndex = pageIndex > 0 ? pageIndex : 1;
         var pendingStatuses = new List<string>
         {
@@ -46,8 +68,8 @@ public class TopicApproveModel : PageModel
         TopicFilter filter = new()
         {
             SemesterTermFilter = currentSemester == null ? null : new() { currentSemester.Term },
-            TopicStatusFilter = pendingStatuses
-
+            TopicStatusFilter = pendingStatuses,
+            ByIntructors = new() { id }
         };
         var totalTopics = await _topicService.CountAsync(filter);
         TotalPages = (int)Math.Ceiling(totalTopics / (double)PageSize);
@@ -56,6 +78,7 @@ public class TopicApproveModel : PageModel
             PageIndex = TotalPages;
         }
         PendingTopics = await _topicService.GetPaginationAsync(filter, PageIndex, PageSize);
+        return Page();
     }
 
     // --- Helper Method để dịch trạng thái (tái sử dụng) ---
@@ -88,8 +111,14 @@ public class TopicApproveModel : PageModel
         try
         {
             await _topicService.UpdateTopicStatus(topicId, newStatus);
-            string reloadMessage = "Danh sách đề tài chờ duyệt đã được cập nhật.";
-            await _hubContext.Clients.All.SendAsync("ReceiveApprovalUpdate", reloadMessage);
+            await _hubContext.Clients.All.SendAsync("ReceiveApprovalUpdate",
+                new
+                {
+                    topicId = topicId,
+                    newStatus = newStatus.ToString(),
+                    vietnameseStatus = GetVietnameseStatus(newStatus.ToString())
+                }
+            );
         }
         catch (Exception ex)
         {

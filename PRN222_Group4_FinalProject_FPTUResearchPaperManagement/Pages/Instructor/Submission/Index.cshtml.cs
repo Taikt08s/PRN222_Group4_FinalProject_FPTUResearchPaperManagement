@@ -1,4 +1,7 @@
+using System.Security.Claims;
+using BusinessObject.Filters;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Service.Dtos;
 using Service.Interfaces;
@@ -20,13 +23,40 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
         public int PageIndex { get; set; } = 1;
         public int PageSize { get; set; } = 50;
 
-        public async Task OnGetAsync(int pageIndex = 1)
+        private Guid GetUserGuid()
         {
+            string? id = HttpContext.User
+        .FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new Exception("Cannot get user id");
+            }
+            Console.WriteLine("String id: " + id);
+            return Guid.Parse(id);
+        }
+
+        public async Task<IActionResult> OnGetAsync(int pageIndex = 1)
+        {
+            Guid id;
+            try
+            {
+                id = GetUserGuid();
+            }
+            catch
+            {
+                return RedirectToPage("/Authentication/Login");
+            }
             PageIndex = pageIndex;
-            Topics = await _topicService.GetPaginationAsync(null, PageIndex, PageSize);
+            TopicFilter filter = new()
+            {
+                ByIntructors = new() { GetUserGuid() }
+            };
+            Topics = await _topicService.GetPaginationAsync(filter, PageIndex, PageSize);
 
             ViewData["ShowSidebar"] = true;
             ViewData["ActiveMenu"] = "TopicSubmissions";
+            return Page();
         }
     }
 }
