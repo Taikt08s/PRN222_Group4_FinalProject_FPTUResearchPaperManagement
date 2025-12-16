@@ -28,6 +28,7 @@ namespace Repository
         {
             return await _context.Topics
                 .Include(t => t.Semester)
+                .Include(t => t.Groups)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
@@ -91,6 +92,20 @@ namespace Repository
             .Skip((page - 1) * size)
             .Take(size)
             .ToListAsync();
+        }
+
+        public async Task<Topic?> GetTopicByGroupAsync(int groupId)
+        {
+            return await _context.StudentGroups
+                .Where(grp => grp.Id == groupId)
+                .Select(grp => grp.Topic)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<StudentGroup?> GetGroupByTopicAsync(int topic)
+        {
+            return await _context.StudentGroups
+                .FirstOrDefaultAsync(grp => grp.Topic_Id == topic);
         }
     }
 

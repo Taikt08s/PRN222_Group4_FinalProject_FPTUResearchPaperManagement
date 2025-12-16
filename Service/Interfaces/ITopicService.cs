@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Filters;
+using BusinessObject.Models;
 using Service.Dtos;
 
 namespace Service.Interfaces
@@ -19,5 +20,7 @@ namespace Service.Interfaces
 
         Task<int> CountAsync(TopicFilter? filter);
         Task<List<TopicResponseModel>> GetPaginationAsync(TopicFilter? filter, int page, int size);
+        Task<Topic?> GetTopicByGroupAsync(int groupId);
+        Task<StudentGroup?> GetGroupByTopicAsync(int topic);
     }
 }

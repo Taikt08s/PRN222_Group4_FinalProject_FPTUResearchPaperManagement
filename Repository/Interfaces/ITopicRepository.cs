@@ -20,5 +20,7 @@ namespace Repository.Interfaces
         Task<int> CountAsync(TopicFilter? filter);
 
         Task<List<Topic>> GetPaginationAsync(TopicFilter? filter, int page, int size);
+        Task<Topic?> GetTopicByGroupAsync(int groupId);
+        Task<StudentGroup?> GetGroupByTopicAsync(int topic);
     }
 }

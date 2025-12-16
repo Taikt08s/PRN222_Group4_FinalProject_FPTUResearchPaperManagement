@@ -1,4 +1,5 @@
-﻿using DataAccessLayer;
+﻿using BusinessObject.Models;
+using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
 
@@ -20,5 +21,6 @@ namespace Repository
                 .Select(m => m.Student_Id)
                 .ToListAsync();
         }
+
     }
 }
