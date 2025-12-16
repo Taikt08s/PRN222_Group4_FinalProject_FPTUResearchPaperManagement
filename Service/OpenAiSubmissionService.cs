@@ -115,6 +115,17 @@ public class OpenAiSubmissionService : IOpenAiSubmissionService
 
             Analyze the thesis content below and return STRICT JSON only.
 
+            Evaluation rules (IMPORTANT):
+            - plagiarism_score must be a number from 0 to 100
+            - plagiarism_pass MUST be:
+              true  if plagiarism_score > 80
+              false if plagiarism_score <= 80
+            - is_approved MUST be determined as follows:
+              • true  → if plagiarism_score <= 80 AND issues are minor or acceptable
+              • false → if plagiarism_score > 80 OR violations are serious
+            - Moderate scores (60–80) should be treated leniently if originality
+              and citation quality are acceptable
+
             Check:
             1. Plagiarism
             2. Academic originality
