@@ -144,6 +144,16 @@ namespace Service
             topic.Status = status;
             await _repo.UpdateAsync(topic);
         }
+
+        public async Task<Topic?> GetTopicByGroupAsync(int groupId)
+        {
+            return await _repo.GetTopicByGroupAsync(groupId);
+        }
+
+        public async Task<StudentGroup?> GetGroupByTopicAsync(int topic)
+        {
+            return await _repo.GetGroupByTopicAsync(topic);
+        }
     }
 
 }

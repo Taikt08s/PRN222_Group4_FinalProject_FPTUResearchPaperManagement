@@ -99,14 +99,19 @@ public class TopicApproveModel : PageModel
         return statusEnglish;
     }
 
-
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> OnPostApproveAsync(int id)
     {
-        return await ProcessTopicStatusUpdate(id, nameof(TopicStatus.Assigned));
+        var group = await _topicService.GetGroupByTopicAsync(id);
+        if (group == null)
+        {
+            ErrorMessage = "Cannot found group for topic with id " + id;
+            return RedirectToPage();
+        }
+        return await ProcessTopicStatusUpdate(id, group.Id, nameof(TopicStatus.Assigned));
     }
 
-    private async Task<IActionResult> ProcessTopicStatusUpdate(int topicId, string newStatus)
+    private async Task<IActionResult> ProcessTopicStatusUpdate(int topicId, int groupId, string newStatus)
     {
         try
         {
@@ -115,6 +120,7 @@ public class TopicApproveModel : PageModel
                 new
                 {
                     topicId = topicId,
+                    groupId = groupId,
                     newStatus = newStatus.ToString(),
                     vietnameseStatus = GetVietnameseStatus(newStatus.ToString())
                 }
