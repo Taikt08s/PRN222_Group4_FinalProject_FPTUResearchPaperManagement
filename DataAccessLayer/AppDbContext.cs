@@ -156,7 +156,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Administrator.ToString(),
                     Major = "System Administrator",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -167,7 +168,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Student.ToString(),
                     Major = "Ngôn Ngữ Anh",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -178,7 +180,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Student.ToString(),
                     Major = "Ngôn Ngữ Anh",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -189,7 +192,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Student.ToString(),
                     Major = "Quản Trị Kinh Doanh",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -200,7 +204,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Student.ToString(),
                     Major = "Quản Trị Kinh Doanh",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -211,7 +216,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Student.ToString(),
                     Major = "Kỹ Thuật Phần Mềm",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -222,7 +228,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Student.ToString(),
                     Major = "Kỹ Thuật Phần Mềm",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -233,7 +240,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Student.ToString(),
                     Major = "Kỹ Thuật Phần Mềm",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -244,7 +252,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Student.ToString(),
                     Major = "Kỹ Thuật Phần Mềm",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -255,7 +264,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Instructor.ToString(),
                     Major = "Teacher",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -266,7 +276,8 @@ namespace DataAccessLayer
                     Role = AccountRole.Instructor.ToString(),
                     Major = "Teacher",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -277,7 +288,8 @@ namespace DataAccessLayer
                     Role = AccountRole.GraduationProjectEvaluationCommitteeMember.ToString(),
                     Major = "Teacher",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -288,7 +300,8 @@ namespace DataAccessLayer
                     Role = AccountRole.GraduationProjectEvaluationCommitteeMember.ToString(),
                     Major = "Teacher",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -299,7 +312,8 @@ namespace DataAccessLayer
                     Role = AccountRole.GraduationProjectEvaluationCommitteeMember.ToString(),
                     Major = "Teacher",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 },
                 new User
                 {
@@ -310,7 +324,8 @@ namespace DataAccessLayer
                     Role = AccountRole.GraduationProjectEvaluationCommitteeMember.ToString(),
                     Major = "Teacher",
                     Is_Suspended = false,
-                    Created_At = DateTime.UtcNow
+                    Created_At = DateTime.UtcNow,
+                    Is_Active = true,
                 }
             );
 
