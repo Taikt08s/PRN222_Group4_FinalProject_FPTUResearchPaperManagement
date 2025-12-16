@@ -41,7 +41,10 @@
                             <div class="small text-muted">@f.File_Type • @f.Uploaded_At.ToString("dd/MM/yyyy HH:mm")</div>
                         </div>
                         <div>
-                            <a class="btn btn-sm btn-outline-primary" href="@f.Firebase_Url" target="_blank" rel="noopener noreferrer">
+                            <!-- Route download through server to avoid direct public URL -->
+                            <a class="btn btn-sm btn-outline-primary"
+                               asp-page="./DownloadFile"
+                               asp-route-fileId="@f.Id">
                                 View / Download
                             </a>
                         </div>
