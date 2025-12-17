@@ -38,9 +38,9 @@
                     @* Admin menu *@
                     @if (isAdmin)
                     {
-                        <li><a href="/Administrator/Dashboard" class="@(ViewBag.ActiveMenu == "Dashboard" ? "active" : "")">>📊Dashboard</a></li>
+                        <li><a href="/Administrator/Dashboard" class="@(ViewBag.ActiveMenu == "Dashboard" ? "active" : "")">📊Dashboard</a></li>
                         <li><a href="/Administrator/Semester" class="@(ViewBag.ActiveMenu == "Semester" ? "active" : "")">📅 Quản lí kỳ</a></li>
-                        <li><a href="/Administrator/ThesisTopic" class="@(ViewBag.ActiveMenu == "ThesisTopic" ? "active" : "")">📝 Quản lí đề tài</a></li>
+                        <li><a href="/Administrator/Topic" class="@(ViewBag.ActiveMenu == "ThesisTopic" ? "active" : "")">📝 Quản lí đề tài</a></li>
                         <li><a href="/Administrator/User" class="@(ViewBag.ActiveMenu == "User" ? "active" : "")">👤 Quản lí người dùng</a></li>
                     }
 

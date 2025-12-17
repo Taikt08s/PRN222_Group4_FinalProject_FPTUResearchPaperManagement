@@ -46,5 +46,27 @@ namespace Repository
             _context.Submissions.Update(submission);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Submission>> GetAllAsync()
+        {
+            return await _context.Submissions
+                .Include(s => s.Semester)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<int> CountByStatusAsync(string status)
+        {
+            return await _context.Submissions
+                .Where(s => s.Status == status)
+                .CountAsync();
+        }
+
+        public async Task<int> CountPlagiarismFlaggedAsync()
+        {
+            return await _context.Submissions
+                .Where(s => s.Plagiarism_Flag)
+                .CountAsync();
+        }
     }
 }

@@ -28,6 +28,10 @@ namespace Repository
         {
             return await _context.Topics
                 .Include(t => t.Semester)
+                .Include(t => t.Creator)
+                .Include(t => t.Groups)
+                    .ThenInclude(g => g.Members)
+                        .ThenInclude(m => m.Student)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
@@ -90,6 +94,20 @@ namespace Repository
             .Skip((page - 1) * size)
             .Take(size)
             .ToListAsync();
+        }
+
+        public async Task<Topic> CreateTopicAsync(Topic topic)
+        {
+            await _context.Topics.AddAsync(topic);
+            await _context.SaveChangesAsync();
+            return topic;
+        }
+
+        public async Task<Topic> UpdateTopicAsync(Topic topic)
+        {
+            _context.Topics.Update(topic);
+            await _context.SaveChangesAsync();
+            return topic;
         }
     }
 

@@ -19,4 +19,6 @@ public interface IUserRepository
     Task UpdateAsync(User user);
 
     Task<bool> SoftDeleteAsync(Guid id);
+
+    Task<int> CountByRoleAsync(string role);
 }

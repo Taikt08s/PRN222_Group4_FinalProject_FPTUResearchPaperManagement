@@ -4,4 +4,356 @@
     ViewBag.ShowSidebar = true;
     ViewBag.ActiveMenu = "Dashboard";
 }
-<h1>Administrator Dashboard</h1>
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
+
+    :root {
+        --dash-ink: #0f172a;
+        --dash-muted: #64748b;
+        --dash-accent: #0ea5e9;
+        --dash-success: #10b981;
+        --dash-warning: #f59e0b;
+        --dash-danger: #ef4444;
+        --dash-panel: rgba(255, 255, 255, 0.95);
+        --dash-border: rgba(15, 23, 42, 0.08);
+    }
+
+    .dashboard-container {
+        font-family: 'Sora', 'Segoe UI', sans-serif;
+        padding: 32px;
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(249, 115, 22, 0.08));
+        min-height: 100vh;
+    }
+
+    .dashboard-header {
+        margin-bottom: 32px;
+    }
+
+    .dashboard-header h1 {
+        margin: 0;
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--dash-ink);
+    }
+
+    .dashboard-header p {
+        margin: 8px 0 0;
+        color: var(--dash-muted);
+        font-size: 16px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 48px;
+    }
+
+    .stat-card {
+        background: var(--dash-panel);
+        border-radius: 20px;
+        padding: 28px;
+        border: 1px solid var(--dash-border);
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15);
+    }
+
+    .stat-card h3 {
+        margin: 0 0 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--dash-muted);
+    }
+
+    .stat-card .stat-value {
+        font-size: 48px;
+        font-weight: 700;
+        margin: 12px 0;
+    }
+
+    .stat-card.students .stat-value { color: var(--dash-accent); }
+    .stat-card.submitted .stat-value { color: var(--dash-success); }
+    .stat-card.approved .stat-value { color: #8b5cf6; }
+    .stat-card.plagiarism .stat-value { color: var(--dash-warning); }
+    .stat-card.rejected .stat-value { color: var(--dash-danger); }
+
+    .table-section {
+        background: var(--dash-panel);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12);
+        margin-bottom: 32px;
+    }
+
+    .table-section h2 {
+        margin: 0 0 24px;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--dash-ink);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead {
+        background: rgba(14, 165, 233, 0.08);
+        border-radius: 12px;
+    }
+
+    th {
+        padding: 16px;
+        text-align: left;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--dash-muted);
+        border-bottom: 2px solid var(--dash-border);
+    }
+
+    td {
+        padding: 16px;
+        border-bottom: 1px solid var(--dash-border);
+        color: var(--dash-ink);
+    }
+
+    tbody tr:hover {
+        background: rgba(14, 165, 233, 0.04);
+    }
+
+    .badge {
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .badge-students { background: rgba(14, 165, 233, 0.15); color: var(--dash-accent); }
+    .badge-submitted { background: rgba(16, 185, 129, 0.15); color: var(--dash-success); }
+    .badge-approved { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; }
+    .badge-plagiarism { background: rgba(245, 158, 11, 0.15); color: var(--dash-warning); }
+    .badge-rejected { background: rgba(239, 68, 68, 0.15); color: var(--dash-danger); }
+
+    .empty-state {
+        text-align: center;
+        padding: 48px;
+        color: var(--dash-muted);
+    }
+</style>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>📊 Bảng điều khiển quản trị</h1>
+        <p>Tổng quan thống kê hệ thống và chi tiết theo từng kỳ học.</p>
+    </div>
+
+    <!-- Overall Statistics -->
+    <div class="stats-grid">
+        <div class="stat-card students">
+            <h3>Tổng sinh viên</h3>
+            <div class="stat-value">@Model.Statistics.TotalStudents</div>
+        </div>
+        <div class="stat-card submitted">
+            <h3>Đã nộp</h3>
+            <div class="stat-value">@Model.Statistics.TotalSubmitted</div>
+        </div>
+        <div class="stat-card approved">
+            <h3>Đã duyệt</h3>
+            <div class="stat-value">@Model.Statistics.TotalApproved</div>
+        </div>
+        <div class="stat-card plagiarism">
+            <h3>Phát hiện đạo văn</h3>
+            <div class="stat-value">@Model.Statistics.TotalPlagiarism</div>
+        </div>
+        <div class="stat-card rejected">
+            <h3>Bị từ chối</h3>
+            <div class="stat-value">@Model.Statistics.TotalRejected</div>
+        </div>
+    </div>
+
+    <!-- Table 1: Students by Semester -->
+    <div class="table-section">
+        <h2>1️⃣ Số lượng sinh viên theo kỳ</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kỳ học</th>
+                    <th>Số lượng sinh viên</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Statistics.SemesterStats.Any())
+                {
+                    @foreach (var semester in Model.Statistics.SemesterStats)
+                    {
+                        <tr>
+                            <td><strong>@semester.SemesterName</strong></td>
+                            <td><span class="badge badge-students">@semester.Students sinh viên</span></td>
+                        </tr>
+                    }
+                    <tr style="background: rgba(14, 165, 233, 0.1); font-weight: 600;">
+                        <td>TỔNG CỘNG</td>
+                        <td><span class="badge badge-students">@Model.Statistics.TotalStudents sinh viên</span></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" class="empty-state">Chưa có dữ liệu.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Table 2: Submitted Count by Semester -->
+    <div class="table-section">
+        <h2>2️⃣ Số lượng bài nộp theo kỳ</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kỳ học</th>
+                    <th>Số lượng bài nộp</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Statistics.SemesterStats.Any())
+                {
+                    @foreach (var semester in Model.Statistics.SemesterStats)
+                    {
+                        <tr>
+                            <td><strong>@semester.SemesterName</strong></td>
+                            <td><span class="badge badge-submitted">@semester.Submitted bài</span></td>
+                        </tr>
+                    }
+                    <tr style="background: rgba(16, 185, 129, 0.1); font-weight: 600;">
+                        <td>TỔNG CỘNG</td>
+                        <td><span class="badge badge-submitted">@Model.Statistics.TotalSubmitted bài</span></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" class="empty-state">Chưa có dữ liệu.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Table 3: Approved Count by Semester -->
+    <div class="table-section">
+        <h2>3️⃣ Số lượng bài đã duyệt theo kỳ</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kỳ học</th>
+                    <th>Số lượng bài duyệt</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Statistics.SemesterStats.Any())
+                {
+                    @foreach (var semester in Model.Statistics.SemesterStats)
+                    {
+                        <tr>
+                            <td><strong>@semester.SemesterName</strong></td>
+                            <td><span class="badge badge-approved">@semester.Approved bài</span></td>
+                        </tr>
+                    }
+                    <tr style="background: rgba(139, 92, 246, 0.1); font-weight: 600;">
+                        <td>TỔNG CỘNG</td>
+                        <td><span class="badge badge-approved">@Model.Statistics.TotalApproved bài</span></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" class="empty-state">Chưa có dữ liệu.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Table 4: Plagiarism Count by Semester -->
+    <div class="table-section">
+        <h2>4️⃣ Số lượng phát hiện đạo văn theo kỳ</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kỳ học</th>
+                    <th>Số lượng đạo văn</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Statistics.SemesterStats.Any())
+                {
+                    @foreach (var semester in Model.Statistics.SemesterStats)
+                    {
+                        <tr>
+                            <td><strong>@semester.SemesterName</strong></td>
+                            <td><span class="badge badge-plagiarism">@semester.Plagiarism bài</span></td>
+                        </tr>
+                    }
+                    <tr style="background: rgba(245, 158, 11, 0.1); font-weight: 600;">
+                        <td>TỔNG CỘNG</td>
+                        <td><span class="badge badge-plagiarism">@Model.Statistics.TotalPlagiarism bài</span></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" class="empty-state">Chưa có dữ liệu.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Table 5: Rejected Count by Semester -->
+    <div class="table-section">
+        <h2>5️⃣ Số lượng bài bị từ chối theo kỳ</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kỳ học</th>
+                    <th>Số lượng từ chối</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Statistics.SemesterStats.Any())
+                {
+                    @foreach (var semester in Model.Statistics.SemesterStats)
+                    {
+                        <tr>
+                            <td><strong>@semester.SemesterName</strong></td>
+                            <td><span class="badge badge-rejected">@semester.Rejected bài</span></td>
+                        </tr>
+                    }
+                    <tr style="background: rgba(239, 68, 68, 0.1); font-weight: 600;">
+                        <td>TỔNG CỘNG</td>
+                        <td><span class="badge badge-rejected">@Model.Statistics.TotalRejected bài</span></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" class="empty-state">Chưa có dữ liệu.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

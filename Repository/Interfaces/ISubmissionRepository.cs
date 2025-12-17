@@ -19,5 +19,9 @@ namespace Repository.Interfaces
         Task AddAsync(Submission submission);
 
         Task UpdateAsync(Submission submission);
-    }
+        Task<List<Submission>> GetAllAsync();
+
+        Task<int> CountByStatusAsync(string status);
+
+        Task<int> CountPlagiarismFlaggedAsync();    }
 }

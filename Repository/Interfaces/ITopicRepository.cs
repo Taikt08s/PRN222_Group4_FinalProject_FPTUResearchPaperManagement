@@ -20,5 +20,7 @@ namespace Repository.Interfaces
         Task<int> CountAsync(TopicFilter? filter);
 
         Task<List<Topic>> GetPaginationAsync(TopicFilter? filter, int page, int size);
+        Task<Topic> CreateTopicAsync(Topic topic);
+        Task<Topic> UpdateTopicAsync(Topic topic);
     }
 }

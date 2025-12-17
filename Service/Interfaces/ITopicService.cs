@@ -19,5 +19,7 @@ namespace Service.Interfaces
 
         Task<int> CountAsync(TopicFilter? filter);
         Task<List<TopicResponseModel>> GetPaginationAsync(TopicFilter? filter, int page, int size);
+        Task<TopicResponseModel> CreateTopicAsync(CreateTopicRequest req);
+        Task<TopicResponseModel> UpdateTopicAsync(UpdateTopicRequest req);
     }
 }

@@ -63,4 +63,11 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<int> CountByRoleAsync(string role)
+    {
+        return await _context.Users
+            .Where(u => u.Role == role && u.Is_Active)
+            .CountAsync();
+    }
 }

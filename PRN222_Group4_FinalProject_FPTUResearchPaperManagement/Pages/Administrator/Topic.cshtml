@@ -1,0 +1,614 @@
+@page
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administrator.TopicModel
+@{
+    ViewBag.ShowSidebar = true;
+    ViewBag.ActiveMenu = "ThesisTopic";
+    var flash = TempData["Message"] as string;
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
+
+    :root {
+        --topic-ink: #0b1220;
+        --topic-muted: #6b7280;
+        --topic-accent: #0ea5e9;
+        --topic-warm: #f97316;
+        --topic-panel: rgba(255, 255, 255, 0.92);
+        --topic-border: rgba(15, 23, 42, 0.08);
+    }
+
+    .topic-admin {
+        font-family: 'Sora', 'Segoe UI', sans-serif;
+        color: var(--topic-ink);
+        background: radial-gradient(circle at top left, rgba(249, 115, 22, 0.25), transparent 50%),
+                    radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.25), transparent 55%),
+                    #f8fafc;
+        padding: 32px;
+        border-radius: 28px;
+        box-shadow: 0 35px 80px rgba(15, 23, 42, 0.15);
+    }
+
+    .topic-hero {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        padding: 28px;
+        border-radius: 24px;
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.16), rgba(249, 115, 22, 0.18));
+        color: #0f172a;
+    }
+
+    .topic-hero h1 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 700;
+    }
+
+    .topic-hero p {
+        max-width: 560px;
+        margin: 8px 0 0;
+        color: rgba(15, 23, 42, 0.85);
+    }
+
+    .topic-grid {
+        margin-top: 32px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 28px;
+    }
+
+    .card {
+        background: var(--topic-panel);
+        border-radius: 24px;
+        padding: 28px;
+        border: 1px solid var(--topic-border);
+        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12);
+    }
+
+    .topic-form h2 {
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .topic-form p {
+        margin: 0 0 24px;
+        color: var(--topic-muted);
+    }
+
+    .form-label {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .form-control, .form-select, .form-textarea {
+        width: 100%;
+        border-radius: 16px;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        padding: 12px 16px;
+        margin-top: 6px;
+        transition: border 0.2s ease, box-shadow 0.2s ease;
+        background: #fff;
+    }
+
+    .form-control:focus, .form-select:focus, .form-textarea:focus {
+        outline: none;
+        border-color: var(--topic-accent);
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+    }
+
+    .two-col {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 18px;
+    }
+
+    .toggle {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 12px;
+        padding: 14px 18px;
+        border-radius: 18px;
+        border: 1px dashed rgba(14, 165, 233, 0.45);
+        background: rgba(14, 165, 233, 0.04);
+    }
+
+    .toggle-input {
+        appearance: none;
+        width: 48px;
+        height: 26px;
+        background: rgba(148, 163, 184, 0.6);
+        border-radius: 999px;
+        position: relative;
+        transition: background 0.2s ease;
+    }
+
+    .toggle-input::after {
+        content: "";
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        border-radius: 50%;
+        position: absolute;
+        top: 3px;
+        left: 4px;
+        transition: transform 0.2s ease;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+    }
+
+    .toggle-input:checked {
+        background: var(--topic-accent);
+    }
+
+    .toggle-input:checked::after {
+        transform: translateX(20px);
+    }
+
+    .primary-btn {
+        margin-top: 24px;
+        border: none;
+        border-radius: 999px;
+        padding: 14px 28px;
+        font-weight: 600;
+        background: linear-gradient(120deg, var(--topic-accent), var(--topic-warm));
+        color: #fff;
+        box-shadow: 0 18px 35px rgba(249, 115, 22, 0.35);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .primary-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 25px 45px rgba(249, 115, 22, 0.4);
+    }
+
+    .semester-scroll {
+        max-height: 520px;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding-right: 4px;
+    }
+
+    .semester-chip {
+        border-radius: 18px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        padding: 16px;
+        background: #fff;
+    }
+
+    .semester-chip h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .semester-chip span {
+        display: block;
+        font-size: 13px;
+        color: var(--topic-muted);
+        margin-top: 6px;
+    }
+
+    .status-legend {
+        margin-top: 32px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 18px;
+    }
+
+    .status-pill {
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: rgba(14, 165, 233, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .status-pill strong {
+        font-size: 14px;
+    }
+
+    .text-muted {
+        color: var(--topic-muted);
+        font-size: 13px;
+    }
+
+    .flash-message {
+        margin-top: 24px;
+        padding: 16px 20px;
+        border-radius: 18px;
+        background: rgba(16, 185, 129, 0.14);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        font-weight: 600;
+        color: #047857;
+    }
+
+    .text-danger {
+        font-size: 13px;
+        margin-top: 4px;
+    }
+
+    .mb-3 {
+        margin-bottom: 18px;
+    }
+
+    .update-card {
+        border: 1px solid rgba(14, 165, 233, 0.35);
+        box-shadow: 0 25px 70px rgba(14, 165, 233, 0.25);
+    }
+
+    .topic-table {
+        margin-top: 36px;
+        background: #fff;
+        border-radius: 26px;
+        padding: 24px;
+        box-shadow: 0 35px 90px rgba(15, 23, 42, 0.12);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead {
+        font-size: 13px;
+        text-transform: uppercase;
+        color: var(--topic-muted);
+        letter-spacing: 0.08em;
+    }
+
+    th, td {
+        padding: 14px;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        vertical-align: middle;
+    }
+
+    tbody tr:hover {
+        background: rgba(14, 165, 233, 0.05);
+    }
+
+    .status-chip {
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #0f172a;
+        background: rgba(14, 165, 233, 0.18);
+    }
+
+    .topic-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .ghost-btn {
+        border-radius: 999px;
+        border: 1px solid rgba(15, 23, 42, 0.18);
+        padding: 8px 16px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--topic-ink);
+        transition: all 0.2s ease;
+        background: transparent;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .ghost-btn:hover {
+        border-color: var(--topic-accent);
+        color: var(--topic-accent);
+    }
+
+    .muted-note {
+        font-size: 13px;
+        color: var(--topic-muted);
+    }
+
+    @@media (max-width: 960px) {
+        .topic-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="topic-admin">
+    <section class="topic-hero">
+        <div>
+            <h1>Trình tạo & cập nhật đề tài</h1>
+            <p>Tạo đề tài mới, gán kỳ học, trạng thái hoặc chỉnh sửa tức thời giống màn hình quản lý người dùng.</p>
+        </div>
+        <div>
+            <span class="muted-note">Đang quản lý</span>
+            <strong style="display:block;font-size:28px;">@Model.TotalTopics đề tài</strong>
+        </div>
+    </section>
+
+    @if (!string.IsNullOrWhiteSpace(flash))
+    {
+        <div class="flash-message">@flash</div>
+    }
+
+    <div class="topic-grid">
+        <form method="post" asp-page-handler="CreateTopic" class="topic-form card">
+            <h2>Đăng ký đề tài mới</h2>
+            <p class="text-muted">Thông tin sau khi hợp lệ sẽ gửi tới CreateTopicAsync.</p>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label class="form-label">Tên đề tài</label>
+                <input asp-for="TopicInput.TopicName" class="form-control" placeholder="Ví dụ: AI Coach cho sinh viên" />
+                <span asp-validation-for="TopicInput.TopicName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mô tả khái quát</label>
+                <textarea asp-for="TopicInput.TopicDescription" rows="3" class="form-textarea" placeholder="Bổ sung bối cảnh và phạm vi..."></textarea>
+                <span asp-validation-for="TopicInput.TopicDescription" class="text-danger"></span>
+            </div>
+
+            <div class="two-col">
+                <div>
+                    <label class="form-label">Chuyên ngành</label>
+                    <select asp-for="TopicInput.Major" class="form-select">
+                        @foreach (var major in Model.MajorOptions)
+                        {
+                            <option value="@major">@major</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Trạng thái</label>
+                    <select asp-for="TopicInput.Status" class="form-select">
+                        @foreach (var status in Model.StatusOptions)
+                        {
+                            <option value="@status">@status</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="two-col" style="margin-top:18px;">
+                <div>
+                    <label class="form-label">Kỳ học</label>
+                    <select asp-for="TopicInput.SemesterId" class="form-select">
+                        <option value="">-- Chọn kỳ học --</option>
+                        @foreach (var semester in Model.Semesters)
+                        {
+                            <option value="@semester.Id">@semester.Term @semester.Year</option>
+                        }
+                    </select>
+                    <span asp-validation-for="TopicInput.SemesterId" class="text-danger"></span>
+                </div>
+                <div>
+                    <label class="form-label">Giảng viên phụ trách</label>
+                    <select asp-for="TopicInput.InstructorId" class="form-select">
+                        <option value="">-- Chọn giảng viên --</option>
+                        @foreach (var instructor in Model.InstructorOptions)
+                        {
+                            <option value="@instructor.Id">@instructor.FullName (@instructor.Email)</option>
+                        }
+                    </select>
+                    @if (!Model.InstructorOptions.Any())
+                    {
+                        <span class="text-danger">Chưa có giảng viên khả dụng.</span>
+                    }
+                    <span asp-validation-for="TopicInput.InstructorId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="two-col" style="margin-top:18px;">
+                <div>
+                    <label class="form-label">Hạn đăng ký</label>
+                    <input asp-for="TopicInput.DeadlineDate" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="TopicInput.DeadlineDate" class="text-danger"></span>
+                </div>
+                <div>
+                    <label class="form-label">Hướng dẫn nộp</label>
+                    <textarea asp-for="TopicInput.SubmissionInstruction" rows="2" class="form-textarea" placeholder="Link drive, format..."></textarea>
+                    <span asp-validation-for="TopicInput.SubmissionInstruction" class="text-danger"></span>
+                </div>
+            </div>
+
+            <label class="toggle">
+                <input type="checkbox" asp-for="TopicInput.IsGroupTopic" class="toggle-input" />
+                <div>
+                    <strong>Đề tài yêu cầu nhóm</strong>
+                    <span class="text-muted">Nếu bật, hệ thống sẽ bắt buộc nhóm tối thiểu 4 thành viên.</span>
+                </div>
+            </label>
+
+            <button type="submit" class="primary-btn">Tạo đề tài</button>
+        </form>
+
+        @if (Model.EditingTopicId.HasValue)
+        {
+            <form method="post" asp-page-handler="UpdateTopic" class="topic-form card update-card">
+                <input type="hidden" asp-for="UpdateInput.TopicId" />
+                <h2>Cập nhật đề tài</h2>
+                <p class="text-muted">Đang chỉnh sửa ID #@Model.EditingTopicId. <a asp-page="./Topic" class="ghost-btn">⌫ Huỷ</a></p>
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label class="form-label">Tên đề tài</label>
+                    <input asp-for="UpdateInput.TopicName" class="form-control" />
+                    <span asp-validation-for="UpdateInput.TopicName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mô tả khái quát</label>
+                    <textarea asp-for="UpdateInput.TopicDescription" rows="3" class="form-textarea"></textarea>
+                    <span asp-validation-for="UpdateInput.TopicDescription" class="text-danger"></span>
+                </div>
+
+                <div class="two-col">
+                    <div>
+                        <label class="form-label">Chuyên ngành</label>
+                        <select asp-for="UpdateInput.Major" class="form-select">
+                            @foreach (var major in Model.MajorOptions)
+                            {
+                                <option value="@major">@major</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Trạng thái</label>
+                        <select asp-for="UpdateInput.Status" class="form-select">
+                            @foreach (var status in Model.StatusOptions)
+                            {
+                                <option value="@status">@status</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="two-col" style="margin-top:18px;">
+                    <div>
+                        <label class="form-label">Kỳ học</label>
+                        <select asp-for="UpdateInput.SemesterId" class="form-select">
+                            <option value="">-- Chọn kỳ học --</option>
+                            @foreach (var semester in Model.Semesters)
+                            {
+                                <option value="@semester.Id">@semester.Term @semester.Year</option>
+                            }
+                        </select>
+                        <span asp-validation-for="UpdateInput.SemesterId" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label class="form-label">Giảng viên phụ trách</label>
+                        <select asp-for="UpdateInput.InstructorId" class="form-select">
+                            <option value="">-- Chọn giảng viên --</option>
+                            @foreach (var instructor in Model.InstructorOptions)
+                            {
+                                <option value="@instructor.Id">@instructor.FullName (@instructor.Email)</option>
+                            }
+                        </select>
+                        @if (!Model.InstructorOptions.Any())
+                        {
+                            <span class="text-danger">Chưa có giảng viên khả dụng.</span>
+                        }
+                        <span asp-validation-for="UpdateInput.InstructorId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="two-col" style="margin-top:18px;">
+                    <div>
+                        <label class="form-label">Hạn đăng ký</label>
+                        <input asp-for="UpdateInput.DeadlineDate" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="UpdateInput.DeadlineDate" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label class="form-label">Hướng dẫn nộp</label>
+                        <textarea asp-for="UpdateInput.SubmissionInstruction" rows="2" class="form-textarea"></textarea>
+                        <span asp-validation-for="UpdateInput.SubmissionInstruction" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <label class="toggle">
+                    <input type="checkbox" asp-for="UpdateInput.IsGroupTopic" class="toggle-input" />
+                    <div>
+                        <strong>Đề tài yêu cầu nhóm</strong>
+                        <span class="text-muted">Thay đổi này sẽ yêu cầu nhóm tối thiểu 4 thành viên.</span>
+                    </div>
+                </label>
+
+                <button type="submit" class="primary-btn">Lưu cập nhật</button>
+            </form>
+        }
+        else
+        {
+            <section class="card">
+                <h2>Kỳ học khả dụng</h2>
+                <p class="text-muted">Danh sách lấy trực tiếp từ cơ sở dữ liệu.</p>
+
+                <div class="semester-scroll">
+                    @if (!Model.Semesters.Any())
+                    {
+                        <div class="semester-chip" style="border-style:dashed;">
+                            <h3>Chưa có kỳ học</h3>
+                            <span>Tạo một kỳ trước khi đăng ký đề tài.</span>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var semester in Model.Semesters)
+                        {
+                            <div class="semester-chip">
+                                <h3>@semester.Term </h3>
+                                <span>@semester.Start_Date.ToString("dd/MM/yyyy") → @semester.End_Date.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        }
+                    }
+                </div>
+            </section>
+        }
+    </div>
+
+    <section class="topic-table">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+            <div>
+                <h2 style="margin:0;">Danh sách đề tài</h2>
+                <p class="text-muted">Hiển thị tối đa @Model.Topics.Count đề tài đầu tiên.</p>
+            </div>
+            <a asp-page="./Topic" class="ghost-btn">↻ Làm mới</a>
+        </div>
+
+        <div style="overflow-x:auto;margin-top:16px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tên đề tài</th>
+                        <th>Chuyên ngành</th>
+                        <th>Học kỳ</th>
+                        <th>Trạng thái</th>
+                        <th>Hạn đăng ký</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Topics.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-muted">Chưa có đề tài nào.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (Service.Dtos.TopicResponseModel topic in Model.Topics)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@topic.Title</strong><br />
+                                    <span class="text-muted">GV ID: @topic.InstructorId</span>
+                                </td>
+                                <td>@topic.Major</td>
+                                <td>@topic.SemesterTerm</td>
+                                <td><span class="status-chip">@topic.Status</span></td>
+                                <td>@topic.Deadline_Date.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <div class="topic-actions">
+                                        <a asp-page="./Topic" asp-route-editId="@topic.Id" class="ghost-btn">✏️ Chỉnh sửa</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
