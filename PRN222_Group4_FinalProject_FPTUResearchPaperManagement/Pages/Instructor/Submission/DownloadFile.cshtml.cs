@@ -1,11 +1,8 @@
-using System;
-using System.Threading.Tasks;
-using DataAccessLayer;
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using Service.Interfaces;
 
 namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.Submission
 {
@@ -13,13 +10,13 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
     [Authorize(Roles = "Instructor,GraduationProjectEvaluationCommitteeMember")]
     public class DownloadFileModel : PageModel
     {
-        private readonly AppDbContext _context;
         private readonly StorageClient _storage;
+        private ISubmissionFileService _submissionFileService { get; }
         private const string BucketName = "fpturesearchpapermanagement.firebasestorage.app";
 
-        public DownloadFileModel(AppDbContext context, StorageClient storage)
+        public DownloadFileModel(StorageClient storage, ISubmissionFileService submissionFileService)
         {
-            _context = context;
+            _submissionFileService = submissionFileService;
             _storage = storage;
         }
 
@@ -27,13 +24,10 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
         {
             if (fileId <= 0) return BadRequest();
 
-            var file = await _context.SubmissionFiles
-                .AsNoTracking()
-                .FirstOrDefaultAsync(f => f.Id == fileId);
+            var file = await _submissionFileService.GetByIdAsync(fileId);
 
             if (file == null) return NotFound();
 
-            // Parse object name from Firebase URL (same pattern used elsewhere)
             string objectName;
             try
             {

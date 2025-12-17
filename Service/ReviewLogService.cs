@@ -37,5 +37,15 @@ namespace Service
         {
             return await _repo.GetLatestBySubmissionGroupedByRoleAsync(submissionId);
         }
+
+        public async Task<bool> IsUserReviewed(Guid currentUserId, int submissionId)
+        {
+            return await _repo.IsUserReviewed(currentUserId, submissionId);
+        }
+
+        public async Task<List<int>> GetSubmissionUserReviewed(Guid currentUserId, List<int> submissionIds)
+        {
+            return await _repo.GetSubmissionsUserReviewed(currentUserId, submissionIds);
+        }
     }
 }

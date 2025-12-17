@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessObject.Enums;
+using BusinessObject.Filters;
 using BusinessObject.Models;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
@@ -272,6 +273,16 @@ namespace Service
             // Otherwise mark as Reviewing (in-progress)
             submissionEntity.Status = SubmissionStatus.Reviewing.ToString();
             await _submissionRepo.UpdateAsync(submissionEntity);
+        }
+
+        public async Task<int> CountFilteredAsync(SubmissionFilter? filter)
+        {
+            return await _submissionRepo.CountFilteredAsync(filter);
+        }
+
+        public async Task<List<Submission>> GetPaginationAsync(SubmissionFilter? filter, int page, int size)
+        {
+            return await _submissionRepo.GetPaginationAsync(filter, page, size);
         }
     }
 }

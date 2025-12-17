@@ -22,5 +22,24 @@ namespace Repository
                 .ToListAsync();
         }
 
+        public async Task<StudentGroup?> GetByTopicAsync(int topicId)
+        {
+            return await _context.StudentGroups
+                .Where(g => g.Topic_Id == topicId)
+                .Include(g => g.Members)
+                    .ThenInclude(m => m.Student)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<StudentGroup?> GetByIdAsync(int groupId)
+        {
+            return await _context.StudentGroups
+                    .Where(g => g.Id == groupId)
+                    .Include(g => g.Members)
+                        .ThenInclude(m => m.Student)
+                    .FirstOrDefaultAsync();
+
+        }
+
     }
 }

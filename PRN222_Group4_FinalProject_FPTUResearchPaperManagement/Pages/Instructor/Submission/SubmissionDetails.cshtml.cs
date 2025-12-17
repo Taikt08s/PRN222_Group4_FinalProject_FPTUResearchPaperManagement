@@ -1,13 +1,10 @@
 using BusinessObject.Enums;
 using BusinessObject.Models;
-using DataAccessLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Hubs;
-using Service;
 using Service.Dtos;
 using Service.Interfaces;
 using System.Security.Claims;
@@ -17,20 +14,20 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
     [Authorize(Roles = "Instructor")]
     public class SubmissionDetailsModel : PageModel
     {
-        private readonly ISubmissionService _submissionService;
-        private readonly IReviewLogService _reviewLogService;
-        private readonly AppDbContext _context;
-        private readonly IHubContext<NotificationHub> _hubContext;
+        private ISubmissionService _submissionService { get; }
+        private IReviewLogService _reviewLogService { get; }
+        private IHubContext<NotificationHub> _hubContext { get; }
+        private IStudentGroupService _studentGroupService { get; }
 
         public SubmissionDetailsModel(
+            IStudentGroupService studentGroupService,
             ISubmissionService submissionService,
             IReviewLogService reviewLogService,
-            AppDbContext context,
             IHubContext<NotificationHub> hubContext)
         {
+            _studentGroupService = studentGroupService;
             _submissionService = submissionService;
             _reviewLogService = reviewLogService;
-            _context = context;
             _hubContext = hubContext;
         }
 
@@ -63,11 +60,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
             // load members for group
             if (Submission.GroupId > 0)
             {
-                var group = await _context.StudentGroups
-                    .Where(g => g.Id == Submission.GroupId)
-                    .Include(g => g.Members)
-                        .ThenInclude(m => m.Student)
-                    .FirstOrDefaultAsync();
+                var group = await _studentGroupService.GetByIdAsync(Submission.GroupId);
 
                 if (group?.Members != null)
                 {
