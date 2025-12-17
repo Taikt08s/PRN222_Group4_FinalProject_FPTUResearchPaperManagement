@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Filters;
+using BusinessObject.Models;
 using Service.Dtos;
 
 namespace Service.Interfaces
@@ -27,5 +28,7 @@ namespace Service.Interfaces
         Task<SubmissionDto?> GetSubmissionAsync(int topicId, int groupId, int semesterId);
         Task<SubmissionDto?> GetByIdAsync(int submissionId);
         Task ReviewSubmissionAsync(int submissionId, Guid reviewerId, string newStatus, string comment);
+        Task<int> CountFilteredAsync(SubmissionFilter? filter);
+        Task<List<Submission>> GetPaginationAsync(SubmissionFilter? filter, int page, int size);
     }
 }

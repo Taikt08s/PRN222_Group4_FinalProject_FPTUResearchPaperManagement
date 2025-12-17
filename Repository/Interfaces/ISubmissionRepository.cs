@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Filters;
+using BusinessObject.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +20,8 @@ namespace Repository.Interfaces
         Task AddAsync(Submission submission);
 
         Task UpdateAsync(Submission submission);
+
+        Task<int> CountFilteredAsync(SubmissionFilter? filter);
+        Task<List<Submission>> GetPaginationAsync(SubmissionFilter? filter, int page, int size);
     }
 }

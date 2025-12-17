@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Filters;
+using BusinessObject.Models;
 using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
@@ -46,6 +47,37 @@ namespace Repository
         {
             _context.Submissions.Update(submission);
             await _context.SaveChangesAsync();
+        }
+
+        private IQueryable<Submission> GetFiltered(SubmissionFilter? filter)
+        {
+            if (filter == null)
+            {
+                return _context.Submissions
+                .Include(s => s.Topic)
+                .Include(s => s.Group)
+                    .ThenInclude(g => g.Members);
+            }
+            return _context.Submissions
+                .Include(s => s.Topic)
+                .Include(s => s.Group)
+                    .ThenInclude(g => g.Members)
+                .Where(s => filter.SubmissionStatuses != null ? filter.SubmissionStatuses.Contains(s.Status) : true);
+        }
+
+        public async Task<int> CountFilteredAsync(SubmissionFilter? filter)
+        {
+            return await GetFiltered(filter).CountAsync();
+        }
+
+        public async Task<List<Submission>> GetPaginationAsync(SubmissionFilter? filter, int page, int size)
+        {
+            return await GetFiltered(filter)
+                .OrderByDescending(s => s.Submitted_At)
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToListAsync();
+
         }
     }
 }

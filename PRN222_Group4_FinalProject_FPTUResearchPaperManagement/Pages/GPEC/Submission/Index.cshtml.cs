@@ -1,19 +1,22 @@
-using System.Linq;
+using BusinessObject.Filters;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using DataAccessLayer;
+using Service.Interfaces;
 
 namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Submission
 {
     [Authorize(Roles = "GraduationProjectEvaluationCommitteeMember")]
     public class IndexModel : PageModel
     {
-        private readonly AppDbContext _context;
+        private ISubmissionService _submissionService { get; }
+        private IReviewLogService _reviewLogService { get; }
 
-        public IndexModel(AppDbContext context)
+        public IndexModel(ISubmissionService submissionService, IReviewLogService reviewLogService)
         {
-            _context = context;
+            _reviewLogService = reviewLogService;
+            _submissionService = submissionService;
         }
 
         public class SubmissionListItem
@@ -27,33 +30,38 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
             public bool ReviewedByMe { get; set; }
         }
 
+        public int PageIndex { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
+        public int TotalPages { get; set; }
+
+
         public List<SubmissionListItem> Submissions { get; set; } = new();
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int pageIndex = 1)
         {
-            ViewData["ShowSidebar"] = true;
-            ViewData["ActiveMenu"] = "TopicSubmissions";
+            PageIndex = pageIndex;
 
             var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             Guid? currentUserId = Guid.TryParse(userIdStr, out var g) ? g : null;
+            if (currentUserId == null)
+            {
+                return Redirect("Authorization/login");
+            }
 
-            var list = await _context.Submissions
-                .Include(s => s.Topic)
-                .Include(s => s.Group)
-                    .ThenInclude(g => g.Members)
-                .Where(s => s.Status == "Submitted"
-                         || s.Status == "Reviewing"
-                         || s.Status == "Suspended"
-                         || s.Status == "Rejected"
-                         || s.Status == "Approved")
-                .ToListAsync();
+            SubmissionFilter filter = new()
+            {
+                SubmissionStatuses = new List<string>() { "Submitted", "Reviewing", "Suspended", "Rejected", "Approved" }
+            };
 
-            var reviewedByMe =
-                    await _context.ReviewLogs.AnyAsync(r =>
-                        r.Reviewer_Id == currentUserId &&
-                        r.Reviewer.Role == "GraduationProjectEvaluationCommitteeMember");
+            var totalCount = await _submissionService.CountFilteredAsync(filter);
+            TotalPages = (int)Math.Ceiling(totalCount / (double)PageSize);
 
-            Submissions = list.Select(s => new SubmissionListItem
+            var submissions = await _submissionService.GetPaginationAsync(filter, PageIndex, PageSize);
+            var myReviewedSubmissionIds = await _reviewLogService.GetSubmissionUserReviewed(currentUserId.Value, submissions.Select(sub => sub.Id).ToList());
+
+
+            Submissions = (await Task.WhenAll(
+            submissions.Select(async s => new SubmissionListItem
             {
                 SubmissionId = s.Id,
                 TopicTitle = s.Topic?.Title ?? "",
@@ -61,9 +69,13 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
                 MemberCount = s.Group?.Members?.Count ?? 0,
                 Status = s.Status,
                 PlagiarismFlag = s.Plagiarism_Flag,
-                ReviewedByMe = currentUserId != null && reviewedByMe,
-            }).ToList();
+                ReviewedByMe = await _reviewLogService
+                    .IsUserReviewed(currentUserId.Value, s.Id)
+            }))).ToList();
+            return Page();
+
         }
+
 
     }
 }

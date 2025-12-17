@@ -1,10 +1,7 @@
-using System.Security.Claims;
 using BusinessObject.Filters;
-using DataAccessLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Service.Dtos;
 using Service.Interfaces;
 
@@ -13,16 +10,19 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
     [Authorize(Roles = "Instructor")]
     public class IndexModel : PageModel
     {
-        private readonly AppDbContext _context;
         private readonly ITopicService _topicService;
         private readonly ISubmissionService _submissionService;
+        private readonly IStudentGroupService _studentGroupService;
+        private readonly IReviewLogService _reviewLogService;
 
         public IndexModel(
-            AppDbContext context,
+            IReviewLogService reviewLogService,
             ITopicService topicService,
+            IStudentGroupService studentGroupService,
             ISubmissionService submissionService)
         {
-            _context = context;
+            _reviewLogService = reviewLogService;
+            _studentGroupService = studentGroupService;
             _topicService = topicService;
             _submissionService = submissionService;
         }
@@ -34,9 +34,6 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
 
         public async Task<IActionResult> OnGetAsync(int pageIndex = 1)
         {
-            ViewData["ShowSidebar"] = true;
-            ViewData["ActiveMenu"] = "TopicSubmissions";
-
             var instructorId = Guid.Parse(
                 User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value
             );
@@ -49,11 +46,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
 
             foreach (var t in topics)
             {
-                var group = await _context.StudentGroups
-                    .Where(g => g.Topic_Id == t.Id)
-                    .Include(g => g.Members)
-                        .ThenInclude(m => m.Student)
-                    .FirstOrDefaultAsync();
+                var group = await _studentGroupService.GetByTopicAsync(t.Id);
 
                 int? groupId = group?.Id;
                 string? leader = group?.Members
@@ -71,11 +64,8 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
                 var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 Guid? currentUserId = Guid.TryParse(userIdStr, out var g) ? g : null;
 
-                var reviewedByMe =
-                        await _context.ReviewLogs.AnyAsync(r =>
-                            r.Reviewer_Id == currentUserId &&
-                            submission != null ? r.Created_At >= submission.SubmittedAt : true &&
-                            r.Reviewer.Role == "Instructor");
+                var reviewedByMe = currentUserId.HasValue && submission != null ?
+                        await _reviewLogService.IsUserReviewed(currentUserId.Value, submission.Id) : false;
                 Rows.Add(new TopicSubmissionRow
                 {
                     TopicId = t.Id,

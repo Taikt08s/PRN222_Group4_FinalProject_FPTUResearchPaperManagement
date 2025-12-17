@@ -38,6 +38,8 @@ builder.Services.AddSingleton<StorageClient>(sp =>
 });
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISemesterRepository, SemesterRepository>();
+builder.Services.AddScoped<IStudentGroupRepository, StudentGroupRepository>();
+builder.Services.AddScoped<IStudentGroupMemberRepository, StudentGroupMemberRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
@@ -47,6 +49,8 @@ builder.Services.AddScoped<IStudentGroupRepository, StudentGroupRepository>();
 builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISemesterService, SemesterService>();
+builder.Services.AddScoped<IStudentGroupService, StudentGroupService>();
+builder.Services.AddScoped<IStudentGroupMemberService, StudentGroupMemberService>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddScoped<IOpenAiSubmissionService, OpenAiSubmissionService>();
 builder.Services.AddScoped<ISuspensionService, SuspensionService>();

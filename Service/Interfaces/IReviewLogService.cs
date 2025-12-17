@@ -7,5 +7,8 @@ namespace Service.Interfaces
         Task CreateAsync(int submissionId, Guid reviewerId, string originalStatus, string newStatus, string comment);
         Task<List<ReviewLog>> GetBySubmissionIdAsync(int submissionId);
         Task<List<ReviewLog>> GetLatestBySubmissionGroupedByRoleAsync(int submissionId);
+
+        Task<bool> IsUserReviewed(Guid currentUserId, int submissionId);
+        Task<List<int>> GetSubmissionUserReviewed(Guid currentUserId, List<int> submissionIds);
     }
 }

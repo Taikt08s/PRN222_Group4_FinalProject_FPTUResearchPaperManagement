@@ -1,13 +1,9 @@
 using BusinessObject.Models;
-using DataAccessLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Hubs;
-using Service;
-using Service.Dtos;
 using Service.Interfaces;
 using System.Security.Claims;
 
@@ -16,20 +12,20 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
     [Authorize(Roles = "GraduationProjectEvaluationCommitteeMember")]
     public class DetailsModel : PageModel
     {
-        private readonly AppDbContext _context;
         private readonly ISubmissionService _submissionService;
         private readonly IReviewLogService _reviewLogService;
+        private readonly IStudentGroupMemberService _studentGroupMemberService;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public DetailsModel(AppDbContext context, ISubmissionService submissionService, IReviewLogService reviewLogService, IHubContext<NotificationHub> hubContext)
+        public DetailsModel(ISubmissionService submissionService, IReviewLogService reviewLogService, IHubContext<NotificationHub> hubContext, IStudentGroupMemberService studentGroupMemberService)
         {
-            _context = context;
+            _studentGroupMemberService = studentGroupMemberService;
             _submissionService = submissionService;
             _reviewLogService = reviewLogService;
             _hubContext = hubContext;
         }
 
-        public Service.Dtos.SubmissionDto Submission { get; set; }
+        public Service.Dtos.SubmissionDto? Submission { get; set; }
         public List<Service.Dtos.SubmissionFileDto> Files { get; set; } = new();
         public List<(Guid Id, string FullName, string Email, bool IsLeader)> Members { get; set; } = new();
 
@@ -50,43 +46,19 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
             ViewData["ShowSidebar"] = true;
             ViewData["ActiveMenu"] = "TopicSubmissions";
 
-            var sub = await _context.Submissions
-                .Include(s => s.Group)
-                    .ThenInclude(g => g.Members)
-                        .ThenInclude(m => m.Student)
-                .Include(s => s.Files)
-                .Include(s => s.Topic)
-                .FirstOrDefaultAsync(s => s.Id == submissionId);
+            var sub = await _submissionService.GetByIdAsync(submissionId);
 
             if (sub == null) return NotFound();
 
             // map simple DTOs
-            Submission = new Service.Dtos.SubmissionDto
-            {
-                Id = sub.Id,
-                GroupId = sub.Group_Id,
-                TopicId = sub.Topic_Id,
-                SemesterId = sub.Semester_Id,
-                Status = sub.Status,
-                SubmittedAt = sub.Submitted_At,
-                ReviewedAt = sub.Reviewed_At,
-                PlagiarismFlag = sub.Plagiarism_Flag,
-                PlagiarismScore = sub.Plagiarism_Score,
-                RejectReason = sub.Reject_Reason
-            };
+            Submission = sub;
 
-            Files = sub.Files.Select(f => new Service.Dtos.SubmissionFileDto
-            {
-                Id = f.Id,
-                File_Name = f.File_Name,
-                File_Type = f.File_Type,
-                Firebase_Url = f.Firebase_Url,
-                Uploaded_At = f.Uploaded_At
-            }).ToList();
+            Files = await _submissionService.GetFilesAsync(submissionId);
 
-            if (sub.Group?.Members != null)
+            var group = await _studentGroupMemberService.GetByTopicAsync(sub.TopicId);
+            if (group.Count > 0)
             {
-                Members = sub.Group.Members.Select(m => (m.Student_Id, m.Student?.Full_Name ?? "", m.Student?.Email ?? "", m.Is_Leader)).ToList();
+                Members = group.Select(m => (m.Student_Id, m.Student?.Full_Name ?? "", m.Student?.Email ?? "", m.Is_Leader)).ToList();
             }
 
             // ---- REVIEW LOGS ----

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BusinessObject.Models;
+﻿using BusinessObject.Models;
 
 namespace Repository.Interfaces
 {
     public interface IStudentGroupRepository
     {
         Task<List<Guid>> GetStudentIdsByGroupAsync(int groupId);
+        Task<StudentGroup?> GetByTopicAsync(int topicId);
+        Task<StudentGroup?> GetByIdAsync(int groupId);
     }
 }
