@@ -5,7 +5,7 @@
         Draft,
         Submitted,
         Reviewing,
-        Aprroved,
+        Approved,
         Rejected,
         Suspended
     }
