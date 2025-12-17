@@ -6,51 +6,99 @@
     ViewData["ActiveMenu"] = "TopicSubmissions";
 }
 
-<h1>GPEC — Submissions to review</h1>
-<hr />
+<div class="container mt-3">
 
-@if (!Model.Submissions.Any())
-{
-    <div class="alert alert-info">No submissions pending review.</div>
-}
-else
-{
-    <table class="table table-sm table-bordered">
-        <thead>
-            <tr>
-                <th>Submission ID</th>
-                <th>Topic</th>
-                <th>Group</th>
-                <th>Members</th>
-                <th>Status</th>
-                <th>Plagiarism</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var s in Model.Submissions)
-            {
-                <tr>
-                    <td>@s.SubmissionId</td>
-                    <td>@s.TopicTitle</td>
-                    <td>@s.GroupId</td>
-                    <td>@s.MemberCount</td>
-                    <td>@s.Status</td>
-                    <td>
-                        @if (s.PlagiarismFlag)
+    <h4 class="fw-bold mb-3">📋 Submissions to Review</h4>
+
+    @if (!Model.Submissions.Any())
+    {
+        <div class="alert alert-info shadow-sm">
+            No submissions available for review.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Topic</th>
+                            <th>Group</th>
+                            <th>Members</th>
+                            <th>Status</th>
+                            <th>Plagiarism</th>
+                            <th>Your Review</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.Submissions)
                         {
-                            <span class="badge bg-danger">Flagged</span>
+                            <tr>
+                                <td class="fw-semibold">#@s.SubmissionId</td>
+
+                                <td>@s.TopicTitle</td>
+
+                                <td>Group @s.GroupId</td>
+
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        @s.MemberCount members
+                                    </span>
+                                </td>
+
+                                <!-- STATUS -->
+                                <td>
+                                    <span class="badge
+                                        @(s.Status == "Approved" ? "bg-success" :
+                                          s.Status == "Rejected" ? "bg-danger" :
+                                          s.Status == "Suspended" ? "bg-warning text-dark" :
+                                          s.Status == "Reviewing" ? "bg-info text-dark" :
+                                          "bg-secondary")">
+                                        @s.Status
+                                    </span>
+                                </td>
+
+                                <!-- PLAGIARISM -->
+                                <td>
+                                    @if (s.PlagiarismFlag)
+                                    {
+                                        <span class="badge bg-danger">🚩 Flagged</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+
+                                <!-- YOUR REVIEW -->
+                                <td>
+                                    @if (s.ReviewedByMe)
+                                    {
+                                        <span class="badge bg-success">✔ Reviewed</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">⏳ Not yet</span>
+                                    }
+                                </td>
+
+                                <!-- ACTION -->
+                                <td class="text-end">
+                                    <a asp-page="./Details"
+                                       asp-route-submissionId="@s.SubmissionId"
+                                       class="btn btn-sm btn-outline-primary">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
                         }
-                        else
-                        {
-                            <span class="text-muted">—</span>
-                        }
-                    </td>
-                    <td>
-                        <a asp-page="./Details" asp-route-submissionId="@s.SubmissionId" class="btn btn-sm btn-primary">Review</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+

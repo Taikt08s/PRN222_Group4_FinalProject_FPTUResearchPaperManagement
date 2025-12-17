@@ -41,12 +41,17 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
                 .Include(s => s.Topic)
                 .Include(s => s.Group)
                     .ThenInclude(g => g.Members)
-                .Include(s => s.ReviewLogs) // IMPORTANT
                 .Where(s => s.Status == "Submitted"
                          || s.Status == "Reviewing"
                          || s.Status == "Suspended"
+                         || s.Status == "Rejected"
                          || s.Status == "Approved")
                 .ToListAsync();
+
+            var reviewedByMe =
+                    await _context.ReviewLogs.AnyAsync(r =>
+                        r.Reviewer_Id == currentUserId &&
+                        r.Reviewer.Role == "GraduationProjectEvaluationCommitteeMember");
 
             Submissions = list.Select(s => new SubmissionListItem
             {
@@ -56,11 +61,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
                 MemberCount = s.Group?.Members?.Count ?? 0,
                 Status = s.Status,
                 PlagiarismFlag = s.Plagiarism_Flag,
-
-                ReviewedByMe = currentUserId != null &&
-                    s.ReviewLogs.Any(r =>
-                        r.Reviewer_Id == currentUserId &&
-                        r.Reviewer.Role == "GraduationProjectEvaluationCommitteeMember")
+                ReviewedByMe = currentUserId != null && reviewedByMe,
             }).ToList();
         }
 

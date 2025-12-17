@@ -196,13 +196,17 @@ public class OpenAiSubmissionService : IOpenAiSubmissionService
 
         if (!result.IsApproved)
         {
-            submission.Status = SubmissionStatus.Rejected.ToString();
+            submission.Status = SubmissionStatus.Submitted.ToString();
             submission.Reject_Reason = "AI detected plagiarism or violations";
             //Oh please, ai should not has this power to begin with
             // if (submission.Topic != null)
             // {
             //     submission.Topic.Status = TopicStatus.Closed.ToString();
             // }
+        }
+        else
+        {
+            submission.Status = SubmissionStatus.Submitted.ToString();
         }
     }
 }
