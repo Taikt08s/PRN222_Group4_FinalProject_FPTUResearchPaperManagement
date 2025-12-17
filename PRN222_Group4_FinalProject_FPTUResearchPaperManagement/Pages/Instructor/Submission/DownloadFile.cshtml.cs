@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.Submission
 {
+    // Allow both Instructors and GPEC members to download submission files
     [Authorize(Roles = "Instructor,GraduationProjectEvaluationCommitteeMember")]
     public class DownloadFileModel : PageModel
     {

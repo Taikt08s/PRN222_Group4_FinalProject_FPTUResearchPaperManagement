@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using BusinessObject.Enums;
 using BusinessObject.Models;
-using DataAccessLayer;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
-using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
 using Service.Dtos;
 using Service.Interfaces;
+
 
 namespace Service
 {
@@ -17,6 +16,7 @@ namespace Service
         private readonly ISubmissionFileRepository _fileRepo;
         private readonly IOpenAiSubmissionService _openAiSubmissionService;
         private readonly ISuspensionService _suspensionService;
+        private readonly IReviewLogService _reviewLogService;
         private readonly StorageClient _storage;
         private readonly IMapper _mapper;
 
@@ -28,12 +28,14 @@ namespace Service
             ISubmissionFileRepository fileRepo,
             IOpenAiSubmissionService openAiSubmissionService,
             ISuspensionService suspensionService,
+            IReviewLogService reviewLogService,
             IMapper mapper)
         {
             _submissionRepo = submissionRepo;
             _fileRepo = fileRepo;
             _openAiSubmissionService = openAiSubmissionService;
             _suspensionService = suspensionService;
+            _reviewLogService = reviewLogService;
             _mapper = mapper;
 
             var credentialPath = Path.Combine(
@@ -98,7 +100,6 @@ namespace Service
             await _submissionRepo.UpdateAsync(submission);
         }
 
-        //read-only lookup by topic/group/semester (does not create)
         public async Task<SubmissionDto?> GetSubmissionAsync(int topicId, int groupId, int semesterId)
         {
             var submission = await _submissionRepo
@@ -110,7 +111,6 @@ namespace Service
             return _mapper.Map<SubmissionDto>(submission);
         }
 
-        //read-only lookup by submission id
         public async Task<SubmissionDto?> GetByIdAsync(int submissionId)
         {
             var submission = await _submissionRepo.GetByIdAsync(submissionId);
@@ -155,6 +155,98 @@ namespace Service
         {
             var files = await _fileRepo.GetBySubmissionIdAsync(submissionId);
             return _mapper.Map<List<SubmissionFileDto>>(files);
+        }
+
+        // ================= REVIEW / VOTE =================
+        public async Task ReviewSubmissionAsync(int submissionId, Guid reviewerId, string newStatus, string comment)
+        {
+            var submissionEntity = await _submissionRepo.GetByIdAsync(submissionId);
+            if (submissionEntity == null)
+                throw new Exception("Submission not found");
+
+            // Approve action is only allowed when submission is Submitted or Reviewing
+            if (string.Equals(newStatus, "Approve", StringComparison.OrdinalIgnoreCase))
+            {
+                var allowed = string.Equals(submissionEntity.Status, SubmissionStatus.Submitted.ToString(), StringComparison.OrdinalIgnoreCase)
+                              || string.Equals(submissionEntity.Status, SubmissionStatus.Reviewing.ToString(), StringComparison.OrdinalIgnoreCase);
+
+                if (!allowed)
+                    throw new InvalidOperationException("Cannot approve a submission that has not been submitted or is not under review.");
+            }
+
+            // load existing logs to check duplicate vote by same reviewer
+            var existingLogs = await _reviewLogService.GetBySubmissionIdAsync(submissionId);
+
+            // Prevent the same reviewer approving the same submission more than once
+            if (string.Equals(newStatus, "Approve", StringComparison.OrdinalIgnoreCase))
+            {
+                var alreadyApprovedByThisReviewer = existingLogs.Any(l =>
+                    l.Reviewer_Id == reviewerId &&
+                    string.Equals(l.New_Status, "Approve", StringComparison.OrdinalIgnoreCase));
+
+                if (alreadyApprovedByThisReviewer)
+                    throw new InvalidOperationException("You have already approved this submission.");
+            }
+
+            // Persist review via review-log service
+            await _reviewLogService.CreateAsync(
+                submissionId,
+                reviewerId,
+                submissionEntity.Status,
+                newStatus,
+                comment ?? string.Empty
+            );
+
+            // Recompute using up-to-date logs
+            var logs = await _reviewLogService.GetBySubmissionIdAsync(submissionId);
+
+            // If any reject exists -> Rejected
+            var anyReject = logs.Any(l => string.Equals(l.New_Status, "Reject", StringComparison.OrdinalIgnoreCase));
+            if (anyReject)
+            {
+                submissionEntity.Status = SubmissionStatus.Rejected.ToString();
+                var rejectLog = logs.Where(l => string.Equals(l.New_Status, "Reject", StringComparison.OrdinalIgnoreCase))
+                                    .OrderByDescending(l => l.Created_At)
+                                    .FirstOrDefault();
+                if (rejectLog != null)
+                {
+                    submissionEntity.Reject_Reason = rejectLog.Comment;
+                }
+
+                await _submissionRepo.UpdateAsync(submissionEntity);
+                return;
+            }
+
+            // Determine whether there is at least one Approve from Instructor and at least one from GPEC
+            bool instructorApproved = logs.Any(l =>
+                string.Equals(l.New_Status, "Approve", StringComparison.OrdinalIgnoreCase)
+                && l.Reviewer != null
+                && string.Equals(l.Reviewer.Role, "Instructor", StringComparison.OrdinalIgnoreCase));
+
+            bool gpecApproved = logs.Any(l =>
+                string.Equals(l.New_Status, "Approve", StringComparison.OrdinalIgnoreCase)
+                && l.Reviewer != null
+                && string.Equals(l.Reviewer.Role, "GraduationProjectEvaluationCommitteeMember", StringComparison.OrdinalIgnoreCase));
+
+            // If both roles have at least one Approve -> Approved
+            if (instructorApproved && gpecApproved)
+            {
+                submissionEntity.Status = SubmissionStatus.Approved.ToString();
+                await _submissionRepo.UpdateAsync(submissionEntity);
+                return;
+            }
+
+            // If only one of the two roles approved -> set Reviewing
+            if (instructorApproved || gpecApproved)
+            {
+                submissionEntity.Status = SubmissionStatus.Reviewing.ToString();
+                await _submissionRepo.UpdateAsync(submissionEntity);
+                return;
+            }
+
+            // Otherwise mark as Reviewing (in-progress)
+            submissionEntity.Status = SubmissionStatus.Reviewing.ToString();
+            await _submissionRepo.UpdateAsync(submissionEntity);
         }
     }
 }

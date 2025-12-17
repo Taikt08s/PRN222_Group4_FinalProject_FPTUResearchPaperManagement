@@ -9,7 +9,7 @@ using Service.Interfaces;
 
 namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.Submission
 {
-    [Authorize(Roles = "Instructor,GraduationProjectEvaluationCommitteeMember")]
+    [Authorize(Roles = "Instructor")]
     public class ByTopicModel : PageModel
     {
         private readonly AppDbContext _context;
@@ -52,14 +52,12 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
             Topic = await _topicService.GetTopicByIdAsync(id);
             if (Topic == null) return NotFound();
 
-            // load groups for topic with members (include student data)
             var groups = await _context.StudentGroups
                 .Where(g => g.Topic_Id == id)
                 .Include(g => g.Members)
                     .ThenInclude(m => m.Student)
                 .ToListAsync();
 
-            // ensure we have a semester id; if Topic.SemesterId is 0, fallback to DB
             var semesterId = Topic.SemesterId;
             if (semesterId == 0)
             {

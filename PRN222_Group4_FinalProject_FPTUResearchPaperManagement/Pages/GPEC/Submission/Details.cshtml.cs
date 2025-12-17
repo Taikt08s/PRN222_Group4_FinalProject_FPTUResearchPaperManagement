@@ -11,37 +11,33 @@ using Service.Dtos;
 using Service.Interfaces;
 using System.Security.Claims;
 
-namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.Submission
+namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Submission
 {
-    [Authorize(Roles = "Instructor")]
-    public class SubmissionDetailsModel : PageModel
+    [Authorize(Roles = "GraduationProjectEvaluationCommitteeMember")]
+    public class DetailsModel : PageModel
     {
+        private readonly AppDbContext _context;
         private readonly ISubmissionService _submissionService;
         private readonly IReviewLogService _reviewLogService;
-        private readonly AppDbContext _context;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public SubmissionDetailsModel(
-            ISubmissionService submissionService,
-            IReviewLogService reviewLogService,
-            AppDbContext context,
-            IHubContext<NotificationHub> hubContext)
+        public DetailsModel(AppDbContext context, ISubmissionService submissionService, IReviewLogService reviewLogService, IHubContext<NotificationHub> hubContext)
         {
+            _context = context;
             _submissionService = submissionService;
             _reviewLogService = reviewLogService;
-            _context = context;
             _hubContext = hubContext;
         }
 
-        public SubmissionDto? Submission { get; set; }
-        public List<SubmissionFileDto> Files { get; set; } = new();
+        public Service.Dtos.SubmissionDto Submission { get; set; }
+        public List<Service.Dtos.SubmissionFileDto> Files { get; set; } = new();
         public List<(Guid Id, string FullName, string Email, bool IsLeader)> Members { get; set; } = new();
 
-        // review data
+        // Review related
         public List<ReviewLog> ReviewLogs { get; set; } = new();
         public Dictionary<string, ReviewLog?> LatestVotes { get; set; } = new();
 
-        // current user vote
+        // current user vote info
         public ReviewLog? CurrentUserLatestVote { get; set; }
         public bool HasCurrentUserApproved { get; set; }
 
@@ -50,35 +46,53 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
 
         public async Task<IActionResult> OnGetAsync(int submissionId)
         {
-            if (submissionId <= 0) return BadRequest();
-
             SubmissionId = submissionId;
+            ViewData["ShowSidebar"] = true;
+            ViewData["ActiveMenu"] = "TopicSubmissions";
 
-            Submission = await _submissionService.GetByIdAsync(submissionId);
-            if (Submission == null) return NotFound();
-
-            Files = await _submissionService.GetFilesAsync(submissionId);
-
-            // load members for group
-            if (Submission.GroupId > 0)
-            {
-                var group = await _context.StudentGroups
-                    .Where(g => g.Id == Submission.GroupId)
-                    .Include(g => g.Members)
+            var sub = await _context.Submissions
+                .Include(s => s.Group)
+                    .ThenInclude(g => g.Members)
                         .ThenInclude(m => m.Student)
-                    .FirstOrDefaultAsync();
+                .Include(s => s.Files)
+                .Include(s => s.Topic)
+                .FirstOrDefaultAsync(s => s.Id == submissionId);
 
-                if (group?.Members != null)
-                {
-                    Members = group.Members
-                        .Select(m => (m.Student_Id, m.Student?.Full_Name ?? "", m.Student?.Email ?? "", m.Is_Leader))
-                        .ToList();
-                }
+            if (sub == null) return NotFound();
+
+            // map simple DTOs
+            Submission = new Service.Dtos.SubmissionDto
+            {
+                Id = sub.Id,
+                GroupId = sub.Group_Id,
+                TopicId = sub.Topic_Id,
+                SemesterId = sub.Semester_Id,
+                Status = sub.Status,
+                SubmittedAt = sub.Submitted_At,
+                ReviewedAt = sub.Reviewed_At,
+                PlagiarismFlag = sub.Plagiarism_Flag,
+                PlagiarismScore = sub.Plagiarism_Score,
+                RejectReason = sub.Reject_Reason
+            };
+
+            Files = sub.Files.Select(f => new Service.Dtos.SubmissionFileDto
+            {
+                Id = f.Id,
+                File_Name = f.File_Name,
+                File_Type = f.File_Type,
+                Firebase_Url = f.Firebase_Url,
+                Uploaded_At = f.Uploaded_At
+            }).ToList();
+
+            if (sub.Group?.Members != null)
+            {
+                Members = sub.Group.Members.Select(m => (m.Student_Id, m.Student?.Full_Name ?? "", m.Student?.Email ?? "", m.Is_Leader)).ToList();
             }
 
-            // review logs via service
+            // ---- REVIEW LOGS ----
             ReviewLogs = await _reviewLogService.GetBySubmissionIdAsync(submissionId);
 
+            // compute latest vote per reviewer role (Instructor, GraduationProjectEvaluationCommitteeMember, ...)
             LatestVotes = ReviewLogs
                 .Where(r => r.Reviewer != null)
                 .GroupBy(r => r.Reviewer.Role)
@@ -99,9 +113,11 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
                 HasCurrentUserApproved = CurrentUserLatestVote != null
                                          && string.Equals(CurrentUserLatestVote.New_Status, "Approve", StringComparison.OrdinalIgnoreCase);
             }
-
-            ViewData["ShowSidebar"] = true;
-            ViewData["ActiveMenu"] = "TopicSubmissions";
+            else
+            {
+                CurrentUserLatestVote = null;
+                HasCurrentUserApproved = false;
+            }
 
             return Page();
         }
@@ -119,8 +135,6 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
 
                 // fetch updated submission to include latest status/topic/group
                 var updated = await _submissionService.GetByIdAsync(SubmissionId);
-
-                // broadcast final/partial update so UI clients (students/instructors/GPEC) can react
                 if (updated != null)
                 {
                     await _hubContext.Clients.All.SendAsync("ReceiveApprovalUpdate", new
@@ -134,8 +148,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
                 }
 
                 TempData["Message"] = "Your review has been recorded.";
-                // redirect back to details so UI refreshes and shows current user's disabled approve button
-                return RedirectToPage(new { submissionId = SubmissionId });
+                return RedirectToPage("./Index");
             }
             catch (InvalidOperationException ex)
             {

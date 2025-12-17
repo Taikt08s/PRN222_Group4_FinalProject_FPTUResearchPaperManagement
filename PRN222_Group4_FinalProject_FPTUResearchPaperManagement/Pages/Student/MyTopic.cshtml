@@ -9,8 +9,9 @@
     bool isSubmitted = Model.Submission?.IsSubmitted == true;
     bool isSuspended = Model.Submission?.IsSuspended == true;
     int CountOf(string folder) =>
-        filesByFolder.ContainsKey(folder)? filesByFolder[folder].Count: 0;
+        filesByFolder.ContainsKey(folder) ? filesByFolder[folder].Count : 0;
 }
+
 
 @section Scripts {
     <script src="https://unpkg.com/@@microsoft/signalr@latest/dist/browser/signalr.js"></script>
@@ -19,19 +20,101 @@
 
         const groupId = @(Model.Submission?.GroupId ?? 0);
 
+        function showSignalrBanner(message, reloadAfterMs = 1800) {
+            let banner = document.getElementById("signalrBanner");
+            if (!banner) {
+                banner = document.createElement("div");
+                banner.id = "signalrBanner";
+                banner.className = "alert alert-info fixed-top text-center mt-3 mx-auto w-50";
+                banner.style.zIndex = 1050;
+                document.body.appendChild(banner);
+            }
+            banner.textContent = message;
+            banner.style.display = "block";
+
+            document.querySelectorAll(".folder-link").forEach(el => {
+                el.classList.add("disabled-folder");
+                el.setAttribute("aria-disabled", "true");
+            });
+            const submitBtn = document.querySelector(".submission-footer button[data-bs-target='#confirmSubmitModal']");
+            if (submitBtn) submitBtn.disabled = true;
+
+            if (reloadAfterMs) setTimeout(() => window.location.reload(), reloadAfterMs);
+        }
+
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/notificationHub")
+            .withAutomaticReconnect([0, 2000, 5000, 10000])
             .build();
 
-        connection.on("ReceiveApprovalUpdate", function (data) {
-            if (Number(data.groupId) !== Number(groupId)) return;
+        function setApprovalBadge(id, status, reviewerName) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            let cls = "badge bg-secondary";
+            let text = "—";
+            if (!status) {
+                el.innerHTML = '<span class="text-muted">—</span>';
+                return;
+            }
+            const s = status.toString();
+            if (s === "Approve" || s === "Approved") { cls = "badge bg-success"; text = "Đã phê duyệt"; }
+            else if (s === "Reject" || s === "Rejected") { cls = "badge bg-danger"; text = "Bị từ chối"; }
+            else if (s === "Suspend" || s === "Suspended") { cls = "badge bg-warning text-dark"; text = "Đình chỉ"; }
+            else if (s === "Reviewing") { cls = "badge bg-info"; text = "Đang xem xét"; }
+            else if (s === "Submitted") { cls = "badge bg-primary"; text = "Đã nộp"; }
 
-            console.log("Approval update received, reloading page...");
-            window.location.reload();
+            el.innerHTML = `<span class="${cls}">${text}</span>` +
+                (reviewerName ? `<div class="small text-muted">${reviewerName}</div>` : "");
+        }
+
+        connection.on("ReceiveApprovalUpdate", function (data) {
+            try {
+                if (!data) return;
+                if (data.groupId == null || Number(data.groupId) !== Number(groupId)) return;
+
+                // Try to update badges locally if server sent role votes (optional)
+                if (data.instructorVote || data.gpecVote) {
+                    setApprovalBadge("instructorApproval", data.instructorVote?.status, data.instructorVote?.name);
+                    setApprovalBadge("gpecApproval", data.gpecVote?.status, data.gpecVote?.name);
+                }
+
+                // If server sends final submission status, show banner and reload for accurate state
+                const status = (data.newStatus || data.submissionStatus || "").toString();
+                const finalStatuses = ["Approved", "Rejected", "Suspended"];
+                if (finalStatuses.includes(status)) {
+                    showSignalrBanner("Submission status updated: " + status);
+                } else {
+                    // partial update: refresh badges by reloading small area (reload page here)
+                    showSignalrBanner("Submission status changed: " + status, 1200);
+                }
+            } catch (e) {
+                console.error("ReceiveApprovalUpdate handler error:", e);
+            }
         });
 
-        connection.start()
-            .catch(err => console.error("SignalR connection error:", err));
+        connection.on("SubmissionSubmitted", function (data) {
+            try {
+                if (!data) return;
+                if (Number(data.groupId) !== Number(groupId)) return;
+                showSignalrBanner("Your group has submitted. Status: " + (data.submissionStatus || "Submitted"));
+            } catch (e) {
+                console.error("SubmissionSubmitted handler error:", e);
+            }
+        });
+
+        async function startSignalR() {
+            try {
+                await connection.start();
+                console.debug("SignalR connected (MyTopic)");
+            } catch (err) {
+                console.warn("SignalR start failed, retrying...", err);
+                setTimeout(startSignalR, 2000);
+            }
+        }
+        startSignalR();
+
+        connection.onreconnecting(error => console.warn("SignalR reconnecting", error));
+        connection.onreconnected(connectionId => console.debug("SignalR reconnected", connectionId));
     </script>
 }
 
@@ -52,7 +135,8 @@
                 <div class="alert alert-danger py-1 px-3 mb-0">
                     ⚠ Bạn đã bị đình chỉ do vi phạm học thuật. Mọi thao tác nộp bài đã bị khóa.
                 </div>
-            }else if (isSubmitted)
+            }
+            else if (isSubmitted)
             {
                 <div class="alert alert-success py-1 px-3 mb-0">
                     ✔ Nộp bài thành công. Đề tài đang được chờ duyệt.
@@ -61,57 +145,57 @@
         </div>
 
         @if (Model.RegisteredTopic == null || Model.RegisteredTopic.Status != "Assigned")
-    {
-        <div class="text-center my-5">
-            <img src="~/assets/empty_box.png" style="width:150px; opacity:0.8;" />
+        {
+            <div class="text-center my-5">
+                <img src="~/assets/empty_box.png" style="width:150px; opacity:0.8;" />
                 <p class="mt-3 text-muted">Bạn chưa đăng ký đề tài nào hoặc đề tài chưa được phê duyệt.</p>
-        </div>
-    }
-    else
-    {
-            <div class="container-fluid rounded p-3 d-flex flex-row gap-3">
-            <!-- Left: Topic details + members -->
-            <div class="flex-fill border-end pe-3">
-                <h4>@Model.RegisteredTopic.Title</h4>
-                <p>
-                    <strong>Chuyên ngành:</strong> @Model.RegisteredTopic.Major <br />
-                    <strong>Học kỳ:</strong> @Model.RegisteredTopic.SemesterTerm <br />
-                </p>
-
-                @if (Model.RegisteredTopic.Members.Any())
-                {
-                    <p><strong>Thành viên:</strong></p>
-                    <ul>
-                        @foreach (var m in Model.RegisteredTopic.Members)
-                        {
-                            <li>
-                                @m.Full_Name
-                                @if (m.IsLeader)
-                                {
-                                    <span class="badge bg-warning text-dark ms-1">⭐ Nhóm trưởng</span>
-                                }
-                            </li>
-                        }
-                    </ul>
-                }
             </div>
+        }
+        else
+        {
+            <div class="container-fluid rounded p-3 d-flex flex-row gap-3">
+                <!-- Left: Topic details + members -->
+                <div class="flex-fill border-end pe-3">
+                    <h4>@Model.RegisteredTopic.Title</h4>
+                    <p>
+                        <strong>Chuyên ngành:</strong> @Model.RegisteredTopic.Major <br />
+                        <strong>Học kỳ:</strong> @Model.RegisteredTopic.SemesterTerm <br />
+                    </p>
 
-            <!-- Right: Submission Instructions + Countdown -->
-            <div class="flex-fill ps-3 d-flex flex-column justify-content-between">
-                <div>
-                    <h5>Hướng dẫn nộp bài</h5>
+                    @if (Model.RegisteredTopic.Members.Any())
+                    {
+                        <p><strong>Thành viên:</strong></p>
+                        <ul>
+                            @foreach (var m in Model.RegisteredTopic.Members)
+                            {
+                                <li>
+                                    @m.Full_Name
+                                    @if (m.IsLeader)
+                                    {
+                                        <span class="badge bg-warning text-dark ms-1">⭐ Nhóm trưởng</span>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+
+                <!-- Right: Submission Instructions + Countdown -->
+                <div class="flex-fill ps-3 d-flex flex-column justify-content-between">
+                    <div>
+                        <h5>Hướng dẫn nộp bài</h5>
                         <p style="white-space: pre-wrap;">
                             <strong>@Html.Raw(Model.RegisteredTopic.SubmissionInstruction?.TrimStart())</strong>
                         </p>
-                </div>
-                <div class="mt-3 text-center">
-                    <h6>Hạn nộp còn lại:</h6>
-                    <div id="countdown" class="fs-5 fw-bold"></div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <h6>Hạn nộp còn lại:</h6>
+                        <div id="countdown" class="fs-5 fw-bold"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
 </div>
 
 @if (Model.RegisteredTopic != null && Model.RegisteredTopic.Status == "Assigned")
@@ -127,18 +211,39 @@
 
             <!-- Content -->
             <div class="row submission-body text-center">
-                <div class="col border-end text-danger fw-semibold">
-                    Chưa phê duyệt
+                <div class="col border-end">
+                    <div id="instructorApproval" class="d-flex flex-column align-items-center">
+                        @{
+                            if (Model.InstructorApproved)
+                            {
+                                <span class="badge bg-success">Đã phê duyệt</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger fw-semibold">Chưa phê duyệt</span>
+                            }
+                        }
+                    </div>
                 </div>
-                <div class="col border-end text-danger fw-semibold">
-                    Chưa xác nhận
+                <div class="col border-end">
+                    <div id="gpecApproval" class="d-flex flex-column align-items-center">
+                        @{
+                            if (Model.GpecApproved)
+                            {
+                                <span class="badge bg-success">Đã xác nhận</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger fw-semibold">Chưa xác nhận</span>
+                            }
+                        }
+                    </div>
                 </div>
                 <div class="col text-start">
                     <ul class="list-unstyled mb-0 directory-list">
-
                         <!-- Final Thesis and Reports -->
                         <li class="d-flex align-items-center justify-content-between">
-                            @if (isSubmitted || isSuspended)
+                            @if (isSubmitted || isSuspended || Model.TopicApproved)
                             {
                                 <a class="folder-link disabled-folder" aria-disabled="true">
                                     <span>
@@ -169,7 +274,7 @@
 
                         <!-- Slides -->
                         <li class="d-flex align-items-center justify-content-between">
-                            @if (isSubmitted || isSuspended)
+                            @if (isSubmitted || isSuspended || Model.TopicApproved)
                             {
                                 <a class="folder-link disabled-folder" aria-disabled="true">
                                     <span>
@@ -200,7 +305,7 @@
 
                         <!-- Others -->
                         <li class="d-flex align-items-center justify-content-between">
-                            @if (isSubmitted || isSuspended)
+                            @if (isSubmitted || isSuspended || Model.TopicApproved)
                             {
                                 <a class="folder-link disabled-folder" aria-disabled="true">
                                     <span>
@@ -240,6 +345,10 @@
                     <button class="btn btn-danger px-4" disabled>
                         ⛔ Tài khoản bị đình chỉ
                     </button>
+                }
+                else if (Model.TopicApproved)
+                {
+                    <span class="badge bg-success me-2">Topic Approved</span>
                 }
                 else if (isSubmitted)
                 {
