@@ -24,7 +24,7 @@ namespace Service.Interfaces
         );
 
         Task<SubmissionDto?> GetSubmissionAsync(int topicId, int groupId, int semesterId);
-
         Task<SubmissionDto?> GetByIdAsync(int submissionId);
+        Task ReviewSubmissionAsync(int submissionId, Guid reviewerId, string newStatus, string comment);
     }
 }
