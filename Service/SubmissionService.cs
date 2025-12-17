@@ -66,7 +66,7 @@ namespace Service
                     Group_Id = groupId,
                     Semester_Id = semesterId,
                     Status = SubmissionStatus.Draft.ToString(),
-                    Submitted_At = null,
+                    Submitted_At = DateTime.UtcNow,
                     Reviewed_At = null,
                     Plagiarism_Score = 0,
                     Plagiarism_Flag = false,
@@ -157,6 +157,14 @@ namespace Service
             return _mapper.Map<List<SubmissionFileDto>>(files);
         }
 
+        public async Task RemoveFileAsync(int fileId)
+        {
+            var files = await _fileRepo.GetByIdAsync(fileId);
+            if (files == null)
+                throw new Exception("File not found");
+            await _fileRepo.RemoveAsync(files);
+        }
+
         // ================= REVIEW / VOTE =================
         public async Task ReviewSubmissionAsync(int submissionId, Guid reviewerId, string newStatus, string comment)
         {
@@ -213,6 +221,23 @@ namespace Service
                     submissionEntity.Reject_Reason = rejectLog.Comment;
                 }
 
+                await _submissionRepo.UpdateAsync(submissionEntity);
+                return;
+            }
+
+            bool instructorSuspend = logs.Any(l =>
+                string.Equals(l.New_Status, "Suspend", StringComparison.OrdinalIgnoreCase)
+                && l.Reviewer != null
+                && string.Equals(l.Reviewer.Role, "Instructor", StringComparison.OrdinalIgnoreCase));
+
+            bool gpecSuspend = logs.Any(l =>
+                string.Equals(l.New_Status, "Suspend", StringComparison.OrdinalIgnoreCase)
+                && l.Reviewer != null
+                && string.Equals(l.Reviewer.Role, "GraduationProjectEvaluationCommitteeMember", StringComparison.OrdinalIgnoreCase));
+
+            if (instructorSuspend && gpecSuspend)
+            {
+                submissionEntity.Status = SubmissionStatus.Suspended.ToString();
                 await _submissionRepo.UpdateAsync(submissionEntity);
                 return;
             }

@@ -213,29 +213,39 @@
             <div class="row submission-body text-center">
                 <div class="col border-end">
                     <div id="instructorApproval" class="d-flex flex-column align-items-center">
-                        @{
-                            if (Model.InstructorApproved)
-                            {
-                                <span class="badge bg-success">Đã phê duyệt</span>
-                            }
-                            else
-                            {
-                                <span class="text-danger fw-semibold">Chưa phê duyệt</span>
-                            }
-                        }
+                    @switch (Model.InstructorStatus)
+                    {
+                        case ReviewStatus.Approved:
+                            <span class="badge bg-success">Đã phê duyệt</span>
+                            break;
+                        case ReviewStatus.Rejected:
+                            <span class="badge bg-danger">Bị từ chối</span>
+                            break;
+                        case ReviewStatus.Suspended:
+                            <span class="badge bg-warning">Đình chỉ</span>
+                            break;
+                        default:
+                            <span class="text-muted fw-semibold">Đang chờ</span>
+                            break;
+                    }
                     </div>
                 </div>
                 <div class="col border-end">
                     <div id="gpecApproval" class="d-flex flex-column align-items-center">
-                        @{
-                            if (Model.GpecApproved)
-                            {
+                        @switch (Model.GpecStatus)
+                        {
+                            case ReviewStatus.Approved:
                                 <span class="badge bg-success">Đã xác nhận</span>
-                            }
-                            else
-                            {
-                                <span class="text-danger fw-semibold">Chưa xác nhận</span>
-                            }
+                                break;
+                            case ReviewStatus.Rejected:
+                                <span class="badge bg-danger">Bị từ chối</span>
+                                break;
+                            case ReviewStatus.Suspended:
+                                <span class="badge bg-warning">Đình chỉ</span>
+                                break;
+                            default:
+                                <span class="text-muted fw-semibold">Đang chờ</span>
+                                break;
                         }
                     </div>
                 </div>
@@ -243,7 +253,7 @@
                     <ul class="list-unstyled mb-0 directory-list">
                         <!-- Final Thesis and Reports -->
                         <li class="d-flex align-items-center justify-content-between">
-                            @if (isSubmitted || isSuspended || Model.TopicApproved)
+                            @if (isSubmitted || isSuspended || Model.SubmissionStatus == ReviewStatus.Approved)
                             {
                                 <a class="folder-link disabled-folder" aria-disabled="true">
                                     <span>
@@ -274,7 +284,7 @@
 
                         <!-- Slides -->
                         <li class="d-flex align-items-center justify-content-between">
-                            @if (isSubmitted || isSuspended || Model.TopicApproved)
+                            @if (isSubmitted || isSuspended || Model.SubmissionStatus == ReviewStatus.Approved)
                             {
                                 <a class="folder-link disabled-folder" aria-disabled="true">
                                     <span>
@@ -305,7 +315,7 @@
 
                         <!-- Others -->
                         <li class="d-flex align-items-center justify-content-between">
-                            @if (isSubmitted || isSuspended || Model.TopicApproved)
+                            @if (isSubmitted || isSuspended || Model.SubmissionStatus == ReviewStatus.Approved)
                             {
                                 <a class="folder-link disabled-folder" aria-disabled="true">
                                     <span>
@@ -346,9 +356,9 @@
                         ⛔ Tài khoản bị đình chỉ
                     </button>
                 }
-                else if (Model.TopicApproved)
+                else if (Model.SubmissionStatus == ReviewStatus.Approved)
                 {
-                    <span class="badge bg-success me-2">Topic Approved</span>
+                    <span class="badge bg-success me-2">Submission Approved</span>
                 }
                 else if (isSubmitted)
                 {
@@ -389,7 +399,17 @@
                             File không được vượt quá 2GB!
                         </div>
                     </div>
+                <div >
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Tải lên
+                    </button>
                 </div>
+                </div>
+
+            </form>
 
                 @if (Model.Files.Any(f => f.File_Type == Model.CurrentFolder))
                 {
@@ -406,25 +426,23 @@
                                         @f.Uploaded_At.ToString("dd/MM/yyyy HH:mm")
                                     </span>
                                     <!-- Red X icon -->
-                                    <button type="button" class="btn btn-link p-0 text-danger delete-file-btn"
-                                            data-file-id="@f.Id" title="Xóa file">
-                                        <i class="bi bi-x-circle fs-5"></i>
-                                    </button>
+                                    <form method="post"
+                                          asp-page-handler="DeleteFile"
+                                          asp-route-id="@f.Id"
+                                          asp-route-folderName="@Model.FolderName">
+
+                                        <button type="submit" class="btn btn-link text-danger p-0">
+                                            <i class="bi bi-x-circle fs-5"></i>
+                                        </button>
+                                    </form>
+
+
                                 </div>
                             </li>
                         }
                     </ul>
                 }
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Hủy
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        Tải lên
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>

@@ -25,6 +25,7 @@ namespace Repository
             return await _context.ReviewLogs
                 .AsNoTracking()
                 .Where(r => r.Submission_Id == submissionId)
+                .Where(r => r.Created_At >= r.Submission.Submitted_At)
                 .OrderBy(r => r.Created_At)
                 .Include(r => r.Reviewer)
                 .ToListAsync();
@@ -39,11 +40,13 @@ namespace Repository
             var logs = await _context.ReviewLogs
                 .AsNoTracking()
                 .Where(r => r.Submission_Id == submissionId)
+                .Where(r => r.Created_At >= r.Submission.Submitted_At)
                 .Include(r => r.Reviewer)
                 .ToListAsync();
 
             var latestByRole = logs
                 .Where(l => l.Reviewer != null)
+                .Where(r => r.Created_At >= r.Submission.Submitted_At)
                 .GroupBy(l => l.Reviewer.Role)
                 .Select(g => g.OrderByDescending(x => x.Created_At).First())
                 .ToList();

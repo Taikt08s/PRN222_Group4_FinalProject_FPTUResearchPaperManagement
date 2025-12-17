@@ -18,7 +18,7 @@ public class OpenAiSubmissionService : IOpenAiSubmissionService
     private readonly ChatClient _chat;
     private readonly StorageClient _storage;
 
-    public OpenAiSubmissionService(IOptions<OpenAiOptions> options,StorageClient storage)
+    public OpenAiSubmissionService(IOptions<OpenAiOptions> options, StorageClient storage)
     {
         var cfg = options.Value;
         _chat = new ChatClient(cfg.Model, cfg.ApiKey);
@@ -41,7 +41,7 @@ public class OpenAiSubmissionService : IOpenAiSubmissionService
         var objectNameEncoded = path.Substring(bucketPrefix.Length);
         return Uri.UnescapeDataString(objectNameEncoded);
     }
-    
+
     public async Task<bool> ValidateAndModerateSubmissionAsync(Submission submission)
     {
         var filesToCheck = submission.Files
@@ -99,7 +99,7 @@ public class OpenAiSubmissionService : IOpenAiSubmissionService
 
         return aiResult.IsApproved;
     }
-    
+
     private static string CleanJson(string input)
     {
         input = input.Trim();
@@ -163,33 +163,46 @@ public class OpenAiSubmissionService : IOpenAiSubmissionService
     {
         submission.Status = SubmissionStatus.Rejected.ToString();
         submission.Reject_Reason = reason;
-        submission.Plagiarism_Flag = false;
     }
 
     private void UpdateModeration(Submission submission, ThesisAiResult result)
     {
         submission.Plagiarism_Score = result.PlagiarismScore;
         submission.Plagiarism_Flag = !result.PlagiarismPass;
-
-        submission.Moderation = new ThesisModeration
+        if (submission.Moderation == null)
         {
-            Submission_Id = submission.Id,
-            Plagiarism_Pass = result.PlagiarismPass,
-            Plagiarism_Score = result.PlagiarismScore,
-            Is_Approved = result.IsApproved,
-            Reasoning = result.Reasoning,
-            Violations_Json = result.ViolationsJson,
-            Created_At = DateTime.UtcNow
-        };
+            submission.Moderation = new ThesisModeration
+            {
+                Submission_Id = submission.Id,
+                Plagiarism_Pass = result.PlagiarismPass,
+                Plagiarism_Score = result.PlagiarismScore,
+                Is_Approved = result.IsApproved,
+                Reasoning = result.Reasoning,
+                Violations_Json = result.ViolationsJson,
+                Created_At = DateTime.UtcNow
+            };
+
+        }
+        else
+        {
+            submission.Moderation.Plagiarism_Pass = result.PlagiarismPass;
+            submission.Moderation.Plagiarism_Pass = result.PlagiarismPass;
+            submission.Moderation.Plagiarism_Score = result.PlagiarismScore;
+            submission.Moderation.Is_Approved = result.IsApproved;
+            submission.Moderation.Reasoning = result.Reasoning;
+            submission.Moderation.Violations_Json = result.ViolationsJson;
+            submission.Moderation.Created_At = DateTime.UtcNow;
+        }
 
         if (!result.IsApproved)
         {
             submission.Status = SubmissionStatus.Rejected.ToString();
             submission.Reject_Reason = "AI detected plagiarism or violations";
-            if (submission.Topic != null)
-            {
-                submission.Topic.Status = TopicStatus.Closed.ToString();
-            }
+            //Oh please, ai should not has this power to begin with
+            // if (submission.Topic != null)
+            // {
+            //     submission.Topic.Status = TopicStatus.Closed.ToString();
+            // }
         }
     }
 }

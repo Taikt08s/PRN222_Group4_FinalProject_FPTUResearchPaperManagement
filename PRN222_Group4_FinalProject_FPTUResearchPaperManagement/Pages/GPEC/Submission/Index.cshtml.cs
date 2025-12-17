@@ -24,6 +24,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
             public int MemberCount { get; set; }
             public string Status { get; set; }
             public bool PlagiarismFlag { get; set; }
+            public bool ReviewedByMe { get; set; }
         }
 
         public List<SubmissionListItem> Submissions { get; set; } = new();
@@ -33,11 +34,14 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
             ViewData["ShowSidebar"] = true;
             ViewData["ActiveMenu"] = "TopicSubmissions";
 
-            // Include Approved submissions so GPEC can still view them (but Details will restrict actions)
+            var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            Guid? currentUserId = Guid.TryParse(userIdStr, out var g) ? g : null;
+
             var list = await _context.Submissions
                 .Include(s => s.Topic)
                 .Include(s => s.Group)
                     .ThenInclude(g => g.Members)
+                .Include(s => s.ReviewLogs) // IMPORTANT
                 .Where(s => s.Status == "Submitted"
                          || s.Status == "Reviewing"
                          || s.Status == "Suspended"
@@ -51,8 +55,14 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
                 GroupId = s.Group_Id,
                 MemberCount = s.Group?.Members?.Count ?? 0,
                 Status = s.Status,
-                PlagiarismFlag = s.Plagiarism_Flag
+                PlagiarismFlag = s.Plagiarism_Flag,
+
+                ReviewedByMe = currentUserId != null &&
+                    s.ReviewLogs.Any(r =>
+                        r.Reviewer_Id == currentUserId &&
+                        r.Reviewer.Role == "GraduationProjectEvaluationCommitteeMember")
             }).ToList();
         }
+
     }
 }

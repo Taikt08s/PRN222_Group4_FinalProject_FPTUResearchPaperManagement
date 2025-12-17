@@ -19,6 +19,7 @@ namespace Repository
             return await _context.Submissions
                 .Include(s => s.Files)
                 .Include(s => s.Group)
+                .Include(s => s.Moderation)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 

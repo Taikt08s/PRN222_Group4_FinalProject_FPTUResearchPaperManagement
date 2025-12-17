@@ -32,5 +32,16 @@ namespace Repository
             _context.SubmissionFiles.Add(file);
             await _context.SaveChangesAsync();
         }
+
+        public async Task RemoveAsync(SubmissionFile file)
+        {
+            _context.SubmissionFiles.Remove(file);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<SubmissionFile?> GetByIdAsync(int id)
+        {
+            return await _context.SubmissionFiles.Where(f => f.Id == id).FirstOrDefaultAsync();
+        }
     }
 }

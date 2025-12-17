@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models;
+﻿using BusinessObject.Enums;
+using BusinessObject.Models;
 using Google.Api.Gax.ResourceNames;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -44,9 +45,17 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
         public string CurrentFolder { get; set; }
         public List<BusinessObject.Models.ReviewLog> ReviewLogs { get; set; } = new();
         public Dictionary<string, BusinessObject.Models.ReviewLog?> LatestVotes { get; set; } = new();
-        public bool InstructorApproved { get; set; }
-        public bool GpecApproved { get; set; }
-        public bool TopicApproved => InstructorApproved && GpecApproved;
+        public ReviewStatus InstructorStatus { get; set; } = ReviewStatus.Pending;
+        public ReviewStatus GpecStatus { get; set; } = ReviewStatus.Pending;
+
+        public ReviewStatus SubmissionStatus =>
+            (InstructorStatus == ReviewStatus.Approved &&
+             GpecStatus == ReviewStatus.Approved)
+                ? ReviewStatus.Approved
+                : (InstructorStatus == ReviewStatus.Rejected ||
+                   GpecStatus == ReviewStatus.Rejected)
+                    ? ReviewStatus.Rejected
+                    : ReviewStatus.Pending;
 
         public async Task<IActionResult> OnGet(string? folder)
         {
@@ -79,11 +88,10 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
                         g => g.OrderByDescending(l => l.Created_At).FirstOrDefault()
                     );
 
-                InstructorApproved = LatestVotes.TryGetValue("Instructor", out var iVote)
-                    && string.Equals(iVote?.New_Status, "Approve", StringComparison.OrdinalIgnoreCase);
+                InstructorStatus = GetReviewStatus(LatestVotes, "Instructor");
 
-                GpecApproved = LatestVotes.TryGetValue("GraduationProjectEvaluationCommitteeMember", out var gVote)
-                    && string.Equals(gVote?.New_Status, "Approve", StringComparison.OrdinalIgnoreCase);
+                GpecStatus = GetReviewStatus(LatestVotes, "GraduationProjectEvaluationCommitteeMember");
+
             }
 
             CurrentFolder = folder;
@@ -160,5 +168,28 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
             TempData["Success"] = "Nộp bài thành công!";
             return RedirectToPage();
         }
+
+        public async Task<IActionResult> OnPostDeleteFileAsync(int id, string folderName)
+        {
+            await _submissionService.RemoveFileAsync(id);
+            return RedirectToPage(new { folder = folderName });
+        }
+
+        private static ReviewStatus GetReviewStatus(
+    Dictionary<string, ReviewLog?> latestVotes,
+    string role)
+        {
+            if (!latestVotes.TryGetValue(role, out var vote) || vote == null)
+                return ReviewStatus.Pending;
+
+            return vote.New_Status?.ToLower() switch
+            {
+                "approve" => ReviewStatus.Approved,
+                "reject" => ReviewStatus.Rejected,
+                "suspend" => ReviewStatus.Suspended,
+                _ => ReviewStatus.Pending
+            };
+        }
+
     }
 }

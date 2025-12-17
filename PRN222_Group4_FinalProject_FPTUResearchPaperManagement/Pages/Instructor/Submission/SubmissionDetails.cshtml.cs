@@ -1,3 +1,4 @@
+using BusinessObject.Enums;
 using BusinessObject.Models;
 using DataAccessLayer;
 using Microsoft.AspNetCore.Authorization;
@@ -97,7 +98,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
                     .FirstOrDefault();
 
                 HasCurrentUserApproved = CurrentUserLatestVote != null
-                                         && string.Equals(CurrentUserLatestVote.New_Status, "Approve", StringComparison.OrdinalIgnoreCase);
+                                         && string.Equals(CurrentUserLatestVote.New_Status, nameof(ReviewStatus.Approved), StringComparison.OrdinalIgnoreCase);
             }
 
             ViewData["ShowSidebar"] = true;
@@ -139,12 +140,14 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
             }
             catch (InvalidOperationException ex)
             {
+                TempData["ErrorMessage"] = ex.Message;
                 ModelState.AddModelError(string.Empty, ex.Message);
                 await OnGetAsync(SubmissionId);
                 return Page();
             }
             catch (Exception ex)
             {
+                TempData["ErrorMessage"] = ex.Message;
                 ModelState.AddModelError(string.Empty, "Review failed: " + ex.Message);
                 await OnGetAsync(SubmissionId);
                 return Page();
