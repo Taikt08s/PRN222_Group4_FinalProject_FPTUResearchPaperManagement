@@ -14,12 +14,17 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
     {
         private readonly ISubmissionService _submissionService;
         private readonly IReviewLogService _reviewLogService;
-        private readonly IStudentGroupMemberService _studentGroupMemberService;
+        private readonly IStudentGroupService _studentGroupService;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public DetailsModel(ISubmissionService submissionService, IReviewLogService reviewLogService, IHubContext<NotificationHub> hubContext, IStudentGroupMemberService studentGroupMemberService)
+        public DetailsModel(
+                ISubmissionService submissionService,
+                IReviewLogService reviewLogService,
+                IHubContext<NotificationHub> hubContext,
+                IStudentGroupService studentGroupService
+        )
         {
-            _studentGroupMemberService = studentGroupMemberService;
+            _studentGroupService = studentGroupService;
             _submissionService = submissionService;
             _reviewLogService = reviewLogService;
             _hubContext = hubContext;
@@ -55,11 +60,18 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
 
             Files = await _submissionService.GetFilesAsync(submissionId);
 
-            var group = await _studentGroupMemberService.GetByTopicAsync(sub.TopicId);
-            if (group.Count > 0)
+            if (Submission.GroupId > 0)
             {
-                Members = group.Select(m => (m.Student_Id, m.Student?.Full_Name ?? "", m.Student?.Email ?? "", m.Is_Leader)).ToList();
+                var group = await _studentGroupService.GetByIdAsync(Submission.GroupId);
+
+                if (group?.Members != null)
+                {
+                    Members = group.Members
+                        .Select(m => (m.Student_Id, m.Student?.Full_Name ?? "", m.Student?.Email ?? "", m.Is_Leader))
+                        .ToList();
+                }
             }
+
 
             // ---- REVIEW LOGS ----
             ReviewLogs = await _reviewLogService.GetBySubmissionIdAsync(submissionId);

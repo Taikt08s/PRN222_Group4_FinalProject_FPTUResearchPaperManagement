@@ -59,9 +59,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
             var submissions = await _submissionService.GetPaginationAsync(filter, PageIndex, PageSize);
             var myReviewedSubmissionIds = await _reviewLogService.GetSubmissionUserReviewed(currentUserId.Value, submissions.Select(sub => sub.Id).ToList());
 
-
-            Submissions = (await Task.WhenAll(
-            submissions.Select(async s => new SubmissionListItem
+            Submissions = submissions.Select(s => new SubmissionListItem
             {
                 SubmissionId = s.Id,
                 TopicTitle = s.Topic?.Title ?? "",
@@ -69,9 +67,8 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
                 MemberCount = s.Group?.Members?.Count ?? 0,
                 Status = s.Status,
                 PlagiarismFlag = s.Plagiarism_Flag,
-                ReviewedByMe = await _reviewLogService
-                    .IsUserReviewed(currentUserId.Value, s.Id)
-            }))).ToList();
+                ReviewedByMe = myReviewedSubmissionIds.Contains(s.Id)
+            }).ToList();
             return Page();
 
         }
