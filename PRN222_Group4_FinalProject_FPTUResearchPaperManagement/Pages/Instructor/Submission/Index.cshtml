@@ -1,45 +1,165 @@
 ﻿@page
 @model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.Submission.IndexModel
-@{
-    ViewData["Title"] = "Quản lý tệp đề tài";
-    ViewBag.ShowSidebar = true;
-    ViewBag.ActiveMenu = "TopicSubmissions";
-}
 
-<h1>Quản lí tệp đề tài</h1>
-<hr/>
+<h1>Quản lý nộp bài theo đề tài</h1>
+<hr />
 
-@if (!Model.Topics.Any())
+@if (!Model.Rows.Any())
 {
-    <div class="alert alert-warning">Không tìm thấy đề tài.</div>
+    <div class="alert alert-warning">Không có đề tài.</div>
 }
 else
 {
-    <table class="table table-bordered table-hover">
-        <thead>
+    <table class="table table-hover table-bordered align-middle">
+        <thead class="table-light">
             <tr>
-                <th>Tên đề tài</th>
-                <th>Chuyên ngành</th>
-                <th>Học kỳ</th>
-                <th>Yêu cầu nhóm</th>
-                <th>Thao tác</th>
+                <th>Đề tài</th>
+                <th>Nhóm</th>
+                <th>Thành viên</th>
+                <th>Trạng thái</th>
+                <th>Đánh giá</th>
+                <th>Tệp</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var t in Model.Topics)
-            {
-                <tr>
-                    <td>@t.Title</td>
-                    <td>@t.Major</td>
-                    <td>@t.SemesterTerm</td>
-                    <td>@(t.Is_Group_Required ? "Nhóm" : "Cá nhân")</td>
-                    <td>
-                        <a asp-page="./ByTopic" asp-route-id="@t.Id" class="btn btn-sm btn-primary">
-                            Xem nhóm / tệp
+        @foreach (var r in Model.Rows)
+        {
+            <tr id="topic-row-@r.TopicId">
+                <td>
+                    <strong>@r.TopicTitle</strong><br />
+                    <small class="text-muted">@r.Major · @r.Semester</small>
+                </td>
+
+                <td>
+                    @if (r.GroupId.HasValue)
+                    {
+                        <span class="badge bg-info">Group @r.GroupId</span><br />
+                        <small>Leader: @r.LeaderName</small>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Chưa có nhóm</span>
+                    }
+                </td>
+
+                <td class="text-center">
+                    @(r.GroupId.HasValue ? r.MemberCount : "—")
+                </td>
+
+                <td class="submission-status">
+                    <span class="badge
+                        @(r.SubmissionStatus switch
+                        {
+                            "Submitted" => "bg-primary",
+                            "Reviewing" => "bg-warning text-dark",
+                            "Approved" => "bg-success",
+                            "Rejected" => "bg-danger",
+                            _ => "bg-secondary"
+                        })">
+                        @r.SubmissionStatus
+                    </span>
+                </td>
+                <td>
+                    @if (!r.SubmissionId.HasValue)
+                    {
+                        <span class="text-muted">—</span>
+                    }
+                    else if (r.HasReviewedByMe)
+                    {
+                        <span class="badge bg-info">
+                            Đã đánh gía
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">
+                            Chưa đánh giá
+                        </span>
+                    }
+                </td>
+
+
+                <td class="submission-action">
+                    @if (r.SubmissionId.HasValue)
+                    {
+                        <a asp-page="./SubmissionDetails"
+                           asp-route-submissionId="@r.SubmissionId"
+                           class="btn btn-sm btn-primary">
+                            View files
                         </a>
-                    </td>
-                </tr>
-            }
+                    }
+                    else
+                    {
+                        <span class="text-muted">—</span>
+                    }
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 }
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-route-pageIndex="@(Model.PageIndex - 1)">
+                    Previous
+                </a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-route-pageIndex="@i">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link"
+                   asp-route-pageIndex="@(Model.PageIndex + 1)">
+                    Next
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+}
+
+
+@section Scripts {
+<script src="https://unpkg.com/@@microsoft/signalr@latest/dist/browser/signalr.js"></script>
+
+<script>
+"use strict";
+
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/notificationHub")
+    .build();
+
+connection.on("SubmissionSubmitted", function (data) {
+
+    const row = document.getElementById(`topic-row-${data.topicId}`);
+    if (!row) return;
+
+    // Update status badge
+    const statusCell = row.querySelector(".submission-status");
+    statusCell.innerHTML =
+        `<span class="badge bg-primary">${data.submissionStatus}</span>`;
+
+    // Update action button
+    const actionCell = row.querySelector(".submission-action");
+    actionCell.innerHTML =
+        `<a href="/Instructor/Submission/SubmissionDetails/${data.submissionId}"
+            class="btn btn-sm btn-primary">
+            View files
+        </a>`;
+});
+
+connection.start()
+    .catch(err => console.error("SignalR error:", err));
+</script>
+}
+

@@ -46,7 +46,9 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
         public List<BusinessObject.Models.ReviewLog> ReviewLogs { get; set; } = new();
         public Dictionary<string, BusinessObject.Models.ReviewLog?> LatestVotes { get; set; } = new();
         public ReviewStatus InstructorStatus { get; set; } = ReviewStatus.Pending;
+        public string? InstructorComment { get; set; } = null;
         public ReviewStatus GpecStatus { get; set; } = ReviewStatus.Pending;
+        public string? GpecComment { get; set; } = null;
 
         public ReviewStatus SubmissionStatus =>
             (InstructorStatus == ReviewStatus.Approved &&
@@ -90,7 +92,10 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
 
                 InstructorStatus = GetReviewStatus(LatestVotes, "Instructor");
 
+                InstructorComment = GetReviewComment(LatestVotes, "Instructor");
+
                 GpecStatus = GetReviewStatus(LatestVotes, "GraduationProjectEvaluationCommitteeMember");
+                GpecComment = GetReviewComment(LatestVotes, "GraduationProjectEvaluationCommitteeMember");
 
             }
 
@@ -176,8 +181,8 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
         }
 
         private static ReviewStatus GetReviewStatus(
-    Dictionary<string, ReviewLog?> latestVotes,
-    string role)
+                Dictionary<string, ReviewLog?> latestVotes,
+                string role)
         {
             if (!latestVotes.TryGetValue(role, out var vote) || vote == null)
                 return ReviewStatus.Pending;
@@ -189,6 +194,16 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Student
                 "suspend" => ReviewStatus.Suspended,
                 _ => ReviewStatus.Pending
             };
+        }
+
+        private static string? GetReviewComment(
+                Dictionary<string, ReviewLog?> latestVotes,
+                string role)
+        {
+            if (!latestVotes.TryGetValue(role, out var vote) || vote == null)
+                return null;
+
+            return vote.Comment;
         }
 
     }

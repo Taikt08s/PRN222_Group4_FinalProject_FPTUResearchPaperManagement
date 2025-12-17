@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        @if (!string.IsNullOrWhiteSpace(Model.Submission.RejectReason))
+        @if (!string.IsNullOrWhiteSpace(Model.Submission.RejectReason) && Model.Submission.Status == nameof(SubmissionStatus.Rejected))
         {
             <div class="alert alert-danger shadow-sm">
                 <h6 class="alert-heading mb-1">❌ Rejection Reason</h6>
