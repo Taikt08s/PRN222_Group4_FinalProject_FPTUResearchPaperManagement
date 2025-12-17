@@ -8,7 +8,7 @@ using Service.Interfaces;
 
 namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructor.Submission
 {
-    [Authorize(Roles = "Instructor,GraduationProjectEvaluationCommitteeMember")]
+    [Authorize(Roles = "Instructor")]
     public class IndexModel : PageModel
     {
         private readonly ITopicService _topicService;

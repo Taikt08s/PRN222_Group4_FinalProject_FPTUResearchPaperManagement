@@ -1,0 +1,56 @@
+﻿@page
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Submission.IndexModel
+@{
+    ViewData["Title"] = "GPEC - Submissions";
+    ViewData["ShowSidebar"] = true;
+    ViewData["ActiveMenu"] = "TopicSubmissions";
+}
+
+<h1>GPEC — Submissions to review</h1>
+<hr />
+
+@if (!Model.Submissions.Any())
+{
+    <div class="alert alert-info">No submissions pending review.</div>
+}
+else
+{
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>Submission ID</th>
+                <th>Topic</th>
+                <th>Group</th>
+                <th>Members</th>
+                <th>Status</th>
+                <th>Plagiarism</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model.Submissions)
+            {
+                <tr>
+                    <td>@s.SubmissionId</td>
+                    <td>@s.TopicTitle</td>
+                    <td>@s.GroupId</td>
+                    <td>@s.MemberCount</td>
+                    <td>@s.Status</td>
+                    <td>
+                        @if (s.PlagiarismFlag)
+                        {
+                            <span class="badge bg-danger">Flagged</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-page="./Details" asp-route-submissionId="@s.SubmissionId" class="btn btn-sm btn-primary">Review</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
