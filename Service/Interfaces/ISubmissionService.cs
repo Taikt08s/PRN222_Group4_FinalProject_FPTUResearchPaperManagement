@@ -13,6 +13,7 @@ namespace Service.Interfaces
             string contentType
         );
 
+        Task RemoveFileAsync(int fileId);
         Task<List<SubmissionFileDto>> GetFilesAsync(int submissionId);
 
         Task SubmitAsync(int submissionId);
