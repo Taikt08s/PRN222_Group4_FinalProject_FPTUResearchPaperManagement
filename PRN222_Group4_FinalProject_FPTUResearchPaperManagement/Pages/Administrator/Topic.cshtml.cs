@@ -64,35 +64,36 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
 
         public async Task<IActionResult> OnPostCreateTopicAsync()
         {
+            foreach (var key in ModelState.Keys.Where(k => k.StartsWith("UpdateInput")).ToList())
+            {
+                Console.WriteLine("Removing ModelState key: " + key);
+                ModelState.Remove(key);
+            }
+
             await LoadReferenceDataAsync();
             await LoadTopicsAsync();
 
             ValidateSemesterSelection(TopicInput.SemesterId, "TopicInput.SemesterId");
-            ValidateInstructorSelection(TopicInput.InstructorId, "TopicInput.InstructorId");
+            ValidateInstructorSelection(TopicInput.CreatedBy, "TopicInput.CreatedBy");
 
+            Console.WriteLine("TopicInput.DeadlineDate: " + TopicInput.DeadlineDate);
             if (TopicInput.DeadlineDate == default)
             {
                 ModelState.AddModelError("TopicInput.DeadlineDate", "Vui lòng chọn hạn nộp rõ ràng.");
             }
 
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
+           
             var creatorIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrWhiteSpace(creatorIdValue))
             {
                 return RedirectToPage("/Authentication/Login");
             }
-
             var request = new CreateTopicRequest
             {
                 TopicName = TopicInput.TopicName!.Trim(),
                 TopicDescription = TopicInput.TopicDescription?.Trim() ?? string.Empty,
                 SubmissionInstruction = TopicInput.SubmissionInstruction?.Trim() ?? string.Empty,
-                CreatedBy = Guid.Parse(creatorIdValue),
-                InstructorId = TopicInput.InstructorId!.Value,
+                CreatedBy = TopicInput.CreatedBy!.Value,
                 Major = TopicInput.Major,
                 SemesterId = TopicInput.SemesterId,
                 IsGroupTopic = TopicInput.IsGroupTopic,
@@ -100,6 +101,20 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
                 Status = TopicInput.Status
             };
 
+            // if (!ModelState.IsValid)
+            // {
+            //     Console.WriteLine("ModelState is invalid. Errors:");
+            //     foreach (var modelState in ModelState.Values)
+            //     {
+            //         foreach (var error in modelState.Errors)
+            //         {
+            //             Console.WriteLine($"  - {error.ErrorMessage}");
+            //         }
+            //     }
+            //     return Page();
+            // }
+
+            Console.WriteLine("Creating topic with CreatedBy: " + request.CreatedBy);
             try
             {
                 await _topicService.CreateTopicAsync(request);
@@ -115,6 +130,11 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
 
         public async Task<IActionResult> OnPostUpdateTopicAsync()
         {
+            foreach (var key in ModelState.Keys.Where(k => k.StartsWith("TopicInput")).ToList())
+            {
+                ModelState.Remove(key);
+            }
+
             await LoadReferenceDataAsync();
             await LoadTopicsAsync();
 
@@ -126,7 +146,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
             }
 
             ValidateSemesterSelection(UpdateInput.SemesterId, "UpdateInput.SemesterId");
-            ValidateInstructorSelection(UpdateInput.InstructorId, "UpdateInput.InstructorId");
+            ValidateInstructorSelection(UpdateInput.CreatedBy, "UpdateInput.CreatedBy");
 
             if (UpdateInput.DeadlineDate == default)
             {
@@ -151,8 +171,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
                 TopicDescription = UpdateInput.TopicDescription?.Trim() ?? string.Empty,
                 SubmissionInstruction = UpdateInput.SubmissionInstruction?.Trim() ?? string.Empty,
                 SemesterId = UpdateInput.SemesterId,
-                InstructorId = UpdateInput.InstructorId!.Value,
-                CreatedBy = Guid.Parse(editorIdValue),
+                CreatedBy = UpdateInput.CreatedBy!.Value,
                 IsGroupTopic = UpdateInput.IsGroupTopic,
                 DeadlineDate = UpdateInput.DeadlineDate,
                 Status = UpdateInput.Status,
@@ -182,6 +201,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
                 .ToList();
 
             var users = await _userService.GetAllAsync();
+            Console.WriteLine("Total users loaded: " + users.Count);
             var instructorRole = AccountRole.Instructor.ToString();
             InstructorOptions = users
                 .Where(u => string.Equals(u.Role, instructorRole, StringComparison.OrdinalIgnoreCase))
@@ -191,8 +211,12 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
 
         private async Task LoadTopicsAsync()
         {
+            Console.WriteLine("Loading topics...");
             TotalTopics = await _topicService.CountAsync(null);
+
+            Console.WriteLine("Loading total topics: " + TotalTopics);
             Topics = await _topicService.GetPaginationAsync(null, 1, TopicPageSize);
+            Console.WriteLine("Loaded topics count: " + Topics.Count);
         }
 
         private async Task PrepareUpdateAsync(int topicId)
@@ -214,7 +238,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
                 TopicDescription = topic.Description,
                 SubmissionInstruction = topic.SubmissionInstruction,
                 SemesterId = topic.SemesterId,
-                InstructorId = topic.InstructorId,
+                CreatedBy = topic.CreatedBy,
                 DeadlineDate = topic.Deadline_Date,
                 IsGroupTopic = topic.Is_Group_Required
             };
@@ -249,9 +273,9 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
                 TopicInput.SemesterId = Semesters.First().Id;
             }
 
-            if (!TopicInput.InstructorId.HasValue && InstructorOptions.Any())
+            if (!TopicInput.CreatedBy.HasValue && InstructorOptions.Any())
             {
-                TopicInput.InstructorId = InstructorOptions.First().Id;
+                TopicInput.CreatedBy = InstructorOptions.First().Id;
             }
         }
 
@@ -269,7 +293,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
             }
         }
 
-        private void ValidateInstructorSelection(Guid? instructorId, string fieldName)
+        private void ValidateInstructorSelection(Guid? CreatedBy, string fieldName)
         {
             if (!InstructorOptions.Any())
             {
@@ -277,13 +301,13 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
                 return;
             }
 
-            if (!instructorId.HasValue)
+            if (!CreatedBy.HasValue)
             {
                 ModelState.AddModelError(fieldName, "Vui lòng chọn giảng viên phụ trách.");
                 return;
             }
 
-            if (!InstructorOptions.Any(i => i.Id == instructorId.Value))
+            if (!InstructorOptions.Any(i => i.Id == CreatedBy.Value))
             {
                 ModelState.AddModelError(fieldName, "Giảng viên được chọn không hợp lệ.");
             }
@@ -307,7 +331,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
             public int SemesterId { get; set; }
 
             [Display(Name = "Giảng viên phụ trách")]
-            public Guid? InstructorId { get; set; }
+            public Guid? CreatedBy { get; set; }
 
             [Required(ErrorMessage = "Vui lòng chọn hạn đăng ký."), Display(Name = "Hạn đăng ký")]
             public DateTime DeadlineDate { get; set; } = DateTime.Today.AddDays(14);
