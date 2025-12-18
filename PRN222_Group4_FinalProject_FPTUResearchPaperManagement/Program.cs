@@ -57,6 +57,7 @@ builder.Services.AddScoped<ISuspensionService, SuspensionService>();
 builder.Services.AddScoped<ISuspensionRepository, SuspensionRepository>();
 builder.Services.AddScoped<IReviewLogRepository, ReviewLogRepository>();
 builder.Services.AddScoped<IReviewLogService, ReviewLogService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.Configure<OpenAiOptions>(
     builder.Configuration.GetSection("OpenAI"));
 builder.Services.AddRazorPages();
@@ -121,16 +122,16 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AllowAnonymousToFolder("/Administrator");
 });
 
-// var credentialPath = Path.Combine(
-//     Directory.GetCurrentDirectory(),
-//     "Credentials",
-//     "fpturesearchpapermanagement-3465b1d3b88e.json"
-// );
+var credentialPath = Path.Combine(
+    Directory.GetCurrentDirectory(),
+    "Credentials",
+    "fpturesearchpapermanagement-3465b1d3b88e.json"
+);
 
-// FirebaseApp.Create(new AppOptions
-// {
-//     Credential = GoogleCredential.FromFile(credentialPath)
-// });
+FirebaseApp.Create(new AppOptions
+{
+    Credential = GoogleCredential.FromFile(credentialPath)
+});
 
 var app = builder.Build();
 

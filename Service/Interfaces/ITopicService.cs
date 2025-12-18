@@ -22,5 +22,7 @@ namespace Service.Interfaces
         Task<List<TopicResponseModel>> GetPaginationAsync(TopicFilter? filter, int page, int size);
         Task<Topic?> GetTopicByGroupAsync(int groupId);
         Task<StudentGroup?> GetGroupByTopicAsync(int topic);
+        Task<TopicResponseModel> CreateTopicAsync(CreateTopicRequest req);
+        Task<TopicResponseModel> UpdateTopicAsync(UpdateTopicRequest req);
     }
 }

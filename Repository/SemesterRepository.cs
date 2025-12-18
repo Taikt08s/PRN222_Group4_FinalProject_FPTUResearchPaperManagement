@@ -31,4 +31,21 @@ public class SemesterRepository : GenericRepository<Semester>, ISemesterReposito
         return await _context.Semesters
             .FirstOrDefaultAsync(s => s.Id == semesterId);
     }
+
+    public async Task<bool> CheckMatchSemesterTime(DateTime startTime, DateTime endTime)
+    {
+        bool isOverlapping = await _context.Semesters
+            .AnyAsync(sem => 
+                sem.End_Date > startTime && 
+                sem.Start_Date < endTime
+            );
+        return isOverlapping;
+    }
+
+    public async Task<bool> CreateSemesterAsync(Semester semester)
+    {
+        await _context.Semesters.AddAsync(semester);
+        var created = await _context.SaveChangesAsync();
+        return created > 0;
+    }
 }

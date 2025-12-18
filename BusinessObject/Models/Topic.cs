@@ -10,8 +10,9 @@
 
         public int Semester_Id { get; set; }
         public Guid Created_By { get; set; }
-
+        public Guid? Instructor_Id { get; set; }
         public bool Is_Group_Required { get; set; }
+        public int? Student_Group_Id { get; set; } = null;
         public DateTime Deadline_Date { get; set; }
         public string Status { get; set; }
 

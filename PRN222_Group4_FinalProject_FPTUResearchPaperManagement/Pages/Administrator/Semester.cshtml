@@ -1,0 +1,315 @@
+@page
+@model PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administrator.SemesterModel
+@{
+    ViewBag.ShowSidebar = true;
+    ViewBag.ActiveMenu = "Semester";
+    var flash = TempData["Message"] as string;
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+    :root {
+        --sem-ink: #101828;
+        --sem-muted: #475467;
+        --sem-border: rgba(15, 23, 42, 0.1);
+        --sem-accent: #14b8a6;
+        --sem-contrast: #facc15;
+    }
+
+    .semester-shell {
+        font-family: 'Manrope', 'Segoe UI', sans-serif;
+        padding: 34px;
+        border-radius: 30px;
+        background: radial-gradient(circle at 10% 20%, rgba(20, 184, 166, 0.22), transparent 55%),
+                    radial-gradient(circle at 90% 10%, rgba(250, 204, 21, 0.2), transparent 45%),
+                    #f5f7fb;
+        box-shadow: 0 40px 100px rgba(15, 23, 42, 0.12);
+        color: var(--sem-ink);
+    }
+
+    .semester-hero {
+        border-radius: 28px;
+        padding: 32px;
+        background: linear-gradient(135deg, rgba(20, 184, 166, 0.85), rgba(20, 83, 45, 0.9));
+        color: white;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        justify-content: space-between;
+    }
+
+    .semester-hero h1 {
+        margin: 0;
+        font-size: 34px;
+        font-weight: 700;
+    }
+
+    .hero-badges {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .hero-badge {
+        padding: 16px 22px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(6px);
+        font-weight: 600;
+    }
+
+    .semester-grid {
+        margin-top: 32px;
+        display: grid;
+        grid-template-columns: minmax(320px, 1.4fr) minmax(280px, 1fr);
+        gap: 30px;
+    }
+
+    .sem-card {
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 26px;
+        padding: 28px;
+        border: 1px solid var(--sem-border);
+        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.1);
+    }
+
+    .sem-card h2 {
+        margin: 0 0 6px;
+        font-weight: 600;
+    }
+
+    .form-label {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--sem-muted);
+    }
+
+    .form-control, .form-select {
+        width: 100%;
+        border-radius: 18px;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        padding: 12px 16px;
+        margin-top: 6px;
+        transition: border 0.2s ease, box-shadow 0.2s ease;
+        background: #fff;
+    }
+
+    .form-control:focus, .form-select:focus {
+        outline: none;
+        border-color: var(--sem-accent);
+        box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+    }
+
+    .two-up {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 18px;
+    }
+
+    .termlist {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+    }
+
+    .term-pill {
+        border-radius: 999px;
+        border: 1px solid rgba(15, 23, 42, 0.18);
+        padding: 8px 18px;
+        font-weight: 600;
+        color: var(--sem-muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: #fff;
+    }
+
+    .term-input:checked + .term-pill {
+        border-color: var(--sem-accent);
+        color: var(--sem-accent);
+        box-shadow: 0 6px 20px rgba(20, 184, 166, 0.25);
+    }
+
+    .primary-btn {
+        margin-top: 24px;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 999px;
+        font-weight: 700;
+        background: linear-gradient(120deg, var(--sem-accent), #0f766e);
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 20px 40px rgba(15, 118, 110, 0.45);
+        transition: transform 0.2s ease;
+    }
+
+    .primary-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .timeline {
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        max-height: 540px;
+        overflow-y: auto;
+    }
+
+    .timeline-card {
+        border-radius: 20px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        padding: 18px;
+        background: #fff;
+    }
+
+    .timeline-card h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .timeline-card span {
+        display: block;
+        font-size: 13px;
+        color: var(--sem-muted);
+        margin-top: 6px;
+    }
+
+    .flash {
+        margin-top: 20px;
+        padding: 16px 20px;
+        border-radius: 18px;
+        background: rgba(74, 222, 128, 0.18);
+        border: 1px solid rgba(34, 197, 94, 0.4);
+        color: #166534;
+        font-weight: 600;
+    }
+
+    .text-muted {
+        color: var(--sem-muted);
+        font-size: 13px;
+    }
+
+    .text-danger {
+        font-size: 13px;
+        color: #b91c1c;
+        margin-top: 4px;
+    }
+
+    .mb-3 {
+        margin-bottom: 18px;
+    }
+
+    @@media (max-width: 940px) {
+        .semester-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="semester-shell">
+    <section class="semester-hero">
+        <div>
+            <h1>Điều phối kỳ học</h1>
+        </div>
+        <div class="hero-badges">
+            <div class="hero-badge">@Model.ExistingSemesters.Count kỳ đã tạo</div>
+        </div>
+    </section>
+
+    @if (!string.IsNullOrWhiteSpace(flash))
+    {
+        <div class="flash">@flash</div>
+    }
+
+    <div class="semester-grid">
+        <form method="post" asp-page-handler="CreateSemester" class="sem-card">
+            <h2>Khai báo kỳ học mới</h2>
+            <p class="text-muted">Các trường thời gian sẽ được kiểm tra trước khi gọi CreateSemesterAsync.</p>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label class="form-label">Năm học</label>
+                <input asp-for="SemesterInput.Year" type="number" min="2020" class="form-control" />
+                <span asp-validation-for="SemesterInput.Year" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Thuật ngữ</label>
+                <input asp-for="SemesterInput.Term" class="form-control" list="termOptions" placeholder="Spring / Summer / Fall" />
+                <datalist id="termOptions">
+                    @foreach (var term in Model.TermOptions)
+                    {
+                        <option value="@term"></option>
+                    }
+                </datalist>
+                <span asp-validation-for="SemesterInput.Term" class="text-danger"></span>
+                <div class="termlist">
+                    @foreach (var term in Model.TermOptions)
+                    {
+                        var inputId = $"term-{term.ToLower()}";
+                        <div>
+                            <input type="radio" id="@inputId" class="term-input" name="term-choice" value="@term" @(Model.SemesterInput.Term == term ? "checked" : null) hidden data-term="@term" />
+                            <label class="term-pill" for="@inputId" data-term="@term">@term</label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="two-up">
+                <div>
+                    <label class="form-label">Ngày bắt đầu</label>
+                    <input asp-for="SemesterInput.StartDate" type="date" class="form-control" />
+                    <span asp-validation-for="SemesterInput.StartDate" class="text-danger"></span>
+                </div>
+                <div>
+                    <label class="form-label">Ngày kết thúc</label>
+                    <input asp-for="SemesterInput.EndDate" type="date" class="form-control" />
+                    <span asp-validation-for="SemesterInput.EndDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="primary-btn">Tạo</button>
+        </form>
+
+        <section class="sem-card">
+            <h2>Nhật ký kỳ học</h2>
+
+            <div class="timeline">
+                @if (!Model.ExistingSemesters.Any())
+                {
+                    <div class="timeline-card" style="border-style:dashed;">
+                        <h3>Chưa có dữ liệu</h3>
+                        <span>Tạo kỳ đầu tiên để kích hoạt việc đăng ký đề tài.</span>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var semester in Model.ExistingSemesters)
+                    {
+                        <div class="timeline-card">
+                            <h3>@semester.Term</h3>
+                            <span>@semester.Start_Date.ToString("dd/MM/yyyy") → @semester.End_Date.ToString("dd/MM/yyyy")</span>
+                        </div>
+                    }
+                }
+            </div>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const termRadios = document.querySelectorAll('.term-input');
+        termRadios.forEach(radio => {
+            radio.addEventListener('change', (ev) => {
+                const value = ev.target.getAttribute('data-term');
+                const target = document.querySelector('[name="SemesterInput.Term"]');
+                if (target) target.value = value;
+            });
+        });
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}

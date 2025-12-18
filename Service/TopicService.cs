@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using BusinessObject.Enums;
 using BusinessObject.Filters;
 using BusinessObject.Models;
@@ -153,6 +154,73 @@ namespace Service
         public async Task<StudentGroup?> GetGroupByTopicAsync(int topic)
         {
             return await _repo.GetGroupByTopicAsync(topic);
+        }
+
+        public async Task<TopicResponseModel> CreateTopicAsync(CreateTopicRequest req)
+        {
+            ArgumentNullException.ThrowIfNull(req);
+
+            if (string.IsNullOrWhiteSpace(req.TopicName))
+                throw new ArgumentException("Topic name is required.", nameof(req.TopicName));
+            if (req.SemesterId <= 0)
+                throw new ArgumentException("SemesterId must be provided.", nameof(req.SemesterId));
+            if (req.InstructorId == Guid.Empty)
+                throw new ArgumentException("InstructorId must be provided.", nameof(req.InstructorId));
+
+            if (req.CreatedBy == Guid.Empty)
+                throw new ArgumentException("Creator is required.", nameof(req.CreatedBy));
+            if (req.DeadlineDate == default)
+                throw new ArgumentException("DeadlineDate must be provided.", nameof(req.DeadlineDate));
+
+            var topic = new Topic
+            {
+                Title = req.TopicName.Trim(),
+                Description = req.TopicDescription,
+                SubmissionInstruction = req.SubmissionInstruction ?? string.Empty,
+                Semester_Id = req.SemesterId,
+                Created_By = req.CreatedBy,
+                Instructor_Id = req.InstructorId,
+                Is_Group_Required = req.IsGroupTopic,
+                Deadline_Date = req.DeadlineDate,
+                Status = req.Status.ToString(),
+                Major = req.Major.ToString(),
+            };
+
+            var createdTopic = await _repo.CreateTopicAsync(topic);
+            return _mapper.Map<TopicResponseModel>(createdTopic);
+        }
+        
+        public async Task<TopicResponseModel> UpdateTopicAsync(UpdateTopicRequest req)
+        {
+            var topic = await _repo.GetTopicByIdAsync(req.TopicId);
+            if (topic == null)
+                throw new Exception("Topic not found with id: " + req.TopicId);
+
+            ArgumentNullException.ThrowIfNull(req);
+
+            if (string.IsNullOrWhiteSpace(req.TopicName))
+                throw new ArgumentException("Topic name is required.", nameof(req.TopicName));
+            if (req.SemesterId <= 0)
+                throw new ArgumentException("SemesterId must be provided.", nameof(req.SemesterId));
+            if (req.InstructorId == Guid.Empty)
+                throw new ArgumentException("InstructorId must be provided.", nameof(req.InstructorId));
+            if (req.CreatedBy == Guid.Empty)
+                throw new ArgumentException("Creator is required.", nameof(req.CreatedBy));
+            if (req.DeadlineDate == default)
+                throw new ArgumentException("DeadlineDate must be provided.", nameof(req.DeadlineDate));
+
+            topic.Title = req.TopicName.Trim();
+            topic.Description = req.TopicDescription;
+            topic.SubmissionInstruction = req.SubmissionInstruction ?? string.Empty;
+            topic.Semester_Id = req.SemesterId;
+            topic.Instructor_Id = req.InstructorId;
+            topic.Is_Group_Required = req.IsGroupTopic;
+            topic.Deadline_Date = req.DeadlineDate;
+            topic.Status = req.Status.ToString();
+            topic.Major = req.Major.ToString();         
+
+            var updatedTopic = await _repo.UpdateTopicAsync(topic);
+            return _mapper.Map<TopicResponseModel>(updatedTopic);
         }
     }
 
