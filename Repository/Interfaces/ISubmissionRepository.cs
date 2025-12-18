@@ -23,5 +23,9 @@ namespace Repository.Interfaces
 
         Task<int> CountFilteredAsync(SubmissionFilter? filter);
         Task<List<Submission>> GetPaginationAsync(SubmissionFilter? filter, int page, int size);
-    }
+        Task<List<Submission>> GetAllAsync();
+
+        Task<int> CountByStatusAsync(string status);
+
+        Task<int> CountPlagiarismFlaggedAsync();    }
 }

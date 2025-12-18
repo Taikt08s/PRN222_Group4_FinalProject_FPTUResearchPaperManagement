@@ -1,10 +1,13 @@
-﻿namespace Service.Dtos
+﻿using System;
+using System.Collections.Generic;
+
+namespace Service.Dtos
 {
     public class TopicRegistrationRequest
     {
         public int TopicId { get; set; }
         public Guid StudentId { get; set; }
         public List<Guid> MemberIds { get; set; } = new();
-        public int? InstructorId { get; set; }
+        public Guid? InstructorId { get; set; }
     }
 }

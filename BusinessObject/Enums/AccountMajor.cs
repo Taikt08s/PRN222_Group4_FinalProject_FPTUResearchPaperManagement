@@ -6,6 +6,10 @@ public enum AccountMajor
     InformationTechnology,
     SoftwareEngineering,
     DataScience,
-    Teacher
+    Teacher,
+    Finance,
+    BusinessAdministration,
+    Marketing,
+    Other
 }
 

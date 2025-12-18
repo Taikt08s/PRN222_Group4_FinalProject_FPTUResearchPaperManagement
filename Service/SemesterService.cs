@@ -21,4 +21,19 @@ public class SemesterService : GenericService<Semester>, ISemesterService
     {
         return await _repo.GetCurrentSemester();
     }
+
+    public async Task<bool> CreateSemesterAsync(Semester semester)
+    {
+        if (semester.Start_Date >= semester.End_Date)
+        {
+            throw new Exception("Semester start date must be before end date.");
+        }
+
+        if (await _repo.CheckMatchSemesterTime(semester.Start_Date, semester.End_Date))
+        {
+            throw new Exception("Semester time is overlapping with existing semester.");   
+        }
+                
+        return await _repo.CreateSemesterAsync(semester);
+    }
 }

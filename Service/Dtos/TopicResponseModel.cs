@@ -1,4 +1,7 @@
-﻿namespace Service.Dtos
+﻿using System;
+using System.Collections.Generic;
+
+namespace Service.Dtos
 {
     public class TopicResponseModel
     {
@@ -13,6 +16,7 @@
         public string SemesterTerm { get; set; }
         public DateTime Deadline_Date { get; set; }
         public bool Is_Group_Required { get; set; }
+        public Guid? InstructorId { get; set; }
         
         public string InstructorName { get; set; }
         public string Status { get; set; }

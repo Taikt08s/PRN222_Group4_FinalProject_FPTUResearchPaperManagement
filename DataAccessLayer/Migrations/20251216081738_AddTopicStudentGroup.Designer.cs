@@ -4,6 +4,7 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251216081738_AddTopicStudentGroup")]
+    partial class AddTopicStudentGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -397,9 +400,6 @@ namespace DataAccessLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Instructor_Id")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Is_Group_Required")
                         .HasColumnType("bit");
 
@@ -537,10 +537,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5381),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3830),
                             Email = "admin@fpt.edu.vn",
                             Full_Name = "Administrator",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "System Administrator",
                             Password_Hash = "1",
@@ -549,10 +549,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5384),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3834),
                             Email = "anh@fpt.edu.vn",
                             Full_Name = "Nguyen Van Anh",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Ngôn Ngữ Anh",
                             Password_Hash = "1",
@@ -561,10 +561,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("33333333-3333-3333-3333-333333333333"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5386),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3837),
                             Email = "bao@fpt.edu.vn",
                             Full_Name = "Nguyen Van Bao",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Ngôn Ngữ Anh",
                             Password_Hash = "1",
@@ -573,10 +573,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("44444444-4444-4444-4444-444444444444"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5388),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3839),
                             Email = "cam@fpt.edu.vn",
                             Full_Name = "Le Thi Cam",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Quản Trị Kinh Doanh",
                             Password_Hash = "1",
@@ -585,10 +585,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("55555555-5555-5555-5555-555555555555"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5390),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3841),
                             Email = "duc@fpt.edu.vn",
                             Full_Name = "Tran Minh Duc",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Quản Trị Kinh Doanh",
                             Password_Hash = "1",
@@ -597,10 +597,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("66666666-6666-6666-6666-666666666666"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5392),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3843),
                             Email = "huy@fpt.edu.vn",
                             Full_Name = "Pham Quoc Huy",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Kỹ Thuật Phần Mềm",
                             Password_Hash = "1",
@@ -609,10 +609,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("77777777-7777-7777-7777-777777777777"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5394),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3845),
                             Email = "khanh@fpt.edu.vn",
                             Full_Name = "Vo Thi Khanh",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Kỹ Thuật Phần Mềm",
                             Password_Hash = "1",
@@ -621,10 +621,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("88888888-8888-8888-8888-888888888888"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5396),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3847),
                             Email = "lam@fpt.edu.vn",
                             Full_Name = "Nguyen Hoang Lam",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Kỹ Thuật Phần Mềm",
                             Password_Hash = "1",
@@ -633,10 +633,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("99999999-9999-9999-9999-999999999999"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5398),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3849),
                             Email = "my@fpt.edu.vn",
                             Full_Name = "Tran Thi My",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Kỹ Thuật Phần Mềm",
                             Password_Hash = "1",
@@ -645,10 +645,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaa1"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5400),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3851),
                             Email = "son.instructor@fpt.edu.vn",
                             Full_Name = "Pham Thanh Son",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
@@ -657,10 +657,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("aaaaaaa2-aaaa-aaaa-aaaa-aaaaaaaaaaa2"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5402),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3853),
                             Email = "ha.instructor@fpt.edu.vn",
                             Full_Name = "Le Thi Ha",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
@@ -669,10 +669,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("bbbbbbb1-bbbb-bbbb-bbbb-bbbbbbbbbbb1"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5404),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3856),
                             Email = "tri.committee@fpt.edu.vn",
                             Full_Name = "Nguyen Minh Tri",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
@@ -681,10 +681,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("bbbbbbb2-bbbb-bbbb-bbbb-bbbbbbbbbbb2"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5407),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3858),
                             Email = "thu.committee@fpt.edu.vn",
                             Full_Name = "Tran Hoai Thu",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
@@ -693,10 +693,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("bbbbbbb3-bbbb-bbbb-bbbb-bbbbbbbbbbb3"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5408),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3860),
                             Email = "duy.committee@fpt.edu.vn",
                             Full_Name = "Vo Quoc Duy",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
@@ -705,10 +705,10 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = new Guid("bbbbbbb4-bbbb-bbbb-bbbb-bbbbbbbbbbb4"),
-                            Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5410),
+                            Created_At = new DateTime(2025, 12, 16, 8, 17, 35, 864, DateTimeKind.Utc).AddTicks(3862),
                             Email = "yen.committee@fpt.edu.vn",
                             Full_Name = "Pham Thi Yen",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
