@@ -17,6 +17,7 @@ namespace Service.Dtos
         public DateTime Deadline_Date { get; set; }
         public bool Is_Group_Required { get; set; }
         public Guid? InstructorId { get; set; }
+        public Guid CreatedBy { get; set; }
         
         public string InstructorName { get; set; }
         public string Status { get; set; }

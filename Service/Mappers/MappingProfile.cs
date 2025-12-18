@@ -15,9 +15,7 @@ public class MappingProfile : Profile
             .ForMember(d => d.Email, o => o.MapFrom(s => s.Student.Email))
             .ForMember(d => d.Major, o => o.MapFrom(s => s.Student.Major));
         CreateMap<Topic, TopicResponseModel>()
-            .ForMember(d => d.SemesterId, o => o.MapFrom(s => s.Semester_Id))
-            .ForMember(d => d.InstructorId, o => o.MapFrom(s => s.Instructor_Id))
-            .ForMember(d => d.GroupId, o => o.MapFrom(s => s.Student_Group_Id.HasValue ? s.Student_Group_Id.Value : 0));
+            .ForMember(d => d.SemesterId, o => o.MapFrom(s => s.Semester_Id));
         CreateMap<TopicRegistrationRequest, StudentGroup>();
         CreateMap<User, StudentBasicInfo>();
         CreateMap<User, UserAdminDto>()
