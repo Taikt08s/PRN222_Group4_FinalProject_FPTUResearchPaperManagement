@@ -4,6 +4,7 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251216101311_TopicInstructorId")]
+    partial class TopicInstructorId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -540,7 +543,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5381),
                             Email = "admin@fpt.edu.vn",
                             Full_Name = "Administrator",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "System Administrator",
                             Password_Hash = "1",
@@ -552,7 +555,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5384),
                             Email = "anh@fpt.edu.vn",
                             Full_Name = "Nguyen Van Anh",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Ngôn Ngữ Anh",
                             Password_Hash = "1",
@@ -564,7 +567,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5386),
                             Email = "bao@fpt.edu.vn",
                             Full_Name = "Nguyen Van Bao",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Ngôn Ngữ Anh",
                             Password_Hash = "1",
@@ -576,7 +579,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5388),
                             Email = "cam@fpt.edu.vn",
                             Full_Name = "Le Thi Cam",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Quản Trị Kinh Doanh",
                             Password_Hash = "1",
@@ -588,7 +591,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5390),
                             Email = "duc@fpt.edu.vn",
                             Full_Name = "Tran Minh Duc",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Quản Trị Kinh Doanh",
                             Password_Hash = "1",
@@ -600,7 +603,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5392),
                             Email = "huy@fpt.edu.vn",
                             Full_Name = "Pham Quoc Huy",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Kỹ Thuật Phần Mềm",
                             Password_Hash = "1",
@@ -612,7 +615,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5394),
                             Email = "khanh@fpt.edu.vn",
                             Full_Name = "Vo Thi Khanh",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Kỹ Thuật Phần Mềm",
                             Password_Hash = "1",
@@ -624,7 +627,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5396),
                             Email = "lam@fpt.edu.vn",
                             Full_Name = "Nguyen Hoang Lam",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Kỹ Thuật Phần Mềm",
                             Password_Hash = "1",
@@ -636,7 +639,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5398),
                             Email = "my@fpt.edu.vn",
                             Full_Name = "Tran Thi My",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Kỹ Thuật Phần Mềm",
                             Password_Hash = "1",
@@ -648,7 +651,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5400),
                             Email = "son.instructor@fpt.edu.vn",
                             Full_Name = "Pham Thanh Son",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
@@ -660,7 +663,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5402),
                             Email = "ha.instructor@fpt.edu.vn",
                             Full_Name = "Le Thi Ha",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
@@ -672,7 +675,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5404),
                             Email = "tri.committee@fpt.edu.vn",
                             Full_Name = "Nguyen Minh Tri",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
@@ -684,7 +687,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5407),
                             Email = "thu.committee@fpt.edu.vn",
                             Full_Name = "Tran Hoai Thu",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
@@ -696,7 +699,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5408),
                             Email = "duy.committee@fpt.edu.vn",
                             Full_Name = "Vo Quoc Duy",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
@@ -708,7 +711,7 @@ namespace DataAccessLayer.Migrations
                             Created_At = new DateTime(2025, 12, 16, 10, 13, 11, 519, DateTimeKind.Utc).AddTicks(5410),
                             Email = "yen.committee@fpt.edu.vn",
                             Full_Name = "Pham Thi Yen",
-                            Is_Active = true,
+                            Is_Active = false,
                             Is_Suspended = false,
                             Major = "Teacher",
                             Password_Hash = "1",
