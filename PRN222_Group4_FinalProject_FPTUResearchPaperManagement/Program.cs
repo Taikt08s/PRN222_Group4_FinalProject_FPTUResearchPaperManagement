@@ -57,6 +57,7 @@ builder.Services.AddScoped<ISuspensionService, SuspensionService>();
 builder.Services.AddScoped<ISuspensionRepository, SuspensionRepository>();
 builder.Services.AddScoped<IReviewLogRepository, ReviewLogRepository>();
 builder.Services.AddScoped<IReviewLogService, ReviewLogService>();
+builder.Services.AddScoped<IThesisModerationRepository, ThesisModerationRepository>();
 builder.Services.Configure<OpenAiOptions>(
     builder.Configuration.GetSection("OpenAI"));
 builder.Services.AddRazorPages();

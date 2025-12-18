@@ -11,8 +11,6 @@
     int CountOf(string folder) =>
         filesByFolder.ContainsKey(folder) ? filesByFolder[folder].Count : 0;
 }
-
-
 @section Scripts {
     <script src="https://unpkg.com/@@microsoft/signalr@latest/dist/browser/signalr.js"></script>
     <script>
@@ -117,8 +115,6 @@
         connection.onreconnected(connectionId => console.debug("SignalR reconnected", connectionId));
     </script>
 }
-
-
 
 <head>
     <title>@ViewData["Title"] - PRN222_Group4_FinalProject_FPTUResearchPaperManagement</title>
@@ -229,7 +225,7 @@
                             break;
                     }
                     <br/>
-                    @Model.InstructorComment
+                        <strong>Ghi chú:</strong> @Model.InstructorComment
                     </div>
                 </div>
                 <div class="col border-end">
@@ -250,7 +246,7 @@
                                 break;
                         }
                     <br/>
-                    @Model.GpecComment
+                        <strong>Ghi chú:</strong> @Model.GpecComment
                     </div>
                 </div>
                 <div class="col text-start">
@@ -362,7 +358,7 @@
                 }
                 else if (Model.SubmissionStatus == ReviewStatus.Approved)
                 {
-                    <span class="badge bg-success me-2">Submission Approved</span>
+                    <span class="btn btn-success px-4">✔ Đề tài đã được duyệt</span>
                 }
                 else if (isSubmitted)
                 {

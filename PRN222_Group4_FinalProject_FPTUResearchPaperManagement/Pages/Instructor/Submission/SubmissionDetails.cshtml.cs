@@ -32,6 +32,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
         }
 
         public SubmissionDto? Submission { get; set; }
+        public ThesisAiResult? ThesisAiResult { get; set; }
         public List<SubmissionFileDto> Files { get; set; } = new();
         public List<(Guid Id, string FullName, string Email, bool IsLeader)> Members { get; set; } = new();
 
@@ -45,6 +46,8 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
 
         [BindProperty(SupportsGet = true)]
         public int SubmissionId { get; set; }
+        
+        public bool IsFullyApproved { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int submissionId)
         {
@@ -54,6 +57,8 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
 
             Submission = await _submissionService.GetByIdAsync(submissionId);
             if (Submission == null) return NotFound();
+            
+            ThesisAiResult = await _submissionService.GetThesisAiResultAsync(submissionId);
 
             Files = await _submissionService.GetFilesAsync(submissionId);
 
@@ -93,6 +98,17 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Instructo
                 HasCurrentUserApproved = CurrentUserLatestVote != null
                                          && string.Equals(CurrentUserLatestVote.New_Status, nameof(ReviewStatus.Approved), StringComparison.OrdinalIgnoreCase);
             }
+            
+            var instructorApproved =
+                LatestVotes.TryGetValue("Instructor", out var instructorVote)
+                && instructorVote?.New_Status == "Approve";
+
+            var gpecApproved =
+                LatestVotes.TryGetValue("GraduationProjectEvaluationCommitteeMember", out var gpecVote)
+                && gpecVote?.New_Status == "Approve";
+
+            IsFullyApproved = instructorApproved && gpecApproved;
+
 
             ViewData["ShowSidebar"] = true;
             ViewData["ActiveMenu"] = "TopicSubmissions";

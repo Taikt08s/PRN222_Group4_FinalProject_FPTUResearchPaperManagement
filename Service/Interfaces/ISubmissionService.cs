@@ -30,5 +30,6 @@ namespace Service.Interfaces
         Task ReviewSubmissionAsync(int submissionId, Guid reviewerId, string newStatus, string comment);
         Task<int> CountFilteredAsync(SubmissionFilter? filter);
         Task<List<Submission>> GetPaginationAsync(SubmissionFilter? filter, int page, int size);
+        Task<ThesisAiResult?> GetThesisAiResultAsync(int submissionId);
     }
 }

@@ -68,20 +68,18 @@
         <p class="mb-0">@Model.Submission.RejectReason</p>
     </div>
 }
-
-
+        
         <!-- Plagiarism warning -->
         @if (Model.Submission.PlagiarismFlag)
         {
             <div class="alert alert-warning border-warning shadow-sm">
-                <h6 class="alert-heading mb-1">⚠️ Possible plagiarism detected</h6>
+                <h6 class="alert-heading mb-1">⚠️ Phát hiện khả năng đạo văn</h6>
                 <p class="mb-1">
-                    Plagiarism score:
-                    <strong>@Model.Submission.PlagiarismScore</strong>
+                    Điểm đạo văn:
+                    <strong>@Model.Submission.PlagiarismScore/85</strong>
                 </p>
                 <small class="text-muted">
-                    This result is generated automatically and may be inaccurate.
-                    Reviewers may still approve the submission after manual evaluation.
+                    @Model.ThesisAiResult.Reasoning
                 </small>
             </div>
         }
@@ -226,7 +224,8 @@
                 </ul>
             }
         </div>
-
+        @if (!Model.IsFullyApproved)
+        {
         <!-- Review action -->
         <div class="card shadow-sm border-primary mb-4">
             <div class="card-header fw-bold">Your Review</div>
@@ -274,6 +273,7 @@
                 }
             </div>
         </div>
+        }
     }
 </div>
 

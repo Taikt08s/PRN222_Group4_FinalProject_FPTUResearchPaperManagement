@@ -72,13 +72,13 @@
         @if (Model.Submission.PlagiarismFlag)
         {
             <div class="alert alert-warning border-warning shadow-sm">
-                <h6 class="alert-heading mb-1">⚠️ Possible plagiarism detected</h6>
+                <h6 class="alert-heading mb-1">⚠️ Phát hiện khả năng đạo văn</h6>
                 <p class="mb-1">
-                    Plagiarism score:
-                    <strong>@Model.Submission.PlagiarismScore</strong>
+                    Điểm đạo văn:
+                    <strong>@Model.Submission.PlagiarismScore/85</strong>
                 </p>
                 <small class="text-muted">
-                    This result is generated automatically and may be inaccurate.
+                    @Model.ThesisAiResult.Reasoning
                 </small>
             </div>
         }
@@ -213,55 +213,57 @@
                 </ul>
             }
         </div>
-
-        <!-- Review action -->
-        <div class="card shadow-sm border-primary mb-4">
-            <div class="card-header fw-bold">Your Review</div>
-            <div class="card-body">
-                <form method="post" asp-page-handler="Review">
-                    <div class="mb-3">
-                        <label class="form-label">Comment (optional)</label>
-                        <textarea name="comment" class="form-control" rows="3"></textarea>
-                    </div>
-
-                    @if (string.Equals(Model.Submission.Status, "Approved", StringComparison.OrdinalIgnoreCase))
-                    {
-                        <div class="alert alert-info small">
-                            This submission has been approved. You may still submit a rejection.
+        @if (!Model.IsFullyApproved)
+        {
+            <!-- Review action -->
+            <div class="card shadow-sm border-primary mb-4">
+                <div class="card-header fw-bold">Your Review</div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="Review">
+                        <div class="mb-3">
+                            <label class="form-label">Comment (optional)</label>
+                            <textarea name="comment" class="form-control" rows="3"></textarea>
                         </div>
-                        <button type="submit" name="decision" value="Reject" class="btn btn-danger">
-                            Reject
-                        </button>
-                    }
-                    else
-                    {
-                        @if (Model.HasCurrentUserApproved)
+
+                        @if (string.Equals(Model.Submission.Status, "Approved", StringComparison.OrdinalIgnoreCase))
                         {
-                            <button class="btn btn-success" disabled>
-                                ✔ Approved (already voted)
+                            <div class="alert alert-info small">
+                                This submission has been approved. You may still submit a rejection.
+                            </div>
+                            <button type="submit" name="decision" value="Reject" class="btn btn-danger">
+                                Reject
                             </button>
                         }
                         else
                         {
-                            <button type="submit" name="decision" value="Approve" class="btn btn-success me-2">
-                                Approve
-                            </button>
-                        }
+                            @if (Model.HasCurrentUserApproved)
+                            {
+                                <button class="btn btn-success" disabled>
+                                    ✔ Approved (already voted)
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" name="decision" value="Approve" class="btn btn-success me-2">
+                                    Approve
+                                </button>
+                            }
 
-                        <button type="submit" name="decision" value="Reject" class="btn btn-danger me-2">
-                            Reject
-                        </button>
-
-                        @if (Model.Submission.PlagiarismFlag)
-                        {
-                            <button type="submit" name="decision" value="Suspend" class="btn btn-warning">
-                                Suspend
+                            <button type="submit" name="decision" value="Reject" class="btn btn-danger me-2">
+                                Reject
                             </button>
+
+                            @if (Model.Submission.PlagiarismFlag)
+                            {
+                                <button type="submit" name="decision" value="Suspend" class="btn btn-warning">
+                                    Suspend
+                                </button>
+                            }
                         }
-                    }
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
+        }
     }
 </div>
 

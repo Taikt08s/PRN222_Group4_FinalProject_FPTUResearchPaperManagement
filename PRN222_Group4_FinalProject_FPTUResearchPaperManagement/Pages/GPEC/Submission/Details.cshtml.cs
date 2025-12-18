@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 using PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Hubs;
 using Service.Interfaces;
 using System.Security.Claims;
+using Service.Dtos;
 
 namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Submission
 {
@@ -30,8 +31,10 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
             _hubContext = hubContext;
         }
 
-        public Service.Dtos.SubmissionDto? Submission { get; set; }
-        public List<Service.Dtos.SubmissionFileDto> Files { get; set; } = new();
+        public SubmissionDto? Submission { get; set; }
+        
+        public ThesisAiResult? ThesisAiResult { get; set; }
+        public List<SubmissionFileDto> Files { get; set; } = new();
         public List<(Guid Id, string FullName, string Email, bool IsLeader)> Members { get; set; } = new();
 
         // Review related
@@ -44,6 +47,8 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
 
         [BindProperty(SupportsGet = true)]
         public int SubmissionId { get; set; }
+        
+        public bool IsFullyApproved { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int submissionId)
         {
@@ -52,8 +57,9 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
             ViewData["ActiveMenu"] = "TopicSubmissions";
 
             var sub = await _submissionService.GetByIdAsync(submissionId);
-
             if (sub == null) return NotFound();
+            
+            ThesisAiResult = await _submissionService.GetThesisAiResultAsync(submissionId);
 
             // map simple DTOs
             Submission = sub;
@@ -102,6 +108,16 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
                 CurrentUserLatestVote = null;
                 HasCurrentUserApproved = false;
             }
+            
+            var instructorApproved =
+                LatestVotes.TryGetValue("Instructor", out var instructorVote)
+                && instructorVote?.New_Status == "Approve";
+
+            var gpecApproved =
+                LatestVotes.TryGetValue("GraduationProjectEvaluationCommitteeMember", out var gpecVote)
+                && gpecVote?.New_Status == "Approve";
+
+            IsFullyApproved = instructorApproved && gpecApproved;
 
             return Page();
         }

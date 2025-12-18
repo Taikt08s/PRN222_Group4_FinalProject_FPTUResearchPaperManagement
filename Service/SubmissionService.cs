@@ -18,6 +18,7 @@ namespace Service
         private readonly IOpenAiSubmissionService _openAiSubmissionService;
         private readonly ISuspensionService _suspensionService;
         private readonly IReviewLogService _reviewLogService;
+        private readonly IThesisModerationRepository _moderationRepo;
         private readonly StorageClient _storage;
         private readonly IMapper _mapper;
 
@@ -29,6 +30,7 @@ namespace Service
             ISubmissionFileRepository fileRepo,
             IOpenAiSubmissionService openAiSubmissionService,
             ISuspensionService suspensionService,
+            IThesisModerationRepository moderationRepo,
             IReviewLogService reviewLogService,
             IMapper mapper)
         {
@@ -37,6 +39,7 @@ namespace Service
             _openAiSubmissionService = openAiSubmissionService;
             _suspensionService = suspensionService;
             _reviewLogService = reviewLogService;
+            _moderationRepo = moderationRepo;
             _mapper = mapper;
 
             var credentialPath = Path.Combine(
@@ -283,6 +286,14 @@ namespace Service
         public async Task<List<Submission>> GetPaginationAsync(SubmissionFilter? filter, int page, int size)
         {
             return await _submissionRepo.GetPaginationAsync(filter, page, size);
+        }
+        
+        public async Task<ThesisAiResult?> GetThesisAiResultAsync(int submissionId)
+        {
+            var moderation = await _moderationRepo.GetBySubmissionIdAsync(submissionId);
+            if (moderation == null) return null;
+
+            return _mapper.Map<ThesisAiResult>(moderation);
         }
     }
 }

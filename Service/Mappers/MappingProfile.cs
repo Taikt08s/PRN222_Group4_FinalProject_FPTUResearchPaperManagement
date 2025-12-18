@@ -33,5 +33,18 @@ public class MappingProfile : Profile
         .ForMember(d => d.PlagiarismScore, o => o.MapFrom(s => s.Plagiarism_Score))
         .ForMember(d => d.PlagiarismFlag, o => o.MapFrom(s => s.Plagiarism_Flag))
         .ForMember(d => d.RejectReason, o => o.MapFrom(s => s.Reject_Reason));
+        CreateMap<ThesisModeration, ThesisAiResult>()
+            .ForMember(d => d.IsApproved, o => o.MapFrom(s => s.Is_Approved))
+            .ForMember(d => d.PlagiarismPass, o => o.MapFrom(s => s.Plagiarism_Pass))
+            .ForMember(d => d.PlagiarismScore, o => o.MapFrom(s => s.Plagiarism_Score))
+            .ForMember(d => d.OriginalityPass, o => o.MapFrom(s => s.Originality_Pass))
+            .ForMember(d => d.CitationQualityPass, o => o.MapFrom(s => s.Citation_Quality_Pass))
+            .ForMember(d => d.AcademicRigorPass, o => o.MapFrom(s => s.Academic_Rigor_Pass))
+            .ForMember(d => d.ResearchRelevancePass, o => o.MapFrom(s => s.Research_Relevance_Pass))
+            .ForMember(d => d.WritingQualityPass, o => o.MapFrom(s => s.Writing_Quality_Pass))
+            .ForMember(d => d.EthicalCompliancePass, o => o.MapFrom(s => s.Ethical_Compliance_Pass))
+            .ForMember(d => d.CompletenessPass, o => o.MapFrom(s => s.Completeness_Pass))
+            .ForMember(d => d.Reasoning, o => o.MapFrom(s => s.Reasoning))
+            .ForMember(d => d.ViolationsJson, o => o.MapFrom(s => s.Violations_Json));
     }
 }
