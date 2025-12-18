@@ -164,9 +164,6 @@ namespace Service
                 throw new ArgumentException("Topic name is required.", nameof(req.TopicName));
             if (req.SemesterId <= 0)
                 throw new ArgumentException("SemesterId must be provided.", nameof(req.SemesterId));
-            if (req.InstructorId == Guid.Empty)
-                throw new ArgumentException("InstructorId must be provided.", nameof(req.InstructorId));
-
             if (req.CreatedBy == Guid.Empty)
                 throw new ArgumentException("Creator is required.", nameof(req.CreatedBy));
             if (req.DeadlineDate == default)
@@ -179,7 +176,6 @@ namespace Service
                 SubmissionInstruction = req.SubmissionInstruction ?? string.Empty,
                 Semester_Id = req.SemesterId,
                 Created_By = req.CreatedBy,
-                Instructor_Id = req.InstructorId,
                 Is_Group_Required = req.IsGroupTopic,
                 Deadline_Date = req.DeadlineDate,
                 Status = req.Status.ToString(),
@@ -213,7 +209,6 @@ namespace Service
             topic.Description = req.TopicDescription;
             topic.SubmissionInstruction = req.SubmissionInstruction ?? string.Empty;
             topic.Semester_Id = req.SemesterId;
-            topic.Instructor_Id = req.InstructorId;
             topic.Is_Group_Required = req.IsGroupTopic;
             topic.Deadline_Date = req.DeadlineDate;
             topic.Status = req.Status.ToString();
