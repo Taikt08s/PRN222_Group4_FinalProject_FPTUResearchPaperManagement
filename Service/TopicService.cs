@@ -179,7 +179,7 @@ namespace Service
                 Is_Group_Required = req.IsGroupTopic,
                 Deadline_Date = req.DeadlineDate,
                 Status = req.Status.ToString(),
-                Major = req.Major.ToString(),
+                Major = GetMajorName(req.Major),
             };
 
             var createdTopic = await _repo.CreateTopicAsync(topic);
@@ -211,11 +211,29 @@ namespace Service
             topic.Is_Group_Required = req.IsGroupTopic;
             topic.Deadline_Date = req.DeadlineDate;
             topic.Status = req.Status.ToString();
-            topic.Major = req.Major.ToString();         
+            topic.Major = GetMajorName(req.Major);         
 
             var updatedTopic = await _repo.UpdateTopicAsync(topic);
             return _mapper.Map<TopicResponseModel>(updatedTopic);
         }
+
+        public static string GetMajorName(AccountMajor major)
+    {
+        return major switch
+        {
+            AccountMajor.ComputerScience => "Khoa Học Máy Tính",
+            AccountMajor.InformationTechnology => "Công Nghệ Thông Tin",
+            AccountMajor.SoftwareEngineering => "Kỹ Thuật Phần Mềm",
+            AccountMajor.DataScience => "Khoa Học Dữ Liệu",
+            AccountMajor.Teacher => "Sư Phạm",
+            AccountMajor.Finance => "Tài Chính",
+            AccountMajor.BusinessAdministration => "Quản Trị Kinh Doanh",
+            AccountMajor.Marketing => "Marketing",
+            AccountMajor.Other => "Khác",
+            AccountMajor.English => "Ngôn Ngữ Anh",
+            _ => "Không xác định"
+        };
+    }
     }
 
 }

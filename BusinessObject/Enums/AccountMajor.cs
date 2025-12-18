@@ -10,6 +10,7 @@ public enum AccountMajor
     Finance,
     BusinessAdministration,
     Marketing,
+    English,
     Other
 }
 
