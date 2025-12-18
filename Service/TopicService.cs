@@ -164,9 +164,6 @@ namespace Service
                 throw new ArgumentException("Topic name is required.", nameof(req.TopicName));
             if (req.SemesterId <= 0)
                 throw new ArgumentException("SemesterId must be provided.", nameof(req.SemesterId));
-            if (req.InstructorId == Guid.Empty)
-                throw new ArgumentException("InstructorId must be provided.", nameof(req.InstructorId));
-
             if (req.CreatedBy == Guid.Empty)
                 throw new ArgumentException("Creator is required.", nameof(req.CreatedBy));
             if (req.DeadlineDate == default)
