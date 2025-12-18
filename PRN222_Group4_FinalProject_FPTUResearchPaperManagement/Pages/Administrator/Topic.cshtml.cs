@@ -154,11 +154,6 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.Administr
                 ModelState.AddModelError("UpdateInput.DeadlineDate", "Vui lòng chọn hạn nộp rõ ràng.");
             }
 
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             var editorIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrWhiteSpace(editorIdValue))
             {
