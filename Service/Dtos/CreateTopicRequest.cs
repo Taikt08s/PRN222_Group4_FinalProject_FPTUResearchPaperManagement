@@ -8,6 +8,7 @@ namespace Service.Dtos
         public string TopicName { get; set; } = string.Empty;
         public string TopicDescription { get; set; } = string.Empty;
         public string SubmissionInstruction { get; set; } = string.Empty;
+        public Guid InstructorId { get; set; }
         public Guid CreatedBy { get; set; }
         public AccountMajor Major { get; set; } = AccountMajor.SoftwareEngineering;
         public int SemesterId { get; set; }
