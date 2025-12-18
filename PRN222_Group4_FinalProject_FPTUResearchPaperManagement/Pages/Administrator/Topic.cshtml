@@ -390,7 +390,7 @@
                 </div>
                 <div>
                     <label class="form-label">Giảng viên phụ trách</label>
-                    <select asp-for="TopicInput.InstructorId" class="form-select">
+                    <select asp-for="TopicInput.CreatedBy" class="form-select">
                         <option value="">-- Chọn giảng viên --</option>
                         @foreach (var instructor in Model.InstructorOptions)
                         {
@@ -401,7 +401,7 @@
                     {
                         <span class="text-danger">Chưa có giảng viên khả dụng.</span>
                     }
-                    <span asp-validation-for="TopicInput.InstructorId" class="text-danger"></span>
+                    <span asp-validation-for="TopicInput.CreatedBy" class="text-danger"></span>
                 </div>
             </div>
 
@@ -485,7 +485,7 @@
                     </div>
                     <div>
                         <label class="form-label">Giảng viên phụ trách</label>
-                        <select asp-for="UpdateInput.InstructorId" class="form-select">
+                        <select asp-for="UpdateInput.CreatedBy" class="form-select">
                             <option value="">-- Chọn giảng viên --</option>
                             @foreach (var instructor in Model.InstructorOptions)
                             {
@@ -496,7 +496,7 @@
                         {
                             <span class="text-danger">Chưa có giảng viên khả dụng.</span>
                         }
-                        <span asp-validation-for="UpdateInput.InstructorId" class="text-danger"></span>
+                        <span asp-validation-for="UpdateInput.CreatedBy" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -588,7 +588,7 @@
                             <tr>
                                 <td>
                                     <strong>@topic.Title</strong><br />
-                                    <span class="text-muted">GV ID: @topic.InstructorId</span>
+                                    <span class="text-muted">GV ID: @topic.</span>
                                 </td>
                                 <td>@topic.Major</td>
                                 <td>@topic.SemesterTerm</td>

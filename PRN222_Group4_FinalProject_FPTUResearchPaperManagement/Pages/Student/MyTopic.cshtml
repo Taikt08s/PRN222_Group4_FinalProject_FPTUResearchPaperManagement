@@ -251,6 +251,7 @@
                 </div>
                 <div class="col text-start">
                     <ul class="list-unstyled mb-0 directory-list">
+
                         <!-- Final Thesis and Reports -->
                         <li class="d-flex align-items-center justify-content-between">
                             @if (isSubmitted || isSuspended || Model.SubmissionStatus == ReviewStatus.Approved)
@@ -284,7 +285,7 @@
 
                         <!-- Slides -->
                         <li class="d-flex align-items-center justify-content-between">
-                            @if (isSubmitted || isSuspended || Model.SubmissionStatus == ReviewStatus.Approved)
+                            @if (isSubmitted || isSuspended)
                             {
                                 <a class="folder-link disabled-folder" aria-disabled="true">
                                     <span>

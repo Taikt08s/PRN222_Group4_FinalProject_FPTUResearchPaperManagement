@@ -115,6 +115,7 @@ namespace Service
             return _mapper.Map<SubmissionDto>(submission);
         }
 
+        //read-only lookup by submission id
         public async Task<SubmissionDto?> GetByIdAsync(int submissionId)
         {
             var submission = await _submissionRepo.GetByIdAsync(submissionId);

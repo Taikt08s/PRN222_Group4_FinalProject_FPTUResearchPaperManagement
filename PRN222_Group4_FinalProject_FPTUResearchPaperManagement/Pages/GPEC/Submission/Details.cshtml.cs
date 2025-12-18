@@ -57,6 +57,7 @@ namespace PRN222_Group4_FinalProject_FPTUResearchPaperManagement.Pages.GPEC.Subm
             ViewData["ActiveMenu"] = "TopicSubmissions";
 
             var sub = await _submissionService.GetByIdAsync(submissionId);
+
             if (sub == null) return NotFound();
             
             ThesisAiResult = await _submissionService.GetThesisAiResultAsync(submissionId);

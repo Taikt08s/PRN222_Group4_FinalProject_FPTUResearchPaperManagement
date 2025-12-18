@@ -225,33 +225,33 @@
                             <textarea name="comment" class="form-control" rows="3"></textarea>
                         </div>
 
-                        @if (string.Equals(Model.Submission.Status, "Approved", StringComparison.OrdinalIgnoreCase))
+                    @if (string.Equals(Model.Submission.Status, "Approved", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <div class="alert alert-info small">
+                            This submission has been approved. You may still submit a rejection.
+                        </div>
+                        <button type="submit" name="decision" value="Reject" class="btn btn-danger">
+                            Reject
+                        </button>
+                    }
+                    else
+                    {
+                        @if (Model.HasCurrentUserApproved)
                         {
-                            <div class="alert alert-info small">
-                                This submission has been approved. You may still submit a rejection.
-                            </div>
-                            <button type="submit" name="decision" value="Reject" class="btn btn-danger">
-                                Reject
+                            <button class="btn btn-success" disabled>
+                                ✔ Approved (already voted)
                             </button>
                         }
                         else
                         {
-                            @if (Model.HasCurrentUserApproved)
-                            {
-                                <button class="btn btn-success" disabled>
-                                    ✔ Approved (already voted)
-                                </button>
-                            }
-                            else
-                            {
-                                <button type="submit" name="decision" value="Approve" class="btn btn-success me-2">
-                                    Approve
-                                </button>
-                            }
-
-                            <button type="submit" name="decision" value="Reject" class="btn btn-danger me-2">
-                                Reject
+                            <button type="submit" name="decision" value="Approve" class="btn btn-success me-2">
+                                Approve
                             </button>
+                        }
+
+                        <button type="submit" name="decision" value="Reject" class="btn btn-danger me-2">
+                            Reject
+                        </button>
 
                             @if (Model.Submission.PlagiarismFlag)
                             {
